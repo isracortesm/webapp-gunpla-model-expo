@@ -1,4 +1,4 @@
-const BASE_URL = 'https://hobby-city-api-test--hobbycity-26940.us-central1.hosted.app';
+const BASE_URL = process.env.BASE_URL || '';
 
 export class HttpService {
   private baseUrl: string;
