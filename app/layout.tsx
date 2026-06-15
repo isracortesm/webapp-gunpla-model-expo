@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import FloatingToolbar from "@/components/ui/FloatingToolbar";
+import EventCard from "@/features/event/components/EventCard";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,8 +29,15 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col text-white dark:text-zinc-50">
         <FloatingToolbar />
+        <EventCard
+          title="Event Title"
+          subtitle="Event Subtitle"
+          imageUrl="https://static.wikia.nocookie.net/philippinetelevision/images/c/ce/16x9_by_Pengo.svg.png/revision/latest?cb=20241119234704"
+          category="Category Name"
+          isPaid={true}
+          description="# Description\nSome **markdown** text."/>
         <main className="flex-1">{children}</main>
       </body>
     </html>

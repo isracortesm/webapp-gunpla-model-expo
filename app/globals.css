@@ -24,3 +24,12 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* White text utility class for the site */
+.text-white-site {
+  color: white !important;
+}
+
+.dark .text-white-site {
+  color: #ededed !important;
+}
