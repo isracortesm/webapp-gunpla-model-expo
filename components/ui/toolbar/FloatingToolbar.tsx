@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import "../../app/css/floating-toolbar.css";
+import "./FloatingToolbar.css";
 
 export default function FloatingToolbar() {
   return (

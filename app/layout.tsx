@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./css/globals.css";
-import "./css/floating-toolbar.css";
-import FloatingToolbar from "@/components/ui/FloatingToolbar";
-import EventCard from "@/features/event/components/EventCard";
+import FloatingToolbar from "@/components/ui/toolbar/FloatingToolbar";
+import EventCard from "@/components/ui/cards/EventCard";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
