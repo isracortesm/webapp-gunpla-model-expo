@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import "./css/globals.css";
+import "./css/floating-toolbar.css";
 import FloatingToolbar from "@/components/ui/FloatingToolbar";
 import EventCard from "@/features/event/components/EventCard";
 

@@ -1,9 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
+import "../../app/css/floating-toolbar.css";
 
 export default function FloatingToolbar() {
   return (
-    <div className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 py-3 bg-white/10 backdrop-blur-md border-b border-zinc-200/30 dark:bg-black/10 dark:border-zinc-700/30">
+    <div className="floating-toolbar">
       <div className="flex items-center gap-3">
         {/* Profile Image Icon */}
         <Link href="/profile" aria-label="Profile">
@@ -12,25 +13,19 @@ export default function FloatingToolbar() {
             alt="Profile avatar"
             width={28}
             height={28}
-            className="rounded-full object-cover ring-1 ring-zinc-300/50 dark:ring-zinc-600/50 transition-transform hover:scale-110"
+            className="floating-toolbar__profile-link object-cover"
           />
         </Link>
       </div>
 
       <div className="flex items-center gap-2">
         {/* Register Button */}
-        <Link
-          href="/register"
-          className="rounded-full px-4 py-1.5 text-sm font-semibold bg-transparent border border-zinc-300/60 dark:border-zinc-600/60 hover:bg-zinc-100/20 dark:hover:bg-zinc-900/20 transition-colors"
-        >
+        <Link href="/register" className="floating-toolbar__register-btn">
           Register
         </Link>
 
         {/* Login Button */}
-        <Link
-          href="/login"
-          className="rounded-full px-4 py-1.5 text-sm font-semibold bg-[#383838] dark:bg-zinc-700 hover:bg-[#2a2a2a] dark:hover:bg-zinc-600 transition-colors"
-        >
+        <Link href="/login" className="floating-toolbar__login-btn">
           Login
         </Link>
       </div>
