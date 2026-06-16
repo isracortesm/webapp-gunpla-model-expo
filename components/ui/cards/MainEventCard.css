@@ -2,18 +2,12 @@
 
 .event-card {
   width: 100%;
-  max-width: 896px;
+  max-width: 900px;
   margin-left: auto;
   margin-right: auto;
-  border-radius: 24px;
   overflow: hidden;
   border-bottom: 1px solid rgba(67, 67, 67, 0.3);
-  background-color: rgba(250, 250, 250, 0.1);
-}
-
-.dark .event-card {
-  background-color: #0a0a0a;
-  border-bottom-color: rgba(67, 67, 67, 0.3);
+  background-color: #ededed;
 }
 
 .event-card-image-container {
@@ -29,8 +23,8 @@
   background: linear-gradient(
     to top,
     transparent,
-    rgba(255, 255, 255, 0.08) 40%,
-    rgba(255, 255, 255, 0.8) 100%
+    rgba(255, 255, 255, 0.1) 30%,
+    rgba(0, 0, 0, 0.5) 100%
   );
 }
 
@@ -53,11 +47,7 @@
   letter-spacing: -0.5px;
   flex-grow: 1;
   margin-right: 16px;
-  color: white;
-}
-
-.dark .event-card-title {
-  color: #525252;
+  color: black;
 }
 
 .event-card-chips-container {
@@ -76,15 +66,9 @@
   font-size: 10px;
   font-weight: 600;
   backdrop-filter: blur(8px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  border-bottom: 1px solid rgba(67, 67, 67, 0.2);
   color: white;
-  background-color: rgba(250, 250, 250, 0.4);
-}
-
-.dark .event-card-category-chip {
-  border-bottom-color: rgba(67, 67, 67, 0.2);
-  color: #525252;
-  background-color: rgba(67, 67, 67, 0.4);
+  background-color: rgba(67, 67, 67, 0.5);
 }
 
 .event-card-payment-chip-paid {
@@ -96,13 +80,8 @@
   font-size: 10px;
   font-weight: 600;
   backdrop-filter: blur(8px);
-  color: white;
-  background-color: #383838;
-}
-
-.dark .event-card-payment-chip-paid {
-  color: #525252;
-  background-color: #676767;
+  color: black;
+  background-color: white;
 }
 
 .event-card-payment-chip-free {
@@ -114,12 +93,7 @@
   font-size: 10px;
   font-weight: 600;
   backdrop-filter: blur(8px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  background-color: rgba(9, 183, 9, 0.2);
-}
-
-.dark .event-card-payment-chip-free {
-  border-bottom-color: rgba(67, 67, 67, 0.2);
+  border-bottom: 1px solid rgba(67, 67, 67, 0.2);
   background-color: rgba(9, 183, 9, 0.2);
 }
 
@@ -127,23 +101,14 @@
   font-size: 14px;
   line-height: 20px;
   margin-bottom: 24px;
-  color: rgba(255, 255, 255, 0.8);
-}
-
-.dark .event-card-subtitle {
-  color: #737373;
+  color: black;
 }
 
 .event-card-description-container {
   border-radius: 16px;
   padding: 24px;
   border-bottom: 1px solid rgba(67, 67, 67, 0.3);
-  background-color: rgba(255, 255, 255, 0.05);
-}
-
-.dark .event-card-description-container {
-  background-color: rgba(0, 0, 0, 0.2);
-  border-bottom-color: rgba(67, 67, 67, 0.3);
+  background-color: rgba(67, 67, 67, 0.5);
 }
 
 /* Markdown Content Styles */
@@ -151,10 +116,6 @@
   font-size: 24px;
   font-weight: bold;
   margin-bottom: 16px;
-  color: white;
-}
-
-.dark .event-card-markdown h1 {
   color: #525252;
 }
 
@@ -162,10 +123,6 @@
   font-size: 20px;
   font-weight: 600;
   margin-bottom: 12px;
-  color: rgba(255, 255, 255, 0.9);
-}
-
-.dark .event-card-markdown h2 {
   color: #8b8b8b;
 }
 
@@ -173,10 +130,6 @@
   font-size: 14px;
   line-height: 20px;
   margin-bottom: 12px;
-  color: rgba(255, 255, 255, 0.8);
-}
-
-.dark .event-card-markdown p {
   color: #737373;
 }
 
@@ -186,10 +139,6 @@
   margin-top: 12px;
   margin-bottom: 12px;
   gap: 8px;
-  color: rgba(255, 255, 255, 0.8);
-}
-
-.dark .event-card-markdown ul {
   color: #737373;
 }
 

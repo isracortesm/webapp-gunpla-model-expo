@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./css/globals.css";
 import FloatingToolbar from "@/components/ui/toolbar/FloatingToolbar";
-import EventCard from "@/components/ui/cards/EventCard";
+import EventCard from "@/components/ui/cards/MainEventCard";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,7 +29,7 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col text-white dark:text-zinc-50">
+      <body className="min-h-full flex flex-col text-white-site">
         <FloatingToolbar />
         <EventCard
           title="Event Title"

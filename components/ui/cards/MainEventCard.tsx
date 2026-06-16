@@ -1,6 +1,6 @@
 import Image from "next/image";
 import ReactMarkdown from "react-markdown";
-import "./EventCard.css";
+import "./MainEventCard.css";
 
 interface EventCardProps {
   title: string;

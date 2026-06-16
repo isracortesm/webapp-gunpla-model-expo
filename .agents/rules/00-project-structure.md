@@ -13,13 +13,18 @@ src/
 │
 ├── components/
 │   ├── ui/
-│   ├── layout/
-│   └── shared/
+│       ├── cards/
+│       └── toolbar/
+│
+├── features/
+│   ├── event-dashboard/
+│       ├── mappers/
+│       ├── repositories/
+│       ├── services/
+│       ├── types/
+│       └── usecases/
 │
 ├── lib/
-│   ├── api/
-│   ├── validations/
-│   └── utils/
 │
 ├── types/
 │
