@@ -1,6 +1,7 @@
 import Image from "next/image";
 import ReactMarkdown from "react-markdown";
 import "./MainEventCard.css";
+import { SocialNetworkIcons, type SocialNetworkItem } from "../social-networks/SocialNetworkIcons";
 
 interface EventCardProps {
   title: string;
@@ -9,15 +10,17 @@ interface EventCardProps {
   category: string;
   isPaid: boolean;
   description: string;
+  socialNetworks?: SocialNetworkItem[];
 }
 
-export default function EventCard({
+export default function MainEventCard({
   title,
   subtitle,
   imageUrl,
   category,
   isPaid,
   description,
+  socialNetworks,
 }: EventCardProps) {
   return (
     <div className="event-card">
@@ -82,6 +85,11 @@ export default function EventCard({
             {description}
           </ReactMarkdown>
         </div>
+
+        {/* Social Network Icons */}
+        {socialNetworks && socialNetworks.length > 0 && (
+          <SocialNetworkIcons networks={socialNetworks} />
+        )}
       </div>
     </div>
   );
