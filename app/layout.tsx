@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./css/globals.css";
 import FloatingToolbar from "@/components/ui/toolbar/FloatingToolbar";
 import MainEventCard from "@/components/ui/cards/MainEventCard";
+import Footer from "@/components/ui/footer/Footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -44,6 +45,7 @@ export default function RootLayout({
           ]}
         />
         <main className="flex-1">{children}</main>
+        <Footer socialNetworks={[{ type: "facebook", name: "Facebook", url: "#" }, { type: "web", name: "Website", url: "#" }]} />
       </body>
     </html>
   );
