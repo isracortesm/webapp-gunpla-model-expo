@@ -28,6 +28,13 @@
   object-fit: contain;
 }
 
+/* Force SVG icons to render in white */
+.social-network-icon-link svg {
+  fill: white !important;
+  width: 20px !important;
+  height: 20px !important;
+}
+
 .social-network-icon-link.fallback {
   font-size: 14px;
   font-weight: bold;
