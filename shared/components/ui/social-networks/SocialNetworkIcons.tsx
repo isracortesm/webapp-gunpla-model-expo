@@ -1,12 +1,9 @@
 import { FC } from "react";
 import "./SocialNetworkIcons.css";
 import { siFacebook, siInstagram, siTiktok, siPinterest, siArtstation, siLinktree, siWordpress } from "simple-icons";
+import { SocialNetworkItem } from "@/domain/entities/event-dashboard/entity";
 
-export interface SocialNetworkItem {
-  type: string;
-  name: string;
-  url: string;
-}
+
 
 interface SocialNetworkIconsProps {
   networks: SocialNetworkItem[];

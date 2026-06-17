@@ -13,7 +13,7 @@ export class EventDashboardRepositoryImpl implements EventDashboardRepository {
   async getEventByCode(eventCode: string): Promise<EventEntity> {
     const response = await this.httpService.get<{ data: any }>('/api/events', {
       'filters[eventId][$eq]': eventCode,
-      populate: ['image', 'category'],
+      populate: ['image', 'category', 'socialNetworks'],
     });
 
     if (!response.data || response.data.length === 0) {

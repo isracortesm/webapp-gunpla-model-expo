@@ -1,7 +1,8 @@
 import Image from "next/image";
 import ReactMarkdown from "react-markdown";
 import "./MainEventCard.css";
-import { SocialNetworkIcons, type SocialNetworkItem } from "@/shared/components/ui/social-networks/SocialNetworkIcons";
+import { SocialNetworkIcons } from "@/shared/components/ui/social-networks/SocialNetworkIcons";
+import { type SocialNetworkItem } from "@/domain/entities/event-dashboard/entity";
 import { EventEntity } from "@/domain/entities/event-dashboard/entity";
 
 interface MainEventCardProps {
@@ -9,7 +10,7 @@ interface MainEventCardProps {
   socialNetworks?: SocialNetworkItem[];
 }
 
-export default function MainEventCard({ event, socialNetworks }: MainEventCardProps) {
+export default function MainEventCard({ event }: MainEventCardProps) {
   const imageUrl = event.image?.url || "";
   const category = event.category?.name || "Uncategorized";
   const isPaid = event.costType === 'paid';
@@ -84,8 +85,8 @@ export default function MainEventCard({ event, socialNetworks }: MainEventCardPr
         </div>
 
         {/* Social Network Icons */}
-        {socialNetworks && socialNetworks.length > 0 && (
-          <SocialNetworkIcons networks={socialNetworks} />
+        {event.socialNetworks && event.socialNetworks.length > 0 && (
+          <SocialNetworkIcons networks={event.socialNetworks} />
         )}
       </div>
     </div>

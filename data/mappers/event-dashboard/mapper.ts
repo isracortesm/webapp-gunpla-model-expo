@@ -34,6 +34,7 @@ interface StrapiEventResponse {
   endDate: string;
   image?: StrapiMediaResponse;
   category?: StrapiCategoryResponse;
+  socialNetworks?: StrapiSocialNetworkResponse[];
 }
 
 interface StrapiNewsResponse {
@@ -57,6 +58,13 @@ interface StrapiActivityResponse {
   endDate: string;
   image?: StrapiMediaResponse;
   category?: StrapiCategoryResponse;
+}
+
+interface StrapiSocialNetworkResponse {
+  id: number;
+  type: string;
+  name: string;
+  url: string;
 }
 
 export function mapStrapiMediaToEntity(dto: StrapiMediaResponse): MediaEntity {
@@ -96,6 +104,12 @@ export function mapEventDtoToEntity(dto: StrapiEventResponse): EventEntity {
     endDate: dto.endDate,
     image,
     category,
+    socialNetworks: dto.socialNetworks?.map((sn) => ({
+      id: sn.id,
+      type: sn.type,
+      name: sn.name,
+      url: sn.url,
+    })),
   };
 }
 

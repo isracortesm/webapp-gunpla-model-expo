@@ -25,6 +25,7 @@ export interface EventEntity {
   endDate: string;
   image?: MediaEntity;
   category?: CategoryEntity;
+  socialNetworks?: SocialNetworkItem[];
 }
 
 export interface NewsEntity {
@@ -48,4 +49,11 @@ export interface ActivityEntity {
   endDate: string;
   image?: MediaEntity;
   category?: CategoryEntity;
+}
+
+export interface SocialNetworkItem {
+  id: number;
+  type: string;
+  name: string;
+  url: string;
 }
