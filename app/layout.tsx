@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./css/globals.css";
 import FloatingToolbar from "@/components/ui/toolbar/FloatingToolbar";
-import MainEventCard from "@/components/ui/cards/MainEventCard";
 import Footer from "@/components/ui/footer/Footer";
 
 const geistSans = Geist({
@@ -31,18 +30,6 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col text-white-site">
         <FloatingToolbar />
-        <MainEventCard
-          title="Event Title"
-          subtitle="Event Subtitle"
-          imageUrl="https://static.wikia.nocookie.net/philippinetelevision/images/c/ce/16x9_by_Pengo.svg.png/revision/latest?cb=20241119234704"
-          category="Category Name"
-          isPaid={true}
-          description="# Description\nSome **markdown** text."
-          socialNetworks={[
-            { type: "facebook", name: "Facebook", url: "https://www.facebook.com/GundamMexico/" },
-            { type: "web", name: "Website", url: "https://hobbymk.com/" },
-          ]}
-        />
         <main className="flex-1">{children}</main>
         <Footer socialNetworks={[{ 
             type: "facebook", 
