@@ -1,7 +1,7 @@
 import Image from "next/image";
 import ReactMarkdown from "react-markdown";
 import "./MainEventCard.css";
-import { SocialNetworkIcons, type SocialNetworkItem } from "../social-networks/SocialNetworkIcons";
+import { SocialNetworkIcons, type SocialNetworkItem } from "@/shared/components/ui/social-networks/SocialNetworkIcons";
 
 interface EventCardProps {
   title: string;
