@@ -36,43 +36,6 @@ Defines framework-specific guidelines.
 
 Defines typing standards and restrictions.
 
-### 6. API Rules
-
-* rules/04-api.md
-
-Defines API communication patterns.
-
-### 7. UI Rules
-
-* rules/05-ui.md
-
-Defines UI and component standards.
-
-### 8. Quality Rules
-
-* rules/06-quality.md
-
-Defines validation and completion requirements.
-
-### 9. Examples
-
-Review examples before generating new code:
-
-* examples/page-example.md
-* examples/component-example.md
-* examples/service-example.md
-* examples/mapper-example.md
-
-## Priority
-
-When conflicts exist:
-
-1. 00-project-context.md
-2. 00-project-structure.md
-3. Architecture Rules
-4. Feature Rules
-5. Examples
-
 ## Important
 
 Do not create new architectural patterns unless explicitly requested.
