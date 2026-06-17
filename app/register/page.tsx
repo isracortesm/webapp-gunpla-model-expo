@@ -4,6 +4,7 @@ import { useState, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { registerUser } from '@/features/auth/service/auth-service';
 import { useAuthWithStorage } from '@/features/auth/context/auth-provider';
+import '@/app/register/register.css';
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -36,17 +37,17 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-900">
-      <form onSubmit={handleSubmit} className="w-full max-w-md p-8 space-y-4 bg-white rounded-lg shadow-xl text-black-site">
-        <h1 className="text-2xl font-bold mb-6">Register</h1>
+    <div className="register-page">
+      <form onSubmit={handleSubmit} className="register-form">
+        <h1 className="register-title">Register</h1>
 
         {error && (
-          <div className="p-3 mb-4 bg-red-500 text-white rounded-md" role="alert">
+          <div className="error-alert" role="alert">
             {error}
           </div>
         )}
 
-        <label htmlFor="username" className="block font-semibold mb-2">Username</label>
+        <label htmlFor="username" className="input-label">Username</label>
         <input
           id="username"
           type="text"
@@ -54,10 +55,10 @@ export default function RegisterPage() {
           onChange={(e) => setUsername(e.target.value)}
           required
           placeholder="Enter username"
-          className="w-full p-3 border rounded-md focus:outline-none focus:ring-blue-500 mb-4"
+          className="text-input"
         />
 
-        <label htmlFor="email" className="block font-semibold mb-2">Email</label>
+        <label htmlFor="email" className="input-label">Email</label>
         <input
           id="email"
           type="email"
@@ -65,10 +66,10 @@ export default function RegisterPage() {
           onChange={(e) => setEmail(e.target.value)}
           required
           placeholder="Enter email"
-          className="w-full p-3 border rounded-md focus:outline-none focus:ring-blue-500 mb-4"
+          className="text-input"
         />
 
-        <label htmlFor="password" className="block font-semibold mb-2">Password</label>
+        <label htmlFor="password" className="input-label">Password</label>
         <input
           id="password"
           type="password"
@@ -76,19 +77,19 @@ export default function RegisterPage() {
           onChange={(e) => setPassword(e.target.value)}
           required
           placeholder="Enter password"
-          className="w-full p-3 border rounded-md focus:outline-none focus:ring-blue-500 mb-6"
+          className="password-input"
         />
 
         <button
           type="submit"
           disabled={loading}
-          className="w-full py-3 bg-black text-white font-bold rounded-md hover:bg-gray-800 transition-colors duration-200">
+          className="register-button">
           {loading ? 'Registering...' : 'Register'}
         </button>
 
-        <p className="text-center mt-4 text-sm">
+        <p className="login-link-text">
           Already have an account?{' '}
-          <a href="/login" className="underline hover:text-blue-600 transition-colors duration-200">Login</a>
+          <a href="/login" className="login-link">Login</a>
         </p>
       </form>
     </div>
