@@ -1,3 +1,6 @@
+import debug from 'debug';
+
+const httpDebug = debug('http-client');
 const BASE_URL = process.env.BASE_URL || '';
 
 export class HttpService {
@@ -27,7 +30,11 @@ export class HttpService {
       url += `?${queryStringParts.join('&')}`;
     }
 
+    httpDebug(`GET ${url}`);
+    const startTime = Date.now();
     const response = await fetch(url);
+    const elapsed = Date.now() - startTime;
+    httpDebug(`${response.status} (${elapsed}ms)`);
 
     if (!response.ok) {
       let errorMessage: string;
@@ -48,6 +55,8 @@ export class HttpService {
   async post<T>(endpoint: string, body: Record<string, unknown>): Promise<T> {
     const url = `${this.baseUrl}${endpoint}`;
 
+    httpDebug(`POST ${url} - ${JSON.stringify(body)}`);
+    const startTime = Date.now();
     const response = await fetch(url, {
       method: 'POST',
       headers: {
@@ -55,6 +64,8 @@ export class HttpService {
       },
       body: JSON.stringify(body),
     });
+    const elapsed = Date.now() - startTime;
+    httpDebug(`${response.status} (${elapsed}ms)`);
 
     if (!response.ok) {
       let errorMessage: string;
