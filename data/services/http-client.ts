@@ -44,4 +44,31 @@ export class HttpService {
 
     return response.json() as Promise<T>;
   }
+
+  async post<T>(endpoint: string, body: Record<string, unknown>): Promise<T> {
+    const url = `${this.baseUrl}${endpoint}`;
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    });
+
+    if (!response.ok) {
+      let errorMessage: string;
+
+      try {
+        const errorBody = await response.json();
+        errorMessage = errorBody.message || `HTTP ${response.status}: ${response.statusText}`;
+      } catch {
+        errorMessage = `HTTP ${response.status}: ${response.statusText}`;
+      }
+
+      throw new Error(errorMessage);
+    }
+
+    return response.json() as Promise<T>;
+  }
 }
