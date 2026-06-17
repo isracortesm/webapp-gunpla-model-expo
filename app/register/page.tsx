@@ -24,7 +24,7 @@ export default function RegisterPage() {
     try {
       const response = await registerUser(username, email, password);
       login(response.user);
-      router.push('/');
+      router.push('/register/success');
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);
