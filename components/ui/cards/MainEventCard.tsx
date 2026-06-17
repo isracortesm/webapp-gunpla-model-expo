@@ -2,47 +2,44 @@ import Image from "next/image";
 import ReactMarkdown from "react-markdown";
 import "./MainEventCard.css";
 import { SocialNetworkIcons, type SocialNetworkItem } from "@/shared/components/ui/social-networks/SocialNetworkIcons";
+import { EventEntity } from "@/domain/entities/event-dashboard/entity";
 
-interface EventCardProps {
-  title: string;
-  subtitle: string;
-  imageUrl: string;
-  category: string;
-  isPaid: boolean;
-  description: string;
+interface MainEventCardProps {
+  event: EventEntity;
   socialNetworks?: SocialNetworkItem[];
 }
 
-export default function MainEventCard({
-  title,
-  subtitle,
-  imageUrl,
-  category,
-  isPaid,
-  description,
-  socialNetworks,
-}: EventCardProps) {
+export default function MainEventCard({ event, socialNetworks }: MainEventCardProps) {
+  const imageUrl = event.image?.url || "";
+  const category = event.category?.name || "Uncategorized";
+  const isPaid = event.costType === 'paid';
+  const subtitle = event.shortDescription;
+
   return (
     <div className="event-card">
       {/* Image Container with Aspect Ratio */}
       <div className="event-card-image-container">
-        <Image
-          src={imageUrl}
-          alt={title}
-          fill
-          className="object-cover"
-          priority
-        />
+        {imageUrl && (
+          <>
+            <Image
+              src={imageUrl}
+              alt={event.name}
+              fill
+              className="object-cover"
+              priority
+            />
 
-        {/* Gradient Overlay - Transparent to White from bottom */}
-        <div className="event-card-gradient-overlay" />
+            {/* Gradient Overlay - Transparent to White from bottom */}
+            <div className="event-card-gradient-overlay" />
+          </>
+        )}
       </div>
 
       {/* Content Section */}
       <div className="event-card-content">
         {/* Title and Chips Row */}
         <div className="event-card-title-row">
-          <h2 className="event-card-title">{title}</h2>
+          <h2 className="event-card-title">{event.name}</h2>
 
           {/* Chips */}
           <div className="event-card-chips-container">
@@ -82,7 +79,7 @@ export default function MainEventCard({
               ),
             }}
           >
-            {description}
+            {event.description}
           </ReactMarkdown>
         </div>
 
