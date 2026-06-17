@@ -13,7 +13,7 @@ export class EventDashboardRepositoryImpl implements EventDashboardRepository {
   async getEventByCode(eventCode: string): Promise<EventEntity> {
     const response = await this.httpService.get<{ data: any }>('/api/events', {
       'filters[eventId][$eq]': eventCode,
-      populate: 'image,category',
+      populate: ['image', 'category'],
     });
 
     if (!response.data || response.data.length === 0) {
@@ -26,7 +26,7 @@ export class EventDashboardRepositoryImpl implements EventDashboardRepository {
   async getNewsByEvent(eventId: number): Promise<NewsEntity[]> {
     const response = await this.httpService.get<{ data: any }>('/api/news', {
       'filters[event][$eq]': String(eventId),
-      populate: 'thumbnail',
+      populate: ['thumbnail'],
     });
 
     return response.data.map(mapNewsDtoToEntity);
@@ -35,7 +35,7 @@ export class EventDashboardRepositoryImpl implements EventDashboardRepository {
   async getActivitiesByEvent(eventId: number): Promise<ActivityEntity[]> {
     const response = await this.httpService.get<{ data: any }>('/api/activities', {
       'filters[event][$eq]': String(eventId),
-      populate: 'image,category',
+      populate: ['image', 'category'],
     });
 
     return response.data.map(mapActivityDtoToEntity);

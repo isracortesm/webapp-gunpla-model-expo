@@ -7,16 +7,27 @@ export class HttpService {
     this.baseUrl = baseUrl;
   }
 
-  async get<T>(endpoint: string, params?: Record<string, string>): Promise<T> {
-    const url = new URL(`${this.baseUrl}${endpoint}`, 'https://base');
+  async get<T>(endpoint: string, params?: Record<string, string | string[]>): Promise<T> {
+    let url = `${this.baseUrl}${endpoint}`;
     
-    if (params) {
-      Object.entries(params).forEach(([key, value]) => {
-        url.searchParams.append(key, value);
-      });
+    if (params && Object.keys(params).length > 0) {
+      const queryStringParts: string[] = [];
+      
+      for (const [key, value] of Object.entries(params)) {
+        if (Array.isArray(value)) {
+          // Strapi v4 expects multiple params for arrays (e.g., populate=image&populate=category)
+          for (const item of value) {
+            queryStringParts.push(`${key}=${encodeURIComponent(item)}`);
+          }
+        } else {
+          queryStringParts.push(`${key}=${encodeURIComponent(value)}`);
+        }
+      }
+      
+      url += `?${queryStringParts.join('&')}`;
     }
 
-    const response = await fetch(url.toString());
+    const response = await fetch(url);
 
     if (!response.ok) {
       let errorMessage: string;

@@ -1,73 +1,131 @@
 import { MediaEntity, CategoryEntity, EventEntity, NewsEntity, ActivityEntity } from '../../../domain/entities/event-dashboard/entity';
-import { MediaDto, CategoryDto, EventDto, NewsDto, ActivityDto } from '../../../data/dtos/event-dashboard/dto';
 
-export function mapMediaDtoToEntity(dto: MediaDto): MediaEntity {
-  const thumbnailUrl = dto.attributes.formats?.thumbnail?.url;
-  
+// Strapi v4 response types (flat structure without attributes wrapper)
+interface StrapiMediaResponse {
+  id: number;
+  url: string;
+  thumbnailUrl?: string;
+  width?: number;
+  height?: number;
+  formats?: {
+    thumbnail?: {
+      url: string;
+      width?: number;
+      height?: number;
+    };
+  };
+}
+
+interface StrapiCategoryResponse {
+  id: number;
+  name: string;
+  description: string;
+}
+
+interface StrapiEventResponse {
+  id: number;
+  eventId: string;
+  name: string;
+  shortDescription: string;
+  description: string;
+  costType: 'free' | 'paid';
+  cost: number | null;
+  startDate: string;
+  endDate: string;
+  image?: StrapiMediaResponse;
+  category?: StrapiCategoryResponse;
+}
+
+interface StrapiNewsResponse {
+  id: number;
+  title: string;
+  subtitle: string;
+  content: string;
+  order: number;
+  publishedAt: string;
+  thumbnail?: StrapiMediaResponse;
+}
+
+interface StrapiActivityResponse {
+  id: number;
+  name: string;
+  shortDescription: string;
+  description: string;
+  costType: 'free' | 'paid';
+  cost: number | null;
+  startDate: string;
+  endDate: string;
+  image?: StrapiMediaResponse;
+  category?: StrapiCategoryResponse;
+}
+
+export function mapStrapiMediaToEntity(dto: StrapiMediaResponse): MediaEntity {
+  const thumbnailUrl = dto.formats?.thumbnail?.url || dto.thumbnailUrl;
+
   return {
     id: dto.id,
-    name: dto.attributes.name,
-    url: dto.attributes.url,
+    name: '', // API doesn't provide name for nested images
+    url: dto.url,
     thumbnailUrl,
-    width: dto.attributes.width,
-    height: dto.attributes.height,
+    width: dto.width,
+    height: dto.height,
   };
 }
 
-export function mapCategoryDtoToEntity(dto: CategoryDto): CategoryEntity {
+export function mapStrapiCategoryToEntity(dto: StrapiCategoryResponse): CategoryEntity {
   return {
     id: dto.id,
-    name: dto.attributes.name,
-    description: dto.attributes.description,
+    name: dto.name,
+    description: dto.description,
   };
 }
 
-export function mapEventDtoToEntity(dto: EventDto): EventEntity {
-  const image = dto.attributes.image ? mapMediaDtoToEntity(dto.attributes.image) : undefined;
-  const category = dto.attributes.category ? mapCategoryDtoToEntity(dto.attributes.category) : undefined;
+export function mapEventDtoToEntity(dto: StrapiEventResponse): EventEntity {
+  const image = dto.image ? mapStrapiMediaToEntity(dto.image) : undefined;
+  const category = dto.category ? mapStrapiCategoryToEntity(dto.category) : undefined;
 
   return {
     id: dto.id,
-    eventId: dto.attributes.eventId,
-    name: dto.attributes.name,
-    shortDescription: dto.attributes.shortDescription,
-    description: dto.attributes.description,
-    costType: dto.attributes.costType,
-    cost: dto.attributes.cost,
-    startDate: dto.attributes.startDate,
-    endDate: dto.attributes.endDate,
+    eventId: dto.eventId,
+    name: dto.name,
+    shortDescription: dto.shortDescription,
+    description: dto.description,
+    costType: dto.costType,
+    cost: dto.cost,
+    startDate: dto.startDate,
+    endDate: dto.endDate,
     image,
     category,
   };
 }
 
-export function mapNewsDtoToEntity(dto: NewsDto): NewsEntity {
-  const thumbnail = dto.attributes.thumbnail ? mapMediaDtoToEntity(dto.attributes.thumbnail) : undefined;
+export function mapNewsDtoToEntity(dto: StrapiNewsResponse): NewsEntity {
+  const thumbnail = dto.thumbnail ? mapStrapiMediaToEntity(dto.thumbnail) : undefined;
 
   return {
     id: dto.id,
-    title: dto.attributes.title,
-    subtitle: dto.attributes.subtitle,
-    content: dto.attributes.content,
-    order: dto.attributes.order,
-    publishedAt: dto.attributes.publishedAt,
+    title: dto.title,
+    subtitle: dto.subtitle,
+    content: dto.content,
+    order: dto.order,
+    publishedAt: dto.publishedAt,
     thumbnail,
   };
 }
 
-export function mapActivityDtoToEntity(dto: ActivityDto): ActivityEntity {
-  const image = dto.attributes.image ? mapMediaDtoToEntity(dto.attributes.image) : undefined;
-  const category = dto.attributes.category ? mapCategoryDtoToEntity(dto.attributes.category) : undefined;
+export function mapActivityDtoToEntity(dto: StrapiActivityResponse): ActivityEntity {
+  const image = dto.image ? mapStrapiMediaToEntity(dto.image) : undefined;
+  const category = dto.category ? mapStrapiCategoryToEntity(dto.category) : undefined;
 
   return {
     id: dto.id,
-    name: dto.attributes.name,
-    shortDescription: dto.attributes.shortDescription,
-    description: dto.attributes.description,
-    costType: dto.attributes.costType,
-    cost: dto.attributes.cost,
-    startDate: dto.attributes.startDate,
-    endDate: dto.attributes.endDate,
+    name: dto.name,
+    shortDescription: dto.shortDescription,
+    description: dto.description,
+    costType: dto.costType,
+    cost: dto.cost,
+    startDate: dto.startDate,
+    endDate: dto.endDate,
     image,
     category,
   };
