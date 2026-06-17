@@ -1,12 +1,7 @@
-import { EventEntity, NewsEntity, ActivityEntity } from '../types/entity';
-import { HttpService } from '../services/http-client';
-import { mapEventDtoToEntity, mapNewsDtoToEntity, mapActivityDtoToEntity } from '../mappers/mapper';
-
-export interface EventDashboardRepository {
-  getEventByCode(eventCode: string): Promise<EventEntity>;
-  getNewsByEvent(eventId: number): Promise<NewsEntity[]>;
-  getActivitiesByEvent(eventId: number): Promise<ActivityEntity[]>;
-}
+import { EventEntity, NewsEntity, ActivityEntity } from '../../../domain/entities/event-dashboard/entity';
+import { EventDashboardRepository } from '../../../domain/repositories/event-dashboard/event-dashboard-repository';
+import { HttpService } from '../../services/http-client';
+import { mapEventDtoToEntity, mapNewsDtoToEntity, mapActivityDtoToEntity } from '../../mappers/event-dashboard/mapper';
 
 export class EventDashboardRepositoryImpl implements EventDashboardRepository {
   private httpService: HttpService;

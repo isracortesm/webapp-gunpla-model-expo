@@ -1,5 +1,5 @@
-import { ActivityEntity } from '../types/entity';
-import { EventDashboardRepository } from '../repositories/event-dashboard-repository';
+import { ActivityEntity } from '../../../domain/entities/event-dashboard/entity';
+import { EventDashboardRepository } from '../../../domain/repositories/event-dashboard/event-dashboard-repository';
 
 export class GetEventActivitiesUseCase {
   private repository: EventDashboardRepository;

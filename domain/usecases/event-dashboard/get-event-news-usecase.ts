@@ -1,5 +1,5 @@
-import { NewsEntity } from '../types/entity';
-import { EventDashboardRepository } from '../repositories/event-dashboard-repository';
+import { NewsEntity } from '../../../domain/entities/event-dashboard/entity';
+import { EventDashboardRepository } from '../../../domain/repositories/event-dashboard/event-dashboard-repository';
 
 export class GetEventNewsUseCase {
   private repository: EventDashboardRepository;

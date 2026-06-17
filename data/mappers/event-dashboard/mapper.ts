@@ -1,5 +1,5 @@
-import { MediaEntity, CategoryEntity, EventEntity, NewsEntity, ActivityEntity } from '../types/entity';
-import { MediaDto, CategoryDto, EventDto, NewsDto, ActivityDto } from '../types/dto';
+import { MediaEntity, CategoryEntity, EventEntity, NewsEntity, ActivityEntity } from '../../../domain/entities/event-dashboard/entity';
+import { MediaDto, CategoryDto, EventDto, NewsDto, ActivityDto } from '../../../data/dtos/event-dashboard/dto';
 
 export function mapMediaDtoToEntity(dto: MediaDto): MediaEntity {
   const thumbnailUrl = dto.attributes.formats?.thumbnail?.url;
