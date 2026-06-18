@@ -10,12 +10,41 @@ export class HttpService {
     this.baseUrl = baseUrl;
   }
 
+  /**
+   * Handles HTTP response parsing exactly once.
+   * Parses the body using clone().json() and reuses it for logging, error creation, and successful responses.
+   */
+  private async _handleResponse<T>(response: Response): Promise<T> {
+    let responseBody: unknown | undefined;
+
+    try {
+      responseBody = await response.clone().json();
+    } catch {
+      // ignore parse errors for non-JSON responses
+    }
+
+    logHttpResponse(
+      response.status,
+      Date.now() - ((response as Response & { _startTime?: number })._startTime ?? 0),
+      Object.fromEntries(response.headers.entries()),
+      responseBody,
+    );
+
+    if (!response.ok) {
+      const error = ApplicationError.fromResponse(response.status, responseBody);
+      logHttpError(error.status, error.message);
+      throw error;
+    }
+
+    return response.json() as Promise<T>;
+  }
+
   async get<T>(endpoint: string, params?: Record<string, string | string[]>): Promise<T> {
     let url = `${this.baseUrl}${endpoint}`;
-    
+
     if (params && Object.keys(params).length > 0) {
       const queryStringParts: string[] = [];
-      
+
       for (const [key, value] of Object.entries(params)) {
         if (Array.isArray(value)) {
           // Strapi v4 expects multiple params for arrays (e.g., populate=image&populate=category)
@@ -26,40 +55,16 @@ export class HttpService {
           queryStringParts.push(`${key}=${encodeURIComponent(value)}`);
         }
       }
-      
+
       url += `?${queryStringParts.join('&')}`;
     }
 
     logHttpRequest('GET', url, { 'Accept': 'application/json' });
     const startTime = Date.now();
     const response = await fetch(url);
-    const elapsed = Date.now() - startTime;
-    
-    let responseBody: unknown | undefined;
-    try {
-      responseBody = await response.clone().json();
-    } catch {
-      // ignore parse errors for non-JSON responses
-    }
-    
-    logHttpResponse(response.status, elapsed, Object.fromEntries(response.headers.entries()), responseBody);
+    (response as Response & { _startTime?: number })._startTime = startTime;
 
-    if (!response.ok) {
-      let errorMessage: string;
-      
-      try {
-        const errorBody = await response.json();
-        errorMessage = errorBody.message || `HTTP ${response.status}: ${response.statusText}`;
-      } catch {
-        errorMessage = `HTTP ${response.status}: ${response.statusText}`;
-      }
-
-      const error = ApplicationError.fromResponse(response.status, await response.clone().json());
-      logHttpError(error.status, error.message);
-      throw error;
-    }
-
-    return response.json() as Promise<T>;
+    return this._handleResponse<T>(response);
   }
 
   async post<T>(endpoint: string, body: Record<string, unknown>): Promise<T> {
@@ -74,33 +79,9 @@ export class HttpService {
       },
       body: JSON.stringify(body),
     });
-    const elapsed = Date.now() - startTime;
-    
-    let responseBody: unknown | undefined;
-    try {
-      responseBody = await response.clone().json();
-    } catch {
-      // ignore parse errors for non-JSON responses
-    }
-    
-    logHttpResponse(response.status, elapsed, Object.fromEntries(response.headers.entries()), responseBody);
+    (response as Response & { _startTime?: number })._startTime = startTime;
 
-    if (!response.ok) {
-      let errorMessage: string;
-
-      try {
-        const errorBody = await response.json();
-        errorMessage = errorBody.message || `HTTP ${response.status}: ${response.statusText}`;
-      } catch {
-        errorMessage = `HTTP ${response.status}: ${response.statusText}`;
-      }
-
-      const error = ApplicationError.fromResponse(response.status, await response.clone().json());
-      logHttpError(error.status, error.message);
-      throw error;
-    }
-
-    return response.json() as Promise<T>;
+    return this._handleResponse<T>(response);
   }
 
   async put<T>(endpoint: string, body: Record<string, unknown>): Promise<T> {
@@ -115,33 +96,9 @@ export class HttpService {
       },
       body: JSON.stringify(body),
     });
-    const elapsed = Date.now() - startTime;
+    (response as Response & { _startTime?: number })._startTime = startTime;
 
-    let responseBody: unknown | undefined;
-    try {
-      responseBody = await response.clone().json();
-    } catch {
-      // ignore parse errors for non-JSON responses
-    }
-
-    logHttpResponse(response.status, elapsed, Object.fromEntries(response.headers.entries()), responseBody);
-
-    if (!response.ok) {
-      let errorMessage: string;
-
-      try {
-        const errorBody = await response.json();
-        errorMessage = errorBody.message || `HTTP ${response.status}: ${response.statusText}`;
-      } catch {
-        errorMessage = `HTTP ${response.status}: ${response.statusText}`;
-      }
-
-      const error = ApplicationError.fromResponse(response.status, await response.clone().json());
-      logHttpError(error.status, error.message);
-      throw error;
-    }
-
-    return response.json() as Promise<T>;
+    return this._handleResponse<T>(response);
   }
 
   async delete<T>(endpoint: string): Promise<T> {
@@ -150,32 +107,8 @@ export class HttpService {
     logHttpRequest('DELETE', url, { 'Accept': 'application/json' });
     const startTime = Date.now();
     const response = await fetch(url);
-    const elapsed = Date.now() - startTime;
+    (response as Response & { _startTime?: number })._startTime = startTime;
 
-    let responseBody: unknown | undefined;
-    try {
-      responseBody = await response.clone().json();
-    } catch {
-      // ignore parse errors for non-JSON responses
-    }
-
-    logHttpResponse(response.status, elapsed, Object.fromEntries(response.headers.entries()), responseBody);
-
-    if (!response.ok) {
-      let errorMessage: string;
-
-      try {
-        const errorBody = await response.json();
-        errorMessage = errorBody.message || `HTTP ${response.status}: ${response.statusText}`;
-      } catch {
-        errorMessage = `HTTP ${response.status}: ${response.statusText}`;
-      }
-
-      const error = ApplicationError.fromResponse(response.status, await response.clone().json());
-      logHttpError(error.status, error.message);
-      throw error;
-    }
-
-    return response.json() as Promise<T>;
+    return this._handleResponse<T>(response);
   }
 }
