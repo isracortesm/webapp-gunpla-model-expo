@@ -5,23 +5,23 @@ import { useRouter } from 'next/navigation';
 import { registerUser } from '@/features/auth/service/auth-service';
 import { useAuthWithStorage } from '@/features/auth/context/auth-provider';
 import { useErrorDialog } from '@/features/error-dialog/context/error-dialog-provider';
+import { useLoadingDialog } from '@/features/loading-dialog/context/loading-dialog-provider';
 import '@/app/register/register.css';
 
 export default function RegisterPage() {
   const router = useRouter();
   const { login } = useAuthWithStorage();
   const { showError } = useErrorDialog();
+  const { showLoading, hideLoading } = useLoadingDialog();
   
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    setLoading(true);
-
     try {
+      showLoading('Registering...');
       const response = await registerUser(username, email, password);
       login(response.user);
       router.push('/register/success');
@@ -34,7 +34,7 @@ export default function RegisterPage() {
         showError('An unexpected error occurred.');
       }
     } finally {
-      setLoading(false);
+      hideLoading();
     }
   }
 
@@ -78,9 +78,9 @@ export default function RegisterPage() {
 
         <button
           type="submit"
-          disabled={loading}
+          disabled={!username || !email || !password}
           className="register-button">
-          {loading ? 'Registering...' : 'Register'}
+          Register
         </button>
 
         <p className="login-link-text">

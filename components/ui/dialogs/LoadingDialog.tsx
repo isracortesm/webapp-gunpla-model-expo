@@ -19,7 +19,7 @@ export default function LoadingDialog({ isOpen, message = 'Loading...' }: Loadin
           animationData={loadingAnimation}
           loop
           autoplay
-          style={{ width: '120px', height: '120px' }}
+          style={{ width: '250px', height: '150px' }}
         />
         {message && <p className="loading-dialog-message">{message}</p>}
       </div>

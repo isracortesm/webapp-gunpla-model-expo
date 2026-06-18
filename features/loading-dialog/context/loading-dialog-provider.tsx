@@ -31,7 +31,7 @@ interface LoadingDialogProviderProps {
 
 export function LoadingDialogProvider({ children }: LoadingDialogProviderProps) {
   const [state, setState] = useState<LoadingDialogState>({
-    message: 'Loading...',
+    message: '',
   });
 
   const showLoading = useCallback((message?: string) => {
@@ -42,7 +42,7 @@ export function LoadingDialogProvider({ children }: LoadingDialogProviderProps) 
 
   const hideLoading = useCallback(() => {
     setState({
-      message: 'Loading...',
+      message: '',
     });
   }, []);
 
