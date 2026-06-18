@@ -4,14 +4,12 @@ import { useState, useEffect } from 'react';
 import MainEventCard from "@/components/ui/cards/MainEventCard";
 import { EventEntity } from "@/domain/entities/event-dashboard/entity";
 import { getEvent } from "@/features/event-dashboard/service/event-dashboard-service";
-import { useLoadingDialog } from '@/features/loading-dialog/context/loading-dialog-provider';
-import { useErrorDialog } from '@/features/error-dialog/context/error-dialog-provider';
+import { useUnifiedDialog } from '@/features/dialogs/context/unified-dialog-provider';
 
 export default function Home() {
   const [event, setEvent] = useState<EventEntity | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const { showLoading, hideLoading } = useLoadingDialog();
-  const { showError } = useErrorDialog();
+  const { showLoading, hideLoading, showError } = useUnifiedDialog();
 
   useEffect(() => {
     async function fetchEvent() {

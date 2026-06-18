@@ -4,15 +4,13 @@ import { useState, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { registerUser } from '@/features/auth/service/auth-service';
 import { useAuthWithStorage } from '@/features/auth/context/auth-provider';
-import { useErrorDialog } from '@/features/error-dialog/context/error-dialog-provider';
-import { useLoadingDialog } from '@/features/loading-dialog/context/loading-dialog-provider';
+import { useUnifiedDialog } from '@/features/dialogs/context/unified-dialog-provider';
 import '@/app/register/register.css';
 
 export default function RegisterPage() {
   const router = useRouter();
   const { login } = useAuthWithStorage();
-  const { showError } = useErrorDialog();
-  const { showLoading, hideLoading } = useLoadingDialog();
+  const { showError, showLoading, hideLoading } = useUnifiedDialog();
   
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');

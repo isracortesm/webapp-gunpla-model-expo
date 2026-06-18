@@ -3,10 +3,13 @@
 import { useEffect } from 'react';
 import './ErrorDialog.css';
 
+type MessageType = 'error' | 'success' | 'info';
+
 interface ErrorDialogProps {
   isOpen: boolean;
   title?: string;
   message: string;
+  type?: MessageType;
   onClose: () => void;
 }
 
@@ -14,6 +17,7 @@ export default function ErrorDialog({
   isOpen,
   title = 'Error',
   message,
+  type = 'error',
   onClose,
 }: ErrorDialogProps) {
   useEffect(() => {
