@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { registerUser } from '@/features/auth/service/auth-service';
 import { useAuthWithStorage } from '@/features/auth/context/auth-provider';
 import { useUnifiedDialog } from '@/features/dialogs/context/unified-dialog-provider';
-import '@/app/register/register.css';
+import '@/app/auth/register/register.css';
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -22,7 +22,7 @@ export default function RegisterPage() {
       showLoading('Registering...');
       const response = await registerUser(username, email, password);
       login(response.user);
-      router.push('/register/success');
+      router.push('/auth/register/success');
     } catch (err: unknown) {
       if (err instanceof Error && 'status' in err) {
         showError(err.message);
@@ -83,7 +83,7 @@ export default function RegisterPage() {
 
         <p className="login-link-text">
           Already have an account?{' '}
-          <a href="/login" className="login-link">Login</a>
+          <a href="/auth/login" className="login-link">Login</a>
         </p>
       </form>
     </div>

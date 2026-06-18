@@ -71,10 +71,10 @@ export default function LoginPage() {
 
         <p className="register-link-text">
           Don't have an account?{' '}
-          <a href="/register" className="register-link">Register</a>
+          <a href="/auth/register" className="register-link">Register</a>
         </p>
 
-        <a href="/forgot-password" className="forgot-password-link">
+        <a href="/auth/forgot-password" className="forgot-password-link">
           Forgot password?
         </a>
       </form>

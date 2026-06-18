@@ -20,12 +20,12 @@ export default function FloatingToolbar() {
 
       <div className="flex items-center gap-2">
         {/* Register Button */}
-        <Link href="/register" className="floating-toolbar__register-btn">
+        <Link href="/auth/register" className="floating-toolbar__register-btn">
           Register
         </Link>
 
         {/* Login Button */}
-        <Link href="/login" className="floating-toolbar__login-btn">
+        <Link href="/auth/login" className="floating-toolbar__login-btn">
           Login
         </Link>
       </div>
