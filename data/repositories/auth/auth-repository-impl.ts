@@ -1,5 +1,5 @@
 import { AuthRepository } from '../../../domain/repositories/auth/auth-repository';
-import { AuthResponseEntity } from '../../../domain/entities/auth/entity';
+import { AuthResponseEntity, ResetPasswordRequestEntity } from '../../../domain/entities/auth/entity';
 import { HttpService } from '../../services/http-client';
 
 export class AuthRepositoryImpl implements AuthRepository {
@@ -24,5 +24,15 @@ export class AuthRepositoryImpl implements AuthRepository {
       identifier,
       password,
     });
+  }
+
+  async forgotPassword(email: string): Promise<void> {
+    console.log('AuthRepositoryImpl.forgotPassword');
+    await this.http.post('/api/auth/forgot-password', { email });
+  }
+
+  async resetPassword(request: ResetPasswordRequestEntity): Promise<AuthResponseEntity> {
+    console.log('AuthRepositoryImpl.resetPassword');
+    return this.http.post('/api/auth/reset-password', request as unknown as Record<string, unknown>);
   }
 }

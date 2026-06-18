@@ -16,3 +16,9 @@ export interface LoginRequestEntity {
   identifier: string;
   password: string;
 }
+
+export interface ResetPasswordRequestEntity {
+  password: string;
+  passwordConfirmation: string;
+  code: string;
+}
