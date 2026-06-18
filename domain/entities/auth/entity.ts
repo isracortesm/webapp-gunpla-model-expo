@@ -11,3 +11,8 @@ export interface AuthResponseEntity {
   jwt: string;
   user: UserEntity;
 }
+
+export interface LoginRequestEntity {
+  identifier: string;
+  password: string;
+}

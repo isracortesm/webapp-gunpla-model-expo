@@ -17,4 +17,12 @@ export class AuthRepositoryImpl implements AuthRepository {
       password,
     });
   }
+
+  async login(identifier: string, password: string): Promise<AuthResponseEntity> {
+    console.log('AuthRepositoryImpl.login');
+    return this.http.post('/api/auth/local', {
+      identifier,
+      password,
+    });
+  }
 }
