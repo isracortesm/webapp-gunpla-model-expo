@@ -13,6 +13,7 @@ export default function ResetPasswordPage() {
   
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [verificationCode, setVerificationCode] = useState('');
   const [success, setSuccess] = useState(false);
 
   async function handleSubmit(e: FormEvent) {
@@ -23,8 +24,7 @@ export default function ResetPasswordPage() {
     }
     try {
       showLoading('Resetting password...');
-      const code = searchParams.get('code') || '';
-      await resetPasswordUser(password, confirmPassword, code);
+      await resetPasswordUser(password, confirmPassword, verificationCode);
       setSuccess(true);
     } catch (err: unknown) {
       if (err instanceof Error && 'status' in err) {
@@ -44,6 +44,17 @@ export default function ResetPasswordPage() {
       {!success ? (
         <form onSubmit={handleSubmit} className="register-form">
           <h1 className="register-title">Reset Password</h1>
+
+          <label htmlFor="verificationCode" className="input-label">Verification Code</label>
+          <input
+            id="verificationCode"
+            type="text"
+            value={verificationCode}
+            onChange={(e) => setVerificationCode(e.target.value)}
+            required
+            placeholder="Enter verification code sent via email"
+            className="text-input"
+          />
 
           <label htmlFor="password" className="input-label">New Password</label>
           <input
@@ -69,7 +80,7 @@ export default function ResetPasswordPage() {
 
           <button
             type="submit"
-            disabled={!password || !confirmPassword}
+            disabled={!verificationCode || !password || !confirmPassword}
             className="register-button">
             Reset Password
           </button>

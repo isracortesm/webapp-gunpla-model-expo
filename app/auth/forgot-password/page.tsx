@@ -11,14 +11,13 @@ export default function ForgotPasswordPage() {
   const { showError, showLoading, hideLoading } = useUnifiedDialog();
   
   const [email, setEmail] = useState('');
-  const [sent, setSent] = useState(false);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     try {
       showLoading('Sending reset code...');
       await forgotPasswordUser(email);
-      setSent(true);
+      router.push('/auth/forgot-password/success');
     } catch (err: unknown) {
       if (err instanceof Error && 'status' in err) {
         showError(err.message);
@@ -34,8 +33,7 @@ export default function ForgotPasswordPage() {
 
   return (
     <div className="register-page">
-      {!sent ? (
-        <form onSubmit={handleSubmit} className="register-form">
+      <form onSubmit={handleSubmit} className="register-form">
           <h1 className="register-title">Forgot Password</h1>
 
           <label htmlFor="email" className="input-label">Email</label>
@@ -61,21 +59,6 @@ export default function ForgotPasswordPage() {
             <a href="/auth/login" className="login-link">Login</a>
           </p>
         </form>
-      ) : (
-        <div className="register-form">
-          <h1 className="register-title">Reset Code Sent</h1>
-
-          <p style={{ color: 'rgba(0, 0, 0, 0.5)', marginBottom: '24px' }}>
-            We've sent a reset code to your email address. Please check your inbox and click the link to reset your password.
-          </p>
-
-          <button
-            onClick={() => router.push('/auth/login')}
-            className="register-button">
-            Back to Login
-          </button>
-        </div>
-      )}
     </div>
   );
 }
