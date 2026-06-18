@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import MainEventCard from "@/components/ui/cards/MainEventCard";
+import FloatingToolbar from "@/components/ui/toolbar/FloatingToolbar";
 import { EventEntity } from "@/domain/entities/event-dashboard/entity";
 import { getEvent } from "@/features/event-dashboard/service/event-dashboard-service";
 import { useUnifiedDialog } from '@/features/dialogs/context/unified-dialog-provider';
@@ -45,6 +46,7 @@ export default function Home() {
 
   return (
     <div className="main-content">
+      <FloatingToolbar />
       <MainEventCard
         event={event}/>
     </div>

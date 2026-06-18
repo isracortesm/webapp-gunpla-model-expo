@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./css/globals.css";
-import FloatingToolbar from "@/components/ui/toolbar/FloatingToolbar";
 import Footer from "@/components/ui/footer/Footer";
 import { AuthProvider } from "@/features/auth/context/auth-provider";
 import { UnifiedDialogProvider } from "@/features/dialogs/context/unified-dialog-provider";
@@ -33,7 +32,6 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col text-white-site">
         <UnifiedDialogProvider>
           <AuthProvider>
-            <FloatingToolbar />
             <main className="flex-1">{children}</main>
             <Footer socialNetworks={[{
                 type: "facebook",
