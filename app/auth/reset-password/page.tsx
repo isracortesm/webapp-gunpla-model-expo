@@ -13,7 +13,7 @@ export default function ResetPasswordPage() {
   
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [verificationCode, setVerificationCode] = useState('');
+  const [verificationCode, setVerificationCode] = useState(() => searchParams.get('code') || '');
   const [success, setSuccess] = useState(false);
 
   async function handleSubmit(e: FormEvent) {

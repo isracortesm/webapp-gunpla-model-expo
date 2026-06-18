@@ -4,7 +4,7 @@ import { useState, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { forgotPasswordUser } from '@/features/auth/service/auth-service';
 import { useUnifiedDialog } from '@/features/dialogs/context/unified-dialog-provider';
-import '@/app/auth/register/register.css';
+import '@/app/auth/forgot-password/forgot-password.css';
 
 export default function ForgotPasswordPage() {
   const router = useRouter();
