@@ -1,5 +1,6 @@
-/* Event Card Component Styles */
+@reference "tailwindcss";
 
+/* Event Card Component Styles */
 .event-card {
   width: 100%;
   max-width: 900px;

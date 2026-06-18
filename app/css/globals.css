@@ -17,3 +17,11 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.main-content {
+  @apply
+    min-h-screen
+    flex items-center
+    justify-center;
+    background-color: var(--background);
+}
