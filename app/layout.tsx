@@ -4,6 +4,7 @@ import "./css/globals.css";
 import FloatingToolbar from "@/components/ui/toolbar/FloatingToolbar";
 import Footer from "@/components/ui/footer/Footer";
 import { AuthProvider } from "@/features/auth/context/auth-provider";
+import { ErrorDialogProvider } from "@/features/error-dialog/context/error-dialog-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,19 +31,21 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col text-white-site">
-        <AuthProvider>
-          <FloatingToolbar />
-          <main className="flex-1">{children}</main>
-          <Footer socialNetworks={[{
-              type: "facebook",
-              name: "Facebook",
-              url: "#"
-            },{
-              type: "web",
-              name: "Website",
-              url: "#"
-            }]} />
-        </AuthProvider>
+        <ErrorDialogProvider>
+          <AuthProvider>
+            <FloatingToolbar />
+            <main className="flex-1">{children}</main>
+            <Footer socialNetworks={[{
+                type: "facebook",
+                name: "Facebook",
+                url: "#"
+              },{
+                type: "web",
+                name: "Website",
+                url: "#"
+              }]} />
+          </AuthProvider>
+        </ErrorDialogProvider>
       </body>
     </html>
   );

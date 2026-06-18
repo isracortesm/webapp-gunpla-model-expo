@@ -4,21 +4,21 @@ import { useState, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { registerUser } from '@/features/auth/service/auth-service';
 import { useAuthWithStorage } from '@/features/auth/context/auth-provider';
+import { useErrorDialog } from '@/features/error-dialog/context/error-dialog-provider';
 import '@/app/register/register.css';
 
 export default function RegisterPage() {
   const router = useRouter();
   const { login } = useAuthWithStorage();
+  const { showError } = useErrorDialog();
   
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    setError(null);
     setLoading(true);
 
     try {
@@ -26,10 +26,12 @@ export default function RegisterPage() {
       login(response.user);
       router.push('/register/success');
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message);
+      if (err instanceof Error && 'status' in err) {
+        showError(err.message);
+      } else if (err instanceof Error) {
+        showError(err.message);
       } else {
-        setError('An unexpected error occurred.');
+        showError('An unexpected error occurred.');
       }
     } finally {
       setLoading(false);
@@ -40,12 +42,6 @@ export default function RegisterPage() {
     <div className="register-page">
       <form onSubmit={handleSubmit} className="register-form">
         <h1 className="register-title">Register</h1>
-
-        {error && (
-          <div className="error-alert" role="alert">
-            {error}
-          </div>
-        )}
 
         <label htmlFor="username" className="input-label">Username</label>
         <input

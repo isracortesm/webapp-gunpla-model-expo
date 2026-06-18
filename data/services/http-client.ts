@@ -1,4 +1,5 @@
 import { logHttpRequest, logHttpResponse, logHttpError } from '@/shared/utils/http-debug';
+import { ApplicationError } from '@/domain/entities/error/application-error';
 
 const HOST_URI = process.env.NEXT_PUBLIC_HOST_URI || '';
 
@@ -53,8 +54,9 @@ export class HttpService {
         errorMessage = `HTTP ${response.status}: ${response.statusText}`;
       }
 
-      logHttpError(response.status, errorMessage);
-      throw new Error(errorMessage);
+      const error = ApplicationError.fromResponse(response.status, await response.clone().json());
+      logHttpError(error.status, error.message);
+      throw error;
     }
 
     return response.json() as Promise<T>;
@@ -93,8 +95,9 @@ export class HttpService {
         errorMessage = `HTTP ${response.status}: ${response.statusText}`;
       }
 
-      logHttpError(response.status, errorMessage);
-      throw new Error(errorMessage);
+      const error = ApplicationError.fromResponse(response.status, await response.clone().json());
+      logHttpError(error.status, error.message);
+      throw error;
     }
 
     return response.json() as Promise<T>;
@@ -133,8 +136,9 @@ export class HttpService {
         errorMessage = `HTTP ${response.status}: ${response.statusText}`;
       }
 
-      logHttpError(response.status, errorMessage);
-      throw new Error(errorMessage);
+      const error = ApplicationError.fromResponse(response.status, await response.clone().json());
+      logHttpError(error.status, error.message);
+      throw error;
     }
 
     return response.json() as Promise<T>;
@@ -167,8 +171,9 @@ export class HttpService {
         errorMessage = `HTTP ${response.status}: ${response.statusText}`;
       }
 
-      logHttpError(response.status, errorMessage);
-      throw new Error(errorMessage);
+      const error = ApplicationError.fromResponse(response.status, await response.clone().json());
+      logHttpError(error.status, error.message);
+      throw error;
     }
 
     return response.json() as Promise<T>;
