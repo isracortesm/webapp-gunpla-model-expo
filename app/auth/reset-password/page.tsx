@@ -4,7 +4,7 @@ import { useState, FormEvent } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { resetPasswordUser } from '@/features/auth/service/auth-service';
 import { useUnifiedDialog } from '@/features/dialogs/context/unified-dialog-provider';
-import '@/app/auth/register/register.css';
+import '@/app/auth/reset-password/reset-password.css';
 
 export default function ResetPasswordPage() {
   const router = useRouter();
@@ -83,7 +83,7 @@ export default function ResetPasswordPage() {
         <div className="register-form">
           <h1 className="register-title">Password Reset Successful</h1>
 
-          <p style={{ color: 'rgba(0, 0, 0, 0.5)', marginBottom: '24px' }}>
+          <p className="success-message">
             Your password has been reset successfully. You can now login with your new password.
           </p>
 

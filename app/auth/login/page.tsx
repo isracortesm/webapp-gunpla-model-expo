@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { loginUser } from '@/features/auth/service/auth-service';
 import { useAuthWithStorage } from '@/features/auth/context/auth-provider';
 import { useUnifiedDialog } from '@/features/dialogs/context/unified-dialog-provider';
-import '@/app/login/login.css';
+import '@/app/auth/login/login.css';
 
 export default function LoginPage() {
   const router = useRouter();
