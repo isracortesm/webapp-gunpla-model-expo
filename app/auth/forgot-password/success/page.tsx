@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import '@/app/auth/forgot-password/success/success.css';
+import '@/app/css/success-screen.css';
 
 export default function ForgotPasswordSuccessPage() {
   const router = useRouter();
