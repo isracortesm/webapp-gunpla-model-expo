@@ -36,5 +36,5 @@ export function logHttpResponse(status: number, elapsedMs: number, headers?: Rec
 export function logHttpError(status: number, errorMessage: string): void {
   if (!isDebugEnabled) return;
 
-  console.error(`%cHTTP ${status} Error`, 'color: red; font-weight: bold;', errorMessage);
+  console.log(`%cHTTP ${status} Error`, 'color: red; font-weight: bold;', errorMessage);
 }
