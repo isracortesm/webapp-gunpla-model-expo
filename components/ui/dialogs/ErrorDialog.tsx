@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import './ErrorDialog.css';
 
 interface ErrorDialogProps {
   isOpen: boolean;

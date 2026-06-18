@@ -1,7 +1,8 @@
 'use client';
 
 import { createContext, useContext, useState, useCallback } from 'react';
-import Toast from './../../../components/ui/dialogs/Toast';
+import ErrorDialog from './../../../components/ui/dialogs/ErrorDialog';
+import '@/components/ui/dialogs/ErrorDialog.css';
 
 interface ErrorDialogState {
   message: string;
@@ -57,10 +58,11 @@ export function ErrorDialogProvider({ children }: ErrorDialogProviderProps) {
   return (
     <ErrorDialogContext.Provider value={{ showError, showSuccess, hideError }}>
       {children}
-      {state.message && (
-        <Toast
+      {state.message && state.type === 'error' && (
+        <ErrorDialog
+          isOpen={!!state.message}
+          title="Error"
           message={state.message}
-          type={state.type || 'error'}
           onClose={hideError}
         />
       )}
