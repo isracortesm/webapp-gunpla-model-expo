@@ -63,10 +63,10 @@
 }
 
 .confirmation-dialog-button.confirm {
-  background-color: #dc3c37;
+  background-color: black;
   color: white;
 }
 
 .confirmation-dialog-button.confirm:hover {
-  background-color: rgba(220, 60, 59, 0.8);
+  background-color: rgba(0, 0, 0, 0.5);
 }
