@@ -8,11 +8,6 @@ import { HttpService } from '@/data/services/http-client';
 
 const httpService = new HttpService();
 const repository = new AuthRepositoryImpl(httpService);
-const registerUseCase = new RegisterUseCase(repository);
-const loginUseCase = new LoginUseCase(repository);
-const forgotPasswordUseCase = new ForgotPasswordUseCase(repository);
-const resetPasswordUseCase = new ResetPasswordUseCase(repository);
-const getCurrentUserUseCase = new GetCurrentUserServiceCase(repository);
 
 export class AuthService {
   private registerUseCase: RegisterUseCase;
