@@ -1,0 +1,64 @@
+@reference "tailwindcss";
+
+.user-profile-dropdown__overlay {
+  @apply fixed inset-x-0 inset-y-0 z-40 bg-black/30;
+}
+
+.user-profile-dropdown__menu {
+  @apply
+    absolute
+    top-full
+    right-0
+    mt-2
+    w-[280px]
+    rounded-xl
+    overflow-hidden
+    shadow-lg
+    border
+    border-zinc-700/30;
+
+  max-width: calc(100vw - 2rem);
+}
+
+.user-profile-dropdown__header {
+  @apply flex items-center gap-3 p-4 bg-zinc-900/10;
+}
+
+.user-profile-dropdown__avatar {
+  @apply rounded-full ring-1 ring-zinc-600/50;
+}
+
+.user-profile-dropdown__info {
+  @apply flex flex-col min-w-0;
+}
+
+.user-profile-dropdown__username {
+  @apply text-sm font-semibold truncate;
+}
+
+.user-profile-dropdown__email {
+  @apply text-xs text-zinc-400 truncate;
+}
+
+.user-profile-dropdown__divider {
+  @apply border-t border-zinc-700/20 mx-0;
+}
+
+.user-profile-dropdown__menu-items {
+  @apply flex flex-col p-1;
+}
+
+.user-profile-dropdown__menu-item {
+  @apply 
+    w-full 
+    text-left 
+    px-3 
+    py-2 
+    rounded-lg 
+    transition-colors 
+    hover:bg-zinc-900/10;
+}
+
+.user-profile-dropdown__logout-btn {
+  @apply text-red-400 hover:text-red-500 hover:bg-red-900/10;
+}
