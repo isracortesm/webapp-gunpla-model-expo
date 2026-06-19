@@ -34,8 +34,22 @@ function clearStoredUser(): void {
   }
 }
 
+import { AuthService } from '@/features/auth/service/auth-service';
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = React.useState<UserEntity | null>(getStoredUser);
+  const authServiceRef = React.useRef<AuthService | null>(null);
+
+  // Initialize auth service on mount (client only)
+  React.useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
+    try {
+      authServiceRef.current = new AuthService();
+    } catch {
+      // ignore initialization errors
+    }
+  }, []);
 
   const login = React.useCallback((newUser: UserEntity) => {
     setUser(newUser);
@@ -47,9 +61,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     clearStoredUser();
   }, []);
 
+  const fetchCurrentUser = React.useCallback(async () => {
+    if (!authServiceRef.current) return;
+    
+    try {
+      const currentUser = await authServiceRef.current.getCurrentUser();
+      setUser(currentUser);
+      // Update stored user with fresh data (including profileImage, socialNetworks)
+      storeUser(currentUser);
+    } catch {
+      // ignore errors - don't clear user state on fetch failure
+    }
+  }, []);
+
   const value = React.useMemo(
-    () => ({ user, isAuthenticated: !!user, login, logout }),
-    [user, login, logout],
+    () => ({ user, isAuthenticated: !!user, login, logout, fetchCurrentUser }),
+    [user, login, logout, fetchCurrentUser],
   );
 
   return (

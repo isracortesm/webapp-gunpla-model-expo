@@ -35,4 +35,14 @@ export class AuthRepositoryImpl implements AuthRepository {
     console.log('AuthRepositoryImpl.resetPassword');
     return this.http.post('/api/auth/reset-password', request as unknown as Record<string, unknown>);
   }
+
+  async getCurrentUser(): Promise<AuthResponseEntity['user']> {
+    console.log('AuthRepositoryImpl.getCurrentUser');
+    const response = await this.http.get<{ user: AuthResponseEntity['user'] }>('/api/users/me', {
+      populate: ['profileImage', 'socialNetworks']
+      //'populate[profileImage]': 'true',
+      //'populate[socialNetworks]': 'true',
+    });
+    return response.user;
+  }
 }

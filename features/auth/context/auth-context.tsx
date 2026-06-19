@@ -8,6 +8,7 @@ interface AuthContextValue {
   isAuthenticated: boolean;
   login: (user: UserEntity) => void;
   logout: () => void;
+  fetchCurrentUser: () => Promise<void>;
 }
 
 export const AuthContext = React.createContext<AuthContextValue>({
@@ -15,6 +16,7 @@ export const AuthContext = React.createContext<AuthContextValue>({
   isAuthenticated: false,
   login: () => {},
   logout: () => {},
+  fetchCurrentUser: async () => {},
 });
 
 export function useAuth() {

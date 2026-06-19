@@ -1,10 +1,16 @@
+import type { MediaEntity, SocialNetworkItem } from '../event-dashboard/entity';
+
 export interface UserEntity {
   id: number;
+  documentId?: string;
   username: string;
   email: string;
   provider: string;
+  aboutMe?: string;
+  profileImage?: MediaEntity | null;
   confirmed: boolean;
   blocked: boolean;
+  socialNetworks?: SocialNetworkItem[];
 }
 
 export interface AuthResponseEntity {

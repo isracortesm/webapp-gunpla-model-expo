@@ -1,10 +1,18 @@
+import React from 'react';
 import Image from "next/image";
 import Link from "next/link";
 import { useAuth } from "@/features/auth/context/auth-context";
 import "./FloatingToolbar.css";
 
 export default function FloatingToolbar() {
-  const { user, isAuthenticated, logout } = useAuth();
+  const { user, isAuthenticated, logout, fetchCurrentUser } = useAuth();
+
+  // Fetch current user on mount (async, no loader)
+  React.useEffect(() => {
+    if (isAuthenticated && !user?.profileImage) {
+      void fetchCurrentUser();
+    }
+  }, [isAuthenticated, user?.profileImage, fetchCurrentUser]);
 
   return (
     <div className="floating-toolbar">
@@ -13,7 +21,7 @@ export default function FloatingToolbar() {
         {isAuthenticated && user ? (
           <Link href="/profile" aria-label="Profile">
             <Image
-              src="/globe.svg"
+              src={user.profileImage?.thumbnailUrl || user.profileImage?.url || '/globe.svg'}
               alt={`${user.username}'s avatar`}
               width={28}
               height={28}
