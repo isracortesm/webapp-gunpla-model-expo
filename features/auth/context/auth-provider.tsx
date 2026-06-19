@@ -84,9 +84,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const login = React.useCallback((newUser: UserEntity, jwt?: string) => {
-    setUser(newUser)
-    if (jwt) 
-      storeToken(jwt);
+    setUser(newUser);
+    if (jwt) storeToken(jwt);
+    setIsAuthReady(true); // Set isAuthReady to true after successful authentication
   }, []);
 
   const logout = React.useCallback(() => {

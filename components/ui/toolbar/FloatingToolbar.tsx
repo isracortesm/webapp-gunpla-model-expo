@@ -1,23 +1,10 @@
-import React from 'react';
 import Image from "next/image";
 import Link from "next/link";
 import { useAuth } from "@/features/auth/context/auth-context";
 import "./FloatingToolbar.css";
 
 export default function FloatingToolbar() {
-  const { user, isAuthenticated, logout, fetchCurrentUser } = useAuth();
-
-  // Fetch current user on mount (async, no loader)
-  // Fetch current user on mount (async, no loader).
-  // Only trigger once when authenticated and profile image is missing.
-  const hasFetchedRef = React.useRef(false);
-
-  React.useEffect(() => {
-    if (isAuthenticated && !user?.profileImage && !hasFetchedRef.current) {
-      hasFetchedRef.current = true;
-      void fetchCurrentUser();
-    }
-  }, [isAuthenticated, user?.profileImage]);
+  const { user, isAuthenticated, logout } = useAuth();
 
   return (
     <div className="floating-toolbar">
