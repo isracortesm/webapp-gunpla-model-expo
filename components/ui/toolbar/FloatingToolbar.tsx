@@ -8,11 +8,16 @@ export default function FloatingToolbar() {
   const { user, isAuthenticated, logout, fetchCurrentUser } = useAuth();
 
   // Fetch current user on mount (async, no loader)
+  // Fetch current user on mount (async, no loader).
+  // Only trigger once when authenticated and profile image is missing.
+  const hasFetchedRef = React.useRef(false);
+
   React.useEffect(() => {
-    if (isAuthenticated && !user?.profileImage) {
+    if (isAuthenticated && !user?.profileImage && !hasFetchedRef.current) {
+      hasFetchedRef.current = true;
       void fetchCurrentUser();
     }
-  }, [isAuthenticated, user?.profileImage, fetchCurrentUser]);
+  }, [isAuthenticated, user?.profileImage]);
 
   return (
     <div className="floating-toolbar">

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import MainEventCard from "@/components/ui/cards/MainEventCard";
 import FloatingToolbar from "@/components/ui/toolbar/FloatingToolbar";
 import { EventEntity } from "@/domain/entities/event-dashboard/entity";
@@ -12,7 +12,13 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const { showLoading, hideLoading, showError } = useUnifiedDialog();
 
+  // Prevent duplicate fetches on React StrictMode double-invoke and navigation back to home.
+  const hasFetchedRef = useRef(false);
+
   useEffect(() => {
+    if (hasFetchedRef.current) return;
+    hasFetchedRef.current = true;
+
     async function fetchEvent() {
       try {
         showLoading('Loading event...');

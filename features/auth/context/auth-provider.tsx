@@ -62,10 +62,15 @@ function clearStoredUser(): void {
 import { AuthService } from '@/features/auth/service/auth-service';
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = React.useState<UserEntity | null>(getStoredUser);
+  // Use a ref to store the initial user value, computed once on mount.
+  // This avoids React StrictMode double-invoke issues where useState initializer runs twice.
+  const storedUserRef = React.useRef<UserEntity | null>(getStoredUser());
+  
+  const [user, setUser] = React.useState<UserEntity | null>(storedUserRef.current);
+  const [isAuthReady, setIsAuthReady] = React.useState(false);
   const authServiceRef = React.useRef<AuthService | null>(null);
 
-  // Initialize auth service on mount (client only)
+  // Initialize auth service and mark as ready on mount (client only)
   React.useEffect(() => {
     if (typeof window === 'undefined') return;
     
@@ -74,6 +79,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } catch {
       // ignore initialization errors
     }
+    
+    setIsAuthReady(true);
   }, []);
 
   const login = React.useCallback((newUser: UserEntity, jwt?: string) => {
@@ -91,6 +98,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (!authServiceRef.current) return;
     
     try {
+      console.log('AuthContext: fetching current user...');
       const currentUser = await authServiceRef.current.getCurrentUser();
       setUser(currentUser);
       // Update stored user with fresh data (including profileImage, socialNetworks)
@@ -101,8 +109,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const value = React.useMemo(
-    () => ({ user, isAuthenticated: !!user, login, logout, fetchCurrentUser }),
-    [user, login, logout, fetchCurrentUser],
+    () => ({
+      user,
+      isAuthenticated: !!user && isAuthReady,
+      isAuthReady,
+      login,
+      logout,
+      fetchCurrentUser
+    }),
+    [user, isAuthReady, login, logout, fetchCurrentUser],
   );
 
   return (
