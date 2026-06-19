@@ -5,7 +5,7 @@ import "./FloatingToolbar.css";
 
 export default function FloatingToolbar() {
   const { user, isAuthenticated, logout } = useAuth();
-
+  
   return (
     <div className="floating-toolbar">
       <div className="flex items-center gap-3">

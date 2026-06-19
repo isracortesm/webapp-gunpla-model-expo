@@ -1,5 +1,5 @@
 import { AuthRepository } from '../../../domain/repositories/auth/auth-repository';
-import { AuthResponseEntity, ResetPasswordRequestEntity } from '../../../domain/entities/auth/entity';
+import { UserEntity, AuthResponseEntity, ResetPasswordRequestEntity } from '../../../domain/entities/auth/entity';
 import { HttpService } from '../../services/http-client';
 
 export class AuthRepositoryImpl implements AuthRepository {
@@ -36,7 +36,7 @@ export class AuthRepositoryImpl implements AuthRepository {
     return this.http.post('/api/auth/reset-password', request as unknown as Record<string, unknown>);
   }
 
-  async getCurrentUser(): Promise<AuthResponseEntity['user']> {
+  async getCurrentUser(): Promise<UserEntity> {
     console.log('AuthRepositoryImpl.getCurrentUser');
     
     // Read stored JWT for authenticated requests (token is now a plain string)
@@ -54,10 +54,9 @@ export class AuthRepositoryImpl implements AuthRepository {
     // Create authenticated HTTP service with Bearer token
     const authHttpService = new HttpService(this.http['baseUrl'], token);
     
-    const response = await authHttpService.get<{ user: AuthResponseEntity['user'] }>('/api/users/me', {
+    return await authHttpService.get('/api/users/me', {
       populate: ['profileImage', 'socialNetworks'],
-    });
-    return response.user;
+    });;
   }
 
   async logout(): Promise<void> {

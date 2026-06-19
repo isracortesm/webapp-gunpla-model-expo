@@ -9,8 +9,7 @@ const AUTH_USER_KEY = 'auth_user';
 
 export function getStoredToken(): string | null {
   try {
-    const stored = localStorage.getItem(AUTH_TOKEN_KEY);
-    return stored || null;
+    return localStorage.getItem(AUTH_TOKEN_KEY);
   } catch {
     return null;
   }
@@ -19,8 +18,11 @@ export function getStoredToken(): string | null {
 function getStoredUser(): UserEntity | null {
   try {
     const stored = localStorage.getItem(AUTH_USER_KEY);
-    if (!stored) return null;
-    
+
+    if (!stored) {
+      return null;
+    }
+
     return JSON.parse(stored) as UserEntity;
   } catch {
     return null;
@@ -31,7 +33,7 @@ export function storeToken(jwt: string): void {
   try {
     localStorage.setItem(AUTH_TOKEN_KEY, jwt);
   } catch {
-    // ignore storage errors
+    // ignore
   }
 }
 
@@ -39,7 +41,7 @@ function clearStoredToken(): void {
   try {
     localStorage.removeItem(AUTH_TOKEN_KEY);
   } catch {
-    // ignore storage errors
+    // ignore
   }
 }
 
@@ -47,7 +49,7 @@ export function storeUser(user: UserEntity): void {
   try {
     localStorage.setItem(AUTH_USER_KEY, JSON.stringify(user));
   } catch {
-    // ignore storage errors
+    // ignore
   }
 }
 
@@ -55,47 +57,63 @@ function clearStoredUser(): void {
   try {
     localStorage.removeItem(AUTH_USER_KEY);
   } catch {
-    // ignore storage errors
+    // ignore
   }
 }
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
-  // Use a ref to store the initial user value, computed once on mount.
-  // This avoids React StrictMode double-invoke issues where useState initializer runs twice.
-  const storedUserRef = React.useRef<UserEntity | null>(getStoredUser());
-  
-  const [user, setUser] = React.useState<UserEntity | null>(storedUserRef.current);
+export function AuthProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const [user, setUser] = React.useState<UserEntity | null>(null);
   const [isAuthReady, setIsAuthReady] = React.useState(false);
 
+  React.useEffect(() => {
+    const storedUser = getStoredUser();
+
+    if (storedUser) {
+      setUser(storedUser);
+    }
+
+    setIsAuthReady(true);
+  }, []);
+
   const login = React.useCallback((jwt?: string) => {
-    if (jwt) storeToken(jwt);
+    if (jwt) {
+      storeToken(jwt);
+    }
   }, []);
 
   const logout = React.useCallback(() => {
     setUser(null);
+    setIsAuthReady(true);
+
     clearStoredToken();
     clearStoredUser();
   }, []);
 
-  const fetchCurrentUser = React.useCallback((currentUser: UserEntity) => {
-    console.log('AuthContext: store current user...');
+  const fetchCurrentUser = React.useCallback(
+    (currentUser: UserEntity) => {
+      console.log('getCurrentUser result', currentUser);
       setUser(currentUser);
       storeUser(currentUser);
       setIsAuthReady(true);
-  }, []);
+    },
+    [],
+  );
 
   const value = React.useMemo(
     () => ({
       user,
-      isAuthenticated: !!user && isAuthReady,
+      isAuthenticated: !!user,
       isAuthReady,
       login,
       logout,
-      fetchCurrentUser
+      fetchCurrentUser,
     }),
     [user, isAuthReady, login, logout, fetchCurrentUser],
   );
-
   return (
     <AuthContext.Provider value={value}>
       {children}
@@ -104,7 +122,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 }
 
 export function useAuthWithStorage() {
-  const { user, login, logout, fetchCurrentUser } = React.useContext(AuthContext);
+  const { user, login, logout, fetchCurrentUser } =
+    React.useContext(AuthContext);
 
-  return { user, login, logout, fetchCurrentUser };
+  return {
+    user,
+    login,
+    logout,
+    fetchCurrentUser,
+  };
 }
