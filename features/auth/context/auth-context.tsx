@@ -7,9 +7,9 @@ interface AuthContextValue {
   user: UserEntity | null;
   isAuthenticated: boolean;
   isAuthReady: boolean;
-  login: (user: UserEntity, jwt?: string) => void;
+  login: (jwt?: string) => void;
   logout: () => void;
-  fetchCurrentUser: () => Promise<void>;
+  fetchCurrentUser: (user: UserEntity) => void;
 }
 
 export const AuthContext = React.createContext<AuthContextValue>({

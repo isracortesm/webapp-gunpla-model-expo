@@ -3,13 +3,11 @@
 import { useState, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { registerUser } from '@/features/auth/service/auth-service';
-import { useAuthWithStorage } from '@/features/auth/context/auth-provider';
 import { useUnifiedDialog } from '@/features/dialogs/context/unified-dialog-provider';
 import '@/app/auth/register/register.css';
 
 export default function RegisterPage() {
   const router = useRouter();
-  const { login } = useAuthWithStorage();
   const { showError, showLoading, hideLoading } = useUnifiedDialog();
   
   const [username, setUsername] = useState('');
@@ -20,8 +18,7 @@ export default function RegisterPage() {
     e.preventDefault();
     try {
       showLoading('Registering...');
-      const response = await registerUser(username, email, password);
-      login(response.user);
+      await registerUser(username, email, password);
       router.push('/auth/register/success');
     } catch (err: unknown) {
       if (err instanceof Error && 'status' in err) {

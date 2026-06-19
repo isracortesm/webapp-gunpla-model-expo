@@ -59,8 +59,6 @@ function clearStoredUser(): void {
   }
 }
 
-import { AuthService } from '@/features/auth/service/auth-service';
-
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Use a ref to store the initial user value, computed once on mount.
   // This avoids React StrictMode double-invoke issues where useState initializer runs twice.
@@ -68,25 +66,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   
   const [user, setUser] = React.useState<UserEntity | null>(storedUserRef.current);
   const [isAuthReady, setIsAuthReady] = React.useState(false);
-  const authServiceRef = React.useRef<AuthService | null>(null);
 
-  // Initialize auth service and mark as ready on mount (client only)
-  React.useEffect(() => {
-    if (typeof window === 'undefined') return;
-    
-    try {
-      authServiceRef.current = new AuthService();
-    } catch {
-      // ignore initialization errors
-    }
-    
-    setIsAuthReady(true);
-  }, []);
-
-  const login = React.useCallback((newUser: UserEntity, jwt?: string) => {
-    setUser(newUser);
+  const login = React.useCallback((jwt?: string) => {
     if (jwt) storeToken(jwt);
-    setIsAuthReady(true); // Set isAuthReady to true after successful authentication
   }, []);
 
   const logout = React.useCallback(() => {
@@ -95,18 +77,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     clearStoredUser();
   }, []);
 
-  const fetchCurrentUser = React.useCallback(async () => {
-    if (!authServiceRef.current) return;
-    
-    try {
-      console.log('AuthContext: fetching current user...');
-      const currentUser = await authServiceRef.current.getCurrentUser();
+  const fetchCurrentUser = React.useCallback((currentUser: UserEntity) => {
+    console.log('AuthContext: store current user...');
       setUser(currentUser);
-      // Store only the user data (token is stored separately during login)
       storeUser(currentUser);
-    } catch {
-      // ignore errors - don't clear user state on fetch failure
-    }
+      setIsAuthReady(true);
   }, []);
 
   const value = React.useMemo(
