@@ -5,9 +5,11 @@ const HOST_URI = process.env.NEXT_PUBLIC_HOST_URI || '';
 
 export class HttpService {
   private baseUrl: string;
+  private token?: string;
 
-  constructor(baseUrl: string = HOST_URI) {
+  constructor(baseUrl: string = HOST_URI, token?: string) {
     this.baseUrl = baseUrl;
+    this.token = token;
   }
 
   /**
@@ -59,9 +61,14 @@ export class HttpService {
       url += `?${queryStringParts.join('&')}`;
     }
 
-    logHttpRequest('GET', url, { 'Accept': 'application/json' });
+    const headers: Record<string, string> = { 'Accept': 'application/json' };
+    if (this.token) {
+      headers['Authorization'] = `Bearer ${this.token}`;
+    }
+
+    logHttpRequest('GET', url, headers);
     const startTime = Date.now();
-    const response = await fetch(url);
+    const response = await fetch(url, { headers });
     (response as Response & { _startTime?: number })._startTime = startTime;
 
     return this._handleResponse<T>(response);
@@ -70,13 +77,16 @@ export class HttpService {
   async post<T>(endpoint: string, body: Record<string, unknown>): Promise<T> {
     const url = `${this.baseUrl}${endpoint}`;
 
-    logHttpRequest('POST', url, { 'Content-Type': 'application/json' }, body);
+    const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+    if (this.token) {
+      headers['Authorization'] = `Bearer ${this.token}`;
+    }
+
+    logHttpRequest('POST', url, headers, body);
     const startTime = Date.now();
     const response = await fetch(url, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers,
       body: JSON.stringify(body),
     });
     (response as Response & { _startTime?: number })._startTime = startTime;
@@ -87,13 +97,16 @@ export class HttpService {
   async put<T>(endpoint: string, body: Record<string, unknown>): Promise<T> {
     const url = `${this.baseUrl}${endpoint}`;
 
-    logHttpRequest('PUT', url, { 'Content-Type': 'application/json' }, body);
+    const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+    if (this.token) {
+      headers['Authorization'] = `Bearer ${this.token}`;
+    }
+
+    logHttpRequest('PUT', url, headers, body);
     const startTime = Date.now();
     const response = await fetch(url, {
       method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers,
       body: JSON.stringify(body),
     });
     (response as Response & { _startTime?: number })._startTime = startTime;
@@ -104,9 +117,14 @@ export class HttpService {
   async delete<T>(endpoint: string): Promise<T> {
     const url = `${this.baseUrl}${endpoint}`;
 
-    logHttpRequest('DELETE', url, { 'Accept': 'application/json' });
+    const headers: Record<string, string> = { 'Accept': 'application/json' };
+    if (this.token) {
+      headers['Authorization'] = `Bearer ${this.token}`;
+    }
+
+    logHttpRequest('DELETE', url, headers);
     const startTime = Date.now();
-    const response = await fetch(url);
+    const response = await fetch(url, { headers });
     (response as Response & { _startTime?: number })._startTime = startTime;
 
     return this._handleResponse<T>(response);

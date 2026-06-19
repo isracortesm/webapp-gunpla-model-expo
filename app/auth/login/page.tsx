@@ -20,7 +20,7 @@ export default function LoginPage() {
     try {
       showLoading('Logging in...');
       const response = await loginUser(identifier, password);
-      login(response.user);
+      login(response.user, response.jwt);
       router.push('/');
     } catch (err: unknown) {
       if (err instanceof Error && 'status' in err) {

@@ -38,11 +38,47 @@ export class AuthRepositoryImpl implements AuthRepository {
 
   async getCurrentUser(): Promise<AuthResponseEntity['user']> {
     console.log('AuthRepositoryImpl.getCurrentUser');
-    const response = await this.http.get<{ user: AuthResponseEntity['user'] }>('/api/users/me', {
-      populate: ['profileImage', 'socialNetworks']
-      //'populate[profileImage]': 'true',
-      //'populate[socialNetworks]': 'true',
+    
+    // Read stored JWT for authenticated requests
+    const AUTH_TOKEN_KEY = 'auth_token';
+    let token: string | undefined;
+    try {
+      const stored = localStorage.getItem(AUTH_TOKEN_KEY);
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        token = parsed.jwt || undefined;
+      }
+    } catch {
+      // ignore parse errors
+    }
+
+    // Create authenticated HTTP service with Bearer token
+    const authHttpService = new HttpService(this.http['baseUrl'], token);
+    
+    const response = await authHttpService.get<{ user: AuthResponseEntity['user'] }>('/api/users/me', {
+      populate: ['profileImage', 'socialNetworks'],
     });
     return response.user;
+  }
+
+  async logout(): Promise<void> {
+    console.log('AuthRepositoryImpl.logout');
+    
+    // Read stored JWT for authenticated requests
+    const AUTH_TOKEN_KEY = 'auth_token';
+    let token: string | undefined;
+    try {
+      const stored = localStorage.getItem(AUTH_TOKEN_KEY);
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        token = parsed.jwt || undefined;
+      }
+    } catch {
+      // ignore parse errors
+    }
+
+    // Create authenticated HTTP service with Bearer token
+    //const authHttpService = new HttpService(this.http['baseUrl'], token);
+    //await authHttpService.post('/api/auth/logout', {});
   }
 }

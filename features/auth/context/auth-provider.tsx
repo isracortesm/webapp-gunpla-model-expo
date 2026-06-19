@@ -6,6 +6,18 @@ import { UserEntity } from '@/domain/entities/auth/entity';
 
 const AUTH_TOKEN_KEY = 'auth_token';
 
+export function getStoredToken(): string | null {
+  try {
+    const stored = localStorage.getItem(AUTH_TOKEN_KEY);
+    if (!stored) return null;
+    
+    const parsed = JSON.parse(stored);
+    return parsed.jwt || null;
+  } catch {
+    return null;
+  }
+}
+
 function getStoredUser(): UserEntity | null {
   try {
     const stored = localStorage.getItem(AUTH_TOKEN_KEY);
@@ -18,9 +30,22 @@ function getStoredUser(): UserEntity | null {
   }
 }
 
-function storeUser(user: UserEntity): void {
+function storeUser(user: UserEntity, jwt?: string): void {
   try {
-    localStorage.setItem(AUTH_TOKEN_KEY, JSON.stringify({ user }));
+    localStorage.setItem(AUTH_TOKEN_KEY, JSON.stringify({ user, jwt }));
+  } catch {
+    // ignore storage errors
+  }
+}
+
+export function clearStoredToken(): void {
+  try {
+    const stored = localStorage.getItem(AUTH_TOKEN_KEY);
+    if (!stored) return;
+    
+    const parsed = JSON.parse(stored);
+    delete parsed.jwt;
+    localStorage.setItem(AUTH_TOKEN_KEY, JSON.stringify(parsed));
   } catch {
     // ignore storage errors
   }
@@ -51,13 +76,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  const login = React.useCallback((newUser: UserEntity) => {
+  const login = React.useCallback((newUser: UserEntity, jwt?: string) => {
     setUser(newUser);
-    storeUser(newUser);
+    storeUser(newUser, jwt);
   }, []);
 
   const logout = React.useCallback(() => {
     setUser(null);
+    clearStoredToken();
     clearStoredUser();
   }, []);
 
