@@ -5,14 +5,12 @@ import { AuthContext } from './auth-context';
 import { UserEntity } from '@/domain/entities/auth/entity';
 
 const AUTH_TOKEN_KEY = 'auth_token';
+const AUTH_USER_KEY = 'auth_user';
 
 export function getStoredToken(): string | null {
   try {
     const stored = localStorage.getItem(AUTH_TOKEN_KEY);
-    if (!stored) return null;
-    
-    const parsed = JSON.parse(stored);
-    return parsed.jwt || null;
+    return stored || null;
   } catch {
     return null;
   }
@@ -20,32 +18,34 @@ export function getStoredToken(): string | null {
 
 function getStoredUser(): UserEntity | null {
   try {
-    const stored = localStorage.getItem(AUTH_TOKEN_KEY);
+    const stored = localStorage.getItem(AUTH_USER_KEY);
     if (!stored) return null;
     
-    const parsed = JSON.parse(stored);
-    return parsed.user || null;
+    return JSON.parse(stored) as UserEntity;
   } catch {
     return null;
   }
 }
 
-function storeUser(user: UserEntity, jwt?: string): void {
+export function storeToken(jwt: string): void {
   try {
-    localStorage.setItem(AUTH_TOKEN_KEY, JSON.stringify({ user, jwt }));
+    localStorage.setItem(AUTH_TOKEN_KEY, jwt);
   } catch {
     // ignore storage errors
   }
 }
 
-export function clearStoredToken(): void {
+function clearStoredToken(): void {
   try {
-    const stored = localStorage.getItem(AUTH_TOKEN_KEY);
-    if (!stored) return;
-    
-    const parsed = JSON.parse(stored);
-    delete parsed.jwt;
-    localStorage.setItem(AUTH_TOKEN_KEY, JSON.stringify(parsed));
+    localStorage.removeItem(AUTH_TOKEN_KEY);
+  } catch {
+    // ignore storage errors
+  }
+}
+
+export function storeUser(user: UserEntity): void {
+  try {
+    localStorage.setItem(AUTH_USER_KEY, JSON.stringify(user));
   } catch {
     // ignore storage errors
   }
@@ -53,7 +53,7 @@ export function clearStoredToken(): void {
 
 function clearStoredUser(): void {
   try {
-    localStorage.removeItem(AUTH_TOKEN_KEY);
+    localStorage.removeItem(AUTH_USER_KEY);
   } catch {
     // ignore storage errors
   }
@@ -85,7 +85,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const login = React.useCallback((newUser: UserEntity, jwt?: string) => {
     setUser(newUser);
-    storeUser(newUser, jwt);
+    if (jwt) {
+      storeToken(jwt);
+    }
   }, []);
 
   const logout = React.useCallback(() => {
@@ -101,7 +103,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.log('AuthContext: fetching current user...');
       const currentUser = await authServiceRef.current.getCurrentUser();
       setUser(currentUser);
-      // Update stored user with fresh data (including profileImage, socialNetworks)
+      // Store only the user data (token is stored separately during login)
       storeUser(currentUser);
     } catch {
       // ignore errors - don't clear user state on fetch failure
@@ -128,7 +130,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 }
 
 export function useAuthWithStorage() {
-  const { user, login, logout } = React.useContext(AuthContext);
+  const { user, login, logout, fetchCurrentUser } = React.useContext(AuthContext);
 
-  return { user, login, logout };
+  return { user, login, logout, fetchCurrentUser };
 }

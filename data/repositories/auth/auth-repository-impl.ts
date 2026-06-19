@@ -39,14 +39,13 @@ export class AuthRepositoryImpl implements AuthRepository {
   async getCurrentUser(): Promise<AuthResponseEntity['user']> {
     console.log('AuthRepositoryImpl.getCurrentUser');
     
-    // Read stored JWT for authenticated requests
+    // Read stored JWT for authenticated requests (token is now a plain string)
     const AUTH_TOKEN_KEY = 'auth_token';
     let token: string | undefined;
     try {
       const stored = localStorage.getItem(AUTH_TOKEN_KEY);
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        token = parsed.jwt || undefined;
+      if (stored && typeof stored === 'string') {
+        token = stored;
       }
     } catch (error) {
       console.error(error);
@@ -64,14 +63,13 @@ export class AuthRepositoryImpl implements AuthRepository {
   async logout(): Promise<void> {
     console.log('AuthRepositoryImpl.logout');
     
-    // Read stored JWT for authenticated requests
+    // Read stored JWT for authenticated requests (token is now a plain string)
     const AUTH_TOKEN_KEY = 'auth_token';
     let token: string | undefined;
     try {
       const stored = localStorage.getItem(AUTH_TOKEN_KEY);
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        token = parsed.jwt || undefined;
+      if (stored && typeof stored === 'string') {
+        token = stored;
       }
     } catch (error) {
       console.error(error);

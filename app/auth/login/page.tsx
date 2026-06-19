@@ -9,7 +9,7 @@ import '@/app/auth/login/login.css';
 
 export default function LoginPage() {
   const router = useRouter();
-  const { login } = useAuthWithStorage();
+  const { login, fetchCurrentUser } = useAuthWithStorage();
   const { showError, showLoading, hideLoading } = useUnifiedDialog();
   
   const [identifier, setIdentifier] = useState('');
@@ -21,8 +21,13 @@ export default function LoginPage() {
       showLoading('Logging in...');
       const response = await loginUser(identifier, password);
       login(response.user, response.jwt);
+      
+      // Fetch current user data and keep loader until it completes
+      await fetchCurrentUser();
+      hideLoading();
       router.push('/');
     } catch (err: unknown) {
+      hideLoading();
       if (err instanceof Error && 'status' in err) {
         showError(err.message);
       } else if (err instanceof Error) {
@@ -30,8 +35,6 @@ export default function LoginPage() {
       } else {
         showError('An unexpected error occurred.');
       }
-    } finally {
-      hideLoading();
     }
   }
 
