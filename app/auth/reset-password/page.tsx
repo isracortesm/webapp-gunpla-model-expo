@@ -51,7 +51,7 @@ async function handleSubmit(e: FormEvent) {
           onChange={(e) => setVerificationCode(e.target.value)}
           required
           placeholder="Enter verification code sent via email"
-          className="text-input"
+          className="text-input no-autofill"
         />
 
         <label htmlFor="password" className="input-label">New Password</label>
@@ -62,7 +62,7 @@ async function handleSubmit(e: FormEvent) {
           onChange={(e) => setPassword(e.target.value)}
           required
           placeholder="Enter new password"
-          className="password-input"
+          className="password-input no-autofill"
         />
 
         <label htmlFor="confirmPassword" className="input-label">Confirm Password</label>
@@ -73,7 +73,7 @@ async function handleSubmit(e: FormEvent) {
           onChange={(e) => setConfirmPassword(e.target.value)}
           required
           placeholder="Confirm new password"
-          className="password-input"
+          className="password-input no-autofill"
         />
 
         <button

@@ -49,7 +49,7 @@ export default function RegisterPage() {
           onChange={(e) => setUsername(e.target.value)}
           required
           placeholder="Enter username"
-          className="text-input"
+          className="text-input no-autofill"
         />
 
         <label htmlFor="email" className="input-label">Email</label>
@@ -60,7 +60,7 @@ export default function RegisterPage() {
           onChange={(e) => setEmail(e.target.value)}
           required
           placeholder="Enter email"
-          className="text-input"
+          className="text-input no-autofill"
         />
 
         <label htmlFor="password" className="input-label">Password</label>
@@ -71,7 +71,7 @@ export default function RegisterPage() {
           onChange={(e) => setPassword(e.target.value)}
           required
           placeholder="Enter password"
-          className="password-input"
+          className="password-input no-autofill"
         />
 
         <button

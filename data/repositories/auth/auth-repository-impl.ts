@@ -48,8 +48,8 @@ export class AuthRepositoryImpl implements AuthRepository {
         const parsed = JSON.parse(stored);
         token = parsed.jwt || undefined;
       }
-    } catch {
-      // ignore parse errors
+    } catch (error) {
+      console.error(error);
     }
 
     // Create authenticated HTTP service with Bearer token
@@ -73,12 +73,10 @@ export class AuthRepositoryImpl implements AuthRepository {
         const parsed = JSON.parse(stored);
         token = parsed.jwt || undefined;
       }
-    } catch {
-      // ignore parse errors
+    } catch (error) {
+      console.error(error);
     }
 
-    // Create authenticated HTTP service with Bearer token
-    //const authHttpService = new HttpService(this.http['baseUrl'], token);
-    //await authHttpService.post('/api/auth/logout', {});
+    return;
   }
 }

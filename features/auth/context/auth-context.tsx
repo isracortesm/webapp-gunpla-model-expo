@@ -6,7 +6,7 @@ import { UserEntity } from '@/domain/entities/auth/entity';
 interface AuthContextValue {
   user: UserEntity | null;
   isAuthenticated: boolean;
-  login: (user: UserEntity) => void;
+  login: (user: UserEntity, jwt?: string) => void;
   logout: () => void;
   fetchCurrentUser: () => Promise<void>;
 }

@@ -13,8 +13,8 @@ export default function LoadingDialog({ isOpen, message = 'Loading...' }: Loadin
   if (!isOpen) return null;
 
   return (
-    <div className="loading-dialog-overlay">
-      <div className="loading-dialog-content">
+    <div className="loading-dialog-overlay no-autofill">
+      <div className="loading-dialog-content no-autofill">
         <Lottie
           animationData={loadingAnimation}
           loop

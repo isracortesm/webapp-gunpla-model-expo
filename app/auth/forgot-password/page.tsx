@@ -44,7 +44,7 @@ export default function ForgotPasswordPage() {
             onChange={(e) => setEmail(e.target.value)}
             required
             placeholder="Enter your email"
-            className="text-input"
+            className="text-input no-autofill"
           />
 
           <button

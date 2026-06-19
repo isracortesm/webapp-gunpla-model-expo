@@ -48,7 +48,7 @@ export default function LoginPage() {
           onChange={(e) => setIdentifier(e.target.value)}
           required
           placeholder="Enter username or email"
-          className="text-input"
+          className="text-input no-autofill"
         />
 
         <label htmlFor="password" className="input-label">Password</label>
@@ -59,7 +59,7 @@ export default function LoginPage() {
           onChange={(e) => setPassword(e.target.value)}
           required
           placeholder="Enter password"
-          className="password-input"
+          className="password-input no-autofill"
         />
 
         <button
