@@ -2,7 +2,7 @@
 
 import { useState, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
-import { loginUser } from '@/features/auth/service/auth-service';
+import { loginUser, getCurrentUser } from '@/features/auth/service/auth-service';
 import { useAuthWithStorage } from '@/features/auth/context/auth-provider';
 import { useUnifiedDialog } from '@/features/dialogs/context/unified-dialog-provider';
 import '@/app/auth/login/login.css';
@@ -19,11 +19,13 @@ export default function LoginPage() {
     e.preventDefault();
     try {
       showLoading('Logging in...');
-      const response = await loginUser(identifier, password);
-      login(response.user, response.jwt);
+      const loginRes = await loginUser(identifier, password);
+      login(loginRes.jwt);
       
       // Fetch current user data and keep loader until it completes
-      await fetchCurrentUser();
+      const fetchRes = await getCurrentUser();
+      fetchCurrentUser(fetchRes)
+
       hideLoading();
       router.push('/');
     } catch (err: unknown) {
