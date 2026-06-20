@@ -1,13 +1,14 @@
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
 import { useAuth } from "@/features/auth/context/auth-context";
-import UserProfileDropdown from "./UserProfileDropdown";
 import "./FloatingToolbar.css";
 
-export default function FloatingToolbar() {
+interface FloatingToolbarProps {
+  onProfileClick?: () => void;
+}
+
+export default function FloatingToolbar({ onProfileClick }: FloatingToolbarProps) {
   const { user, isAuthenticated, logout } = useAuth();
-  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   
   return (
     <div className="floating-toolbar">
@@ -15,7 +16,7 @@ export default function FloatingToolbar() {
         {/* Profile Image Icon - Always show, but only navigate when logged in */}
         {isAuthenticated && user ? (
           <button
-            onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
+            onClick={onProfileClick}
             aria-label="Profile"
             className="floating-toolbar__profile-link object-cover rounded-full ring-1 ring-zinc-600/50 transition-transform hover:scale-110 cursor-pointer bg-transparent border-none p-0"
           >
@@ -39,7 +40,7 @@ export default function FloatingToolbar() {
           </div>
         )}
       </div>
-
+      
       <div className="flex items-center gap-2">
         {/* Register Button - Only show when logged out */}
         {!isAuthenticated ? (
@@ -47,7 +48,7 @@ export default function FloatingToolbar() {
             <Link href="/auth/register" className="floating-toolbar__register-btn">
               Register
             </Link>
-
+      
             {/* Login Button */}
             <Link href="/auth/login" className="floating-toolbar__login-btn">
               Login
@@ -64,14 +65,6 @@ export default function FloatingToolbar() {
           </button>
         )}
       </div>
-
-      {/* Profile Dropdown Menu */}
-      {isAuthenticated && user && (
-        <UserProfileDropdown
-          isOpen={isProfileMenuOpen}
-          onClose={() => setIsProfileMenuOpen(false)}
-        />
-      )}
     </div>
   );
 }

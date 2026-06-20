@@ -13,6 +13,8 @@ interface UserProfileDropdownProps {
 export default function UserProfileDropdown({ isOpen, onClose }: UserProfileDropdownProps) {
   const { user, logout } = useAuth();
 
+  console.log('UserProfileDropdown - isOpen:', isOpen, 'user:', user);
+
   if (!isOpen || !user) return null;
 
   const menuItems = [
