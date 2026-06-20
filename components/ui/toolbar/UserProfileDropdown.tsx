@@ -13,14 +13,12 @@ interface UserProfileDropdownProps {
 export default function UserProfileDropdown({ isOpen, onClose }: UserProfileDropdownProps) {
   const { user, logout } = useAuth();
 
-  console.log('UserProfileDropdown - isOpen:', isOpen, 'user:', user);
-
   if (!isOpen || !user) return null;
 
   const menuItems = [
-    { label: "My Profile", href: "/profile" },
-    { label: "My Activities", href: "/activities/me" },
-    { label: "My Models", href: "/models/me" },
+    { label: "My Profile", href: "/user/profile" },
+    { label: "My Activities", href: "user/activities" },
+    { label: "My Models", href: "/user/models" },
   ];
 
   return (
