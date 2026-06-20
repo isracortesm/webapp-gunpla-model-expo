@@ -10,8 +10,6 @@ export default function ToolbarGroup() {
   const { user, isAuthenticated } = useAuth();
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
 
-  console.log('ToolbarGroup - isProfileMenuOpen:', isProfileMenuOpen, 'user:', user);
-
   return (
     <div className="toolbar-group-container">
       <FloatingToolbar onProfileClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)} />

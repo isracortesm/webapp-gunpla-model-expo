@@ -42,19 +42,14 @@ export default function Home() {
     fetchEvent();
   }, []);
 
-  if (isLoading) {
-    return <div className="main-content">Loading...</div>;
-  }
-
-  if (!event) {
+  if (!event && !isLoading) {
     return <div className="main-content">Event not found</div>;
   }
 
   return (
     <div className="main-content">
       <ToolbarGroup />
-      <MainEventCard
-        event={event}/>
+      {event && <MainEventCard event={event} />}
     </div>
   );
 }
