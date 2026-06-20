@@ -1,0 +1,47 @@
+@reference "tailwindcss";
+
+/* Forgot Password Success Page Styles */
+.success-page {
+  @apply 
+  min-h-screen 
+  flex items-center 
+  justify-center;
+  padding: 24px;
+}
+
+.success-container {
+  @apply 
+  w-full 
+  max-w-md p-8 
+  space-y-6 
+  bg-white 
+  rounded-lg 
+  shadow-xl;
+  text-align: center;
+  padding: 32px;
+}
+
+h1 {
+  @apply 
+  text-2xl 
+  font-bold 
+  mb-4;
+  color: black;
+}
+
+p {
+  @apply 
+  text-lg 
+  mb-6;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+button {
+  @apply 
+  px-8 py-3 
+  bg-black 
+  text-white 
+  font-bold 
+  rounded-md 
+  hover:bg-gray-800 transition-colors duration-200;
+}

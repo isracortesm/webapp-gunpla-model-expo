@@ -1,7 +1,7 @@
 @reference "tailwindcss";
 
-/* Register Page Styles */
-.register-page {
+/* Login Page Styles */
+.login-page {
   @apply 
   min-h-screen 
   flex items-center 
@@ -9,7 +9,7 @@
   padding: 24px;
 }
 
-.register-form {
+.login-form {
   @apply 
   w-full 
   max-w-md p-8 
@@ -20,7 +20,7 @@
   padding: 24px;
 }
 
-.register-title {
+.login-title {
   @apply 
   text-2xl 
   font-bold 
@@ -61,7 +61,7 @@
   color: rgba(0, 0, 0, 0.5);
 }
 
-.register-button {
+.login-button {
   @apply 
   w-full py-3 
   bg-black 
@@ -71,7 +71,7 @@
   hover:bg-gray-800 transition-colors duration-200;
 }
 
-.login-link-text {
+.register-link-text {
   @apply 
   text-center 
   mt-4 
@@ -79,8 +79,19 @@
   color: rgba(0, 0, 0, 0.5);
 }
 
-.login-link {
+.register-link {
   @apply 
   underline 
   hover:text-blue-600 transition-colors duration-200;
+}
+
+.forgot-password-link {
+  @apply 
+  block 
+  text-center 
+  mt-4 
+  text-sm 
+  underline 
+  hover:text-blue-600 transition-colors duration-200;
+  color: rgba(0, 0, 0, 0.5);
 }

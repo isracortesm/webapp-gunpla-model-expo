@@ -3,36 +3,33 @@
 import { useState, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { registerUser } from '@/features/auth/service/auth-service';
-import { useAuthWithStorage } from '@/features/auth/context/auth-provider';
-import '@/app/register/register.css';
+import { useUnifiedDialog } from '@/features/dialogs/context/unified-dialog-provider';
+import '@/app/auth/register/register.css';
 
 export default function RegisterPage() {
   const router = useRouter();
-  const { login } = useAuthWithStorage();
+  const { showError, showLoading, hideLoading } = useUnifiedDialog();
   
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    setError(null);
-    setLoading(true);
-
     try {
-      const response = await registerUser(username, email, password);
-      login(response.user);
-      router.push('/');
+      showLoading('Registering...');
+      await registerUser(username, email, password);
+      router.push('/auth/register/success');
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message);
+      if (err instanceof Error && 'status' in err) {
+        showError(err.message);
+      } else if (err instanceof Error) {
+        showError(err.message);
       } else {
-        setError('An unexpected error occurred.');
+        showError('An unexpected error occurred.');
       }
     } finally {
-      setLoading(false);
+      hideLoading();
     }
   }
 
@@ -40,12 +37,6 @@ export default function RegisterPage() {
     <div className="register-page">
       <form onSubmit={handleSubmit} className="register-form">
         <h1 className="register-title">Register</h1>
-
-        {error && (
-          <div className="error-alert" role="alert">
-            {error}
-          </div>
-        )}
 
         <label htmlFor="username" className="input-label">Username</label>
         <input
@@ -55,7 +46,7 @@ export default function RegisterPage() {
           onChange={(e) => setUsername(e.target.value)}
           required
           placeholder="Enter username"
-          className="text-input"
+          className="text-input no-autofill"
         />
 
         <label htmlFor="email" className="input-label">Email</label>
@@ -66,7 +57,7 @@ export default function RegisterPage() {
           onChange={(e) => setEmail(e.target.value)}
           required
           placeholder="Enter email"
-          className="text-input"
+          className="text-input no-autofill"
         />
 
         <label htmlFor="password" className="input-label">Password</label>
@@ -77,19 +68,19 @@ export default function RegisterPage() {
           onChange={(e) => setPassword(e.target.value)}
           required
           placeholder="Enter password"
-          className="password-input"
+          className="password-input no-autofill"
         />
 
         <button
           type="submit"
-          disabled={loading}
+          disabled={!username || !email || !password}
           className="register-button">
-          {loading ? 'Registering...' : 'Register'}
+          Register
         </button>
 
         <p className="login-link-text">
           Already have an account?{' '}
-          <a href="/login" className="login-link">Login</a>
+          <a href="/auth/login" className="login-link">Login</a>
         </p>
       </form>
     </div>
