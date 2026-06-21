@@ -17,8 +17,8 @@ export default function UserProfileDropdown({ isOpen, onClose }: UserProfileDrop
 
   const menuItems = [
     { label: "My Profile", href: "/user/profile" },
-    { label: "My Activities", href: "user/activities" },
     { label: "My Models", href: "/user/models" },
+    { label: "My Activities", href: "user/activities" },
   ];
 
   return (

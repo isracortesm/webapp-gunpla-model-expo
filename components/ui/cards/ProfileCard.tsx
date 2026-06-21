@@ -37,6 +37,7 @@ export default function ProfileCard({ user }: ProfileCardProps) {
             <div className="info-item about-me">
               <label>About Me</label>
               <p>{user.aboutMe}</p>
+              
             </div>
           )}
 
