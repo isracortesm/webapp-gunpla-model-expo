@@ -3,11 +3,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { useAuthWithStorage } from '@/features/auth/context/auth-provider';
-import { ModelRepositoryImpl } from '@/data/repositories/models/model-repository-impl';
-import { HttpService } from '@/data/services/http-client';
-import { GetModelsUseCase } from '@/domain/usecases/models/get-models-usecase';
+import { getModels } from '@/features/models/service/models-service';
+import { useUnifiedDialog } from '@/features/dialogs/context/unified-dialog-provider';
 import { ModelEntity } from '@/domain/entities/models/model-entity';
-import { PaginatedModelResult } from '@/domain/entities/models/paginated-model-result';
 import { useRouter } from 'next/navigation';
 import './models.css';
 
@@ -18,34 +16,28 @@ export default function ModelsListPage() {
   const [page, setPage] = useState(1);
   const [pageSize] = useState(25);
   const [pageCount, setPageCount] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
 
   // Initialize repository and use case
-  const httpService = new HttpService();
-  const modelRepository = new ModelRepositoryImpl(httpService);
-  const getModelsUseCase = new GetModelsUseCase(modelRepository);
+  const { showLoading, hideLoading, showError } = useUnifiedDialog();
 
   const fetchModels = useCallback(async (currentPage: number) => {
     if (!user || !user.id) return;
     
-    setIsLoading(true);
+    showLoading('Fetching models...');
     try {
-      const result: PaginatedModelResult = await getModelsUseCase.execute({
-        page: currentPage,
-        pageSize: pageSize,
-        userId: user.id,
-      });
-
+      const result = await getModels(currentPage, pageSize, user.id);
+ 
       setModels(prev => (currentPage === 1 ? result.data : [...prev, ...result.data]));
       setPageCount(result.meta.pagination.pageCount);
       setHasMore(currentPage < result.meta.pagination.pageCount);
     } catch (error) {
       console.error('Error fetching models:', error);
+      showError('Failed to fetch models', 'Error');
     } finally {
-      setIsLoading(false);
+      hideLoading();
     }
-  }, [user, pageSize, getModelsUseCase]);
+  }, [user, pageSize, showLoading, hideLoading, showError]);
 
   useEffect(() => {
     fetchModels(1);
@@ -56,11 +48,11 @@ export default function ModelsListPage() {
     const threshold = 50; // pixels from bottom
     const isBottom = target.scrollHeight - target.scrollTop <= target.clientHeight + threshold;
 
-    if (isBottom && hasMore && !isLoading && page < pageCount) {
+    if (isBottom && hasMore && page < pageCount) {
       fetchModels(page + 1);
       setPage(prev => prev + 1);
     }
-  }, [hasMore, isLoading, page, pageCount, fetchModels]);
+  }, [hasMore, page, pageCount, fetchModels]);
 
   return (
     <main className="models-page__container">
@@ -108,7 +100,6 @@ export default function ModelsListPage() {
             </div>
           ))}
           
-          {isLoading && <p className="models-page__loader-text">Loading more models...</p>}
           {!hasMore && models.length > 0 && <p className="models-page__loader-text">No more models to show.</p>}
         </div>
     
