@@ -103,26 +103,17 @@ export default function ModelsListPage() {
               </div>
 
               <div className="model-card-content">
-                <div className="model-card-title-row">
-                  <h2 className="model-card-title">{model.name}</h2>
-                </div>
-                
+                <h2 className="model-card-title">{model.name}</h2>
                 <p className="model-card-subtitle">{model.description}</p>
-
-                <div className="model-card-description-container">
-                  <div className="model-card-markdown">
-                    {model.description}
-                  </div>
-                </div>
               </div>
             </div>
           ))}
           
-          {isLoading && <p className="text-center py-4">Loading more models...</p>}
-          {!hasMore && models.length > 0 && <p className="text-center py-4 text-gray-500">No more models to show.</p>}
+          {isLoading && <p className="models-page__loader-text">Loading more models...</p>}
+          {!hasMore && models.length > 0 && <p className="models-page__loader-text">No more models to show.</p>}
         </div>
     
-        <div className="mt-4 text-sm text-gray-500">
+        <div className="models-page__count">
           Page {page} of {pageCount || 1}
         </div>
       </div>

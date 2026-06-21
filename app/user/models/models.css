@@ -43,32 +43,46 @@
     font-semibold;
 }
 
+.models-page__count {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  
+  @apply
+    text-gray-500;
+}
+
+.models-page__loader-text {
+  top: 2rem; 
+  
+  @apply
+    text-center
+    py-2
+    text-gray-500;
+}
+
 /* Models List Container */
 .models-list__container {
   height: 80vh;
   overflow-y: auto;
-  border: 1px solid #ccc;
   padding: 16px;
-  border-radius: 12px;
-  background-color: white;
 }
 
 /* Model Card Styles - Inspired by MainEventCard */
 .model-card {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  padding: 32px;
   width: 100%;
-  max-width: 900px;
-  margin-left: auto;
-  margin-right: auto;
-  overflow: hidden;
-  border-bottom: 1px solid rgba(67, 67, 67, 0.3);
-  background-color: #ededed;
-  margin-bottom: 24px;
+  border: 1px solid #e5e7eb;
 }
 
 .model-card-image-container {
   position: relative;
   width: 100%;
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 1 / 1;
 }
 
 .model-card-gradient-overlay {
@@ -84,9 +98,9 @@
 }
 
 .model-card-content {
-  padding: 16px;
+  padding-top: 16px;
   @media (min-width: 768px) {
-    padding: 24px;
+    padding: 16px;
   }
 }
 
@@ -95,11 +109,10 @@
   align-items: start;
   justify-content: space-between;
   gap: 16px;
-  margin-bottom: 12px;
 }
 
 .model-card-title {
-  font-size: clamp(20px, 5vw, 30px);
+  font-size: clamp(20px, 4vw, 30px);
   font-weight: bold;
   line-height: 1.2;
   letter-spacing: -0.5px;
@@ -111,7 +124,6 @@
 .model-card-subtitle {
   font-size: 14px;
   line-height: 20px;
-  margin-bottom: 24px;
   color: black;
 }
 
