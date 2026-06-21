@@ -10,7 +10,7 @@ export class ModelRepositoryImpl implements ModelRepository {
     this.http = http;
   }
 
-  async getModels(params?: { page?: number; pageSize?: number }): Promise<any[]> {
+  async getModels(params?: { page?: number; pageSize?: number, userId?: number }): Promise<any[]> {
     const queryParams: Record<string, string | string[]> = {};
     
     if (params?.page) {
@@ -18,6 +18,9 @@ export class ModelRepositoryImpl implements ModelRepository {
     }
     if (params?.pageSize) {
       queryParams['pagination[pageSize]'] = String(params.pageSize);
+    }
+    if (params?.userId) {
+      queryParams['filters[user][id][$eq]'] = String(params.userId);
     }
 
     const response = await this.http.get<{ data: any }>('/api/models', {

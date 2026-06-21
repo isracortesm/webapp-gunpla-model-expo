@@ -8,7 +8,7 @@ export class GetModelsUseCase {
     this.repository = repository;
   }
 
-  async execute(params?: { page?: number; pageSize?: number }): Promise<ModelEntity[]> {
+  async execute(params?: { page?: number; pageSize?: number, userId: number }): Promise<ModelEntity[]> {
     return this.repository.getModels(params);
   }
 }
