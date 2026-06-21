@@ -33,6 +33,7 @@ export default function UserProfilePage() {
         className="profile-page__back-btn">
         Back
       </button>
+      <h1 className="profile-page__title">Profile</h1>
       <div className="profile-page__card-wrapper">
         <ProfileCard user={user} />
       </div>
