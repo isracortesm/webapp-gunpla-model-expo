@@ -2,6 +2,7 @@ import { ModelRepository } from '@/domain/repositories/models/model-repository';
 import { HttpService } from '@/data/services/http-client';
 import { ModelDto, ApiResponse } from '../../dtos/models/model-dto';
 import { mapModelDtoToEntity } from '../../mappers/models/model-mapper';
+import { PaginatedModelResult } from '@/domain/entities/models/paginated-model-result';
 
 export class ModelRepositoryImpl implements ModelRepository {
   private http: HttpService;
@@ -10,7 +11,7 @@ export class ModelRepositoryImpl implements ModelRepository {
     this.http = http;
   }
 
-  async getModels(params?: { page?: number; pageSize?: number, userId?: number }): Promise<any[]> {
+  async getModels(params?: { page?: number; pageSize?: number, userId?: number }): Promise<PaginatedModelResult> {
     const queryParams: Record<string, string | string[]> = {};
     
     if (params?.page) {
@@ -23,11 +24,21 @@ export class ModelRepositoryImpl implements ModelRepository {
       queryParams['filters[user][id][$eq]'] = String(params.userId);
     }
 
-    const response = await this.http.get<{ data: any }>('/api/models', {
+    const response = await this.http.get<{ data: any; meta: any }>('/api/models', {
       populate: ['image', 'references', 'user'],
       ...queryParams,
     });
 
-    return response.data.map(mapModelDtoToEntity);
+    return {
+      data: response.data.map(mapModelDtoToEntity),
+      meta: {
+        pagination: {
+          page: response.meta.pagination.page,
+          pageSize: response.meta.pagination.pageSize,
+          pageCount: response.meta.pagination.pageCount,
+          total: response.meta.pagination.total,
+        },
+      },
+    };
   }
 }

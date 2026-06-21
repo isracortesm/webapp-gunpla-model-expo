@@ -1,5 +1,5 @@
-import { ModelEntity } from '@/domain/entities/models/model-entity';
 import { ModelRepository } from '@/domain/repositories/models/model-repository';
+import { PaginatedModelResult } from '@/domain/entities/models/paginated-model-result';
 
 export class GetModelsUseCase {
   private repository: ModelRepository;
@@ -8,7 +8,7 @@ export class GetModelsUseCase {
     this.repository = repository;
   }
 
-  async execute(params?: { page?: number; pageSize?: number, userId: number }): Promise<ModelEntity[]> {
+  async execute(params?: { page?: number; pageSize?: number, userId?: number }): Promise<PaginatedModelResult> {
     return this.repository.getModels(params);
   }
 }
