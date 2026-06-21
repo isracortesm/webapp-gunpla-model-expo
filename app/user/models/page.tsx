@@ -79,6 +79,10 @@ export default function ModelsListPage() {
         >
           {models.map((model, index) => (
             <div key={`${model.id}-${index}`} className="model-card">
+              <div className="model-card-content">
+                <h2 className="model-card-title">{model.name}</h2>
+                <p className="model-card-subtitle">{model.description}</p>
+              </div>
               <div className="model-card-image-container">
                 {model.image?.url ? (
                   <>
@@ -100,11 +104,6 @@ export default function ModelsListPage() {
                     priority
                   />
                 )}
-              </div>
-
-              <div className="model-card-content">
-                <h2 className="model-card-title">{model.name}</h2>
-                <p className="model-card-subtitle">{model.description}</p>
               </div>
             </div>
           ))}

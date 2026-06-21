@@ -74,15 +74,22 @@
   background: #ffffff;
   border-radius: 16px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  padding: 32px;
+  padding: 24px;
   width: 100%;
   border: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
 }
 
 .model-card-image-container {
   position: relative;
-  width: 100%;
-  aspect-ratio: 1 / 1;
+  flex-shrink: 0;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  overflow: hidden;
 }
 
 .model-card-gradient-overlay {
@@ -98,10 +105,10 @@
 }
 
 .model-card-content {
-  padding-top: 16px;
-  @media (min-width: 768px) {
-    padding: 16px;
-  }
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .model-card-title-row {
