@@ -8,4 +8,5 @@ export interface GetModelsParams {
 }
 export interface ModelRepository {
   getModels(params?: GetModelsParams): Promise<PaginatedModelResult>;
+  createModel(params: CreateModelParams): Promise<ModelEntity>;
 }
