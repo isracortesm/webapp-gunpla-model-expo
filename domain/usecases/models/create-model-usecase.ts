@@ -1,17 +1,6 @@
 import { ModelRepository } from '@/domain/repositories/models/model-repository';
 import { ModelEntity } from '@/domain/entities/models/model-entity';
-
-export interface CreateModelParams {
-  name: string;
-  description: string;
-  userId: number;
-  imageId?: number;
-  references?: {
-    type: string;
-    name: string;
-    url: string;
-  }[];
-}
+import { CreateModelParams } from '@/domain/repositories/models/model-repository';
 
 export class CreateModelUseCase {
   private repository: ModelRepository;

@@ -6,7 +6,21 @@ export interface GetModelsParams {
   pageSize?: number;
   userId?: number;
 }
+
+export interface CreateModelParams {
+  name: string;
+  description: string;
+  userId: number;
+  imageId?: number;
+  references?: {
+    type: string;
+    name: string;
+    url: string;
+  }[];
+}
+
 export interface ModelRepository {
   getModels(params?: GetModelsParams): Promise<PaginatedModelResult>;
+  getModel(modelId: number): Promise<ModelEntity>;
   createModel(params: CreateModelParams): Promise<ModelEntity>;
 }

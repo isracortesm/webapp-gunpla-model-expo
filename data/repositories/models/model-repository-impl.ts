@@ -24,8 +24,10 @@ export class ModelRepositoryImpl implements ModelRepository {
       queryParams['filters[user][id][$eq]'] = String(params.userId);
     }
     
+    queryParams['populate[image][fields][0]'] = 'url'
+    queryParams['populate[image][fields][1]'] = 'formats'
+
     const response = await this.http.get<{ data: any; meta: any }>('/api/models', {
-      populate: ['image', 'references', 'user'],
       ...queryParams,
     });
     
@@ -40,6 +42,20 @@ export class ModelRepositoryImpl implements ModelRepository {
         },
       },
     };
+  }
+
+  async getModel(modelId: number): Promise<ModelEntity> {
+    const queryParams: Record<string, string | string[]> = {};
+    if (modelId) {
+      queryParams['filters[id][$eq]'] = String(modelId);
+    }
+
+    const response = await this.http.get<{ data: any; meta: any }>('/api/models', {
+      populate: ['user', 'references', 'image'],
+      ...queryParams,
+    });
+    
+    return response.data.map(mapModelDtoToEntity)[0];
   }
 
   async createModel(params: {
