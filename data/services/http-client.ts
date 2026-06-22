@@ -124,7 +124,7 @@ export class HttpService {
 
     logHttpRequest('DELETE', url, headers);
     const startTime = Date.now();
-    const response = await fetch(url, { headers });
+    const response = await fetch(url, { method: 'DELETE', headers });
     (response as Response & { _startTime?: number })._startTime = startTime;
 
     return this._handleResponse<T>(response);

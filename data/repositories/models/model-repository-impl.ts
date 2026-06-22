@@ -54,7 +54,7 @@ export class ModelRepositoryImpl implements ModelRepository {
       populate: ['user', 'references', 'image'],
       ...queryParams,
     });
-    
+
     return response.data.map(mapModelDtoToEntity)[0];
   }
 
@@ -86,4 +86,16 @@ export class ModelRepositoryImpl implements ModelRepository {
     const response = await this.http.post<{ data: any }>('/api/models', body);
     return mapModelDtoToEntity(response.data);
   }
+
+  async getModelByDocumentId(documentId: string): Promise<ModelEntity> {
+    const response = await this.http.get<{ data: any }>(`/api/models/${documentId}`, {
+      populate: ['user', 'references', 'image'],
+    });
+    return mapModelDtoToEntity(response.data);
+  }
+
+  async deleteModel(documentId: string): Promise<void> {
+    await this.http.delete(`/api/models/${documentId}`);
+  }
 }
+

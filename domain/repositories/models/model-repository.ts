@@ -22,5 +22,7 @@ export interface CreateModelParams {
 export interface ModelRepository {
   getModels(params?: GetModelsParams): Promise<PaginatedModelResult>;
   getModel(modelId: number): Promise<ModelEntity>;
+  getModelByDocumentId(documentId: string): Promise<ModelEntity>;
   createModel(params: CreateModelParams): Promise<ModelEntity>;
+  deleteModel(documentId: string): Promise<void>;
 }
