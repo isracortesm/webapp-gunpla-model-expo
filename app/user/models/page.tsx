@@ -100,7 +100,14 @@ export default function ModelsListPage() {
             </div>
           ))}
           
-          {!hasMore && models.length > 0 && <p className="models-page__loader-text">No more models to show.</p>}
+          {!hasMore && models.length > 0 && (
+            <div className="model-card model-card--add" onClick={() => router.push('/user/models/create')}>
+              <div className="model-card-content">
+                <h2 className="model-card-title">+ Add New Model</h2>
+                <p className="model-card-subtitle">Create a new Gunpla model</p>
+              </div>
+            </div>
+          )}
         </div>
     
         <div className="models-page__count">
@@ -110,3 +117,4 @@ export default function ModelsListPage() {
     </main>
   );
 }
+
