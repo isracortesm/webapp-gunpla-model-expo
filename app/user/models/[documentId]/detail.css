@@ -90,6 +90,30 @@
   font-weight: 500;
 }
 
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 16px;
+}
+
+.info-item label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #6b7280;
+}
+
+.info-item span,
+.info-item p {
+  font-size: 1rem;
+  color: #374151;
+}
+
+.info-item p {
+  margin: 0;
+  white-space: pre-wrap;
+}
+
 .detail-field__label {
   @apply
   block

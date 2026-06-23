@@ -1,4 +1,4 @@
-import { ModelRepository } from '@/domain/repositories/models/model-repository';
+import { ModelRepository, UpdateModelParams } from '@/domain/repositories/models/model-repository';
 import { HttpService } from '@/data/services/http-client';
 import { mapModelDtoToEntity } from '../../mappers/models/model-mapper';
 import { PaginatedModelResult } from '@/domain/entities/models/paginated-model-result';
@@ -89,6 +89,29 @@ export class ModelRepositoryImpl implements ModelRepository {
     };
 
     const response = await http.post<{ data: any }>('/api/models', body);
+    return mapModelDtoToEntity(response.data);
+  }
+
+  async updateModel(documentId: string, params: UpdateModelParams): Promise<ModelEntity> {
+    const http = params.token
+      ? new HttpService(process.env.NEXT_PUBLIC_HOST_URI || '', params.token)
+      : this.http;
+
+    const body = {
+      data: {
+        name: params.name,
+        description: params.description,
+        user: String(params.userId),
+        image: params.imageId ? String(params.imageId) : undefined,
+        references: params.references?.map((ref) => ({
+          type: ref.type,
+          name: ref.name,
+          url: ref.url,
+        })),
+      },
+    };
+
+    const response = await http.put<{ data: any }>(`/api/models/${documentId}`, body);
     return mapModelDtoToEntity(response.data);
   }
 

@@ -20,10 +20,24 @@ export interface CreateModelParams {
   }[];
 }
 
+export interface UpdateModelParams {
+  name: string;
+  description: string;
+  userId: number;
+  imageId?: number;
+  token?: string;
+  references?: {
+    type: string;
+    name: string;
+    url: string;
+  }[];
+}
+
 export interface ModelRepository {
   getModels(params?: GetModelsParams): Promise<PaginatedModelResult>;
   getModel(modelId: number): Promise<ModelEntity>;
   getModelByDocumentId(documentId: string): Promise<ModelEntity>;
   createModel(params: CreateModelParams): Promise<ModelEntity>;
+  updateModel(documentId: string, params: UpdateModelParams): Promise<ModelEntity>;
   deleteModel(documentId: string, token?: string): Promise<void>;
 }

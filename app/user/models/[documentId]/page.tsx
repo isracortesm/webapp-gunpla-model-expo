@@ -94,11 +94,17 @@ export default function ModelDetailPage() {
             )}
           </div>
 
-          <label className="detail-field__label">Model Name</label>
-          <div className="detail-field__value">{model.name}</div>
+          <div className="info-item">
+            <label>Model Name</label>
+            <span>{model.name}</span>
+          </div>
 
-          <label className="detail-field__label">Description</label>
-          <div className="detail-field__value detail-description">{model.description}</div>
+          {model.description && (
+            <div className="info-item about-me">
+              <label>Description</label>
+              <p>{model.description}</p>
+            </div>
+          )}
 
           {model.references && model.references.length > 0 && (
             <div className="detail-references-section">
@@ -119,3 +125,4 @@ export default function ModelDetailPage() {
     </main>
   );
 }
+
