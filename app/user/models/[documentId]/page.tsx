@@ -113,8 +113,8 @@ export default function ModelDetailPage() {
           )}
 
           {model.references && model.references.length > 0 && (
-            <div className="detail-references-section">
-              <label className="detail-field__label">References</label>
+            <div className="info-item">
+              <label>References</label>
               <SocialNetworkIcons networks={model.references as SocialNetworkItem[]} />
             </div>
           )}

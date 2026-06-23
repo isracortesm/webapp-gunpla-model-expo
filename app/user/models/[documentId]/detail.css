@@ -61,14 +61,13 @@
 }
 
 .detail-card {
-  @apply
-  w-full
-  max-w-md p-8
-  space-y-4
-  bg-white
-  rounded-lg
-  shadow-xl;
-  padding: 24px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  padding: 32px;
+  width: 100%;
+  max-width: 400px;
+  border: 1px solid #e5e7eb;
 }
 
 .detail-image-container {
@@ -152,8 +151,8 @@
   white-space: pre-wrap;
 }
 
-.detail-references-section {
-  margin-bottom: 1rem;
+.detail-card .info-item:last-of-type {
+  margin-bottom: 24px;
 }
 
 .delete-button {
