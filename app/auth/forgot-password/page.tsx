@@ -33,8 +33,14 @@ export default function ForgotPasswordPage() {
 
   return (
     <div className="register-page">
+      <button
+          onClick={() => router.back()}
+          className="forgot-page__back-btn">
+          Back
+      </button>
+      <h1 className="forgot-page__title">Forgot Password</h1>
+
       <form onSubmit={handleSubmit} className="register-form">
-          <h1 className="register-title">Forgot Password</h1>
 
           <label htmlFor="email" className="input-label">Email</label>
           <input

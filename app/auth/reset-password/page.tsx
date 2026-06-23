@@ -40,8 +40,14 @@ async function handleSubmit(e: FormEvent) {
 
   return (
     <div className="register-page">
+      <button
+          onClick={() => router.back()}
+          className="reset-page__back-btn">
+          Back
+      </button>
+      <h1 className="reset-page__title">Reset Password</h1>
+
       <form onSubmit={handleSubmit} className="register-form">
-        <h1 className="register-title">Reset Password</h1>
 
         <label htmlFor="verificationCode" className="input-label">Verification Code</label>
         <input
