@@ -22,6 +22,7 @@ export async function createModel(params: {
   description: string;
   userId: number;
   imageId?: number;
+  token?: string;
   references?: {
     type: string;
     name: string;

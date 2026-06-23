@@ -12,6 +12,7 @@ export interface CreateModelParams {
   description: string;
   userId: number;
   imageId?: number;
+  token?: string;
   references?: {
     type: string;
     name: string;

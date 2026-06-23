@@ -7,7 +7,7 @@ export class DeleteMediaUseCase {
     this.repository = repository;
   }
 
-  async execute(id: string, token?: string): Promise<void> {
+  async execute(id: number, token?: string): Promise<void> {
     await this.repository.deleteMedia(id, token);
   }
 }

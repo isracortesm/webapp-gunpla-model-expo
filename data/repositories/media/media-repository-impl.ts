@@ -39,7 +39,7 @@ export class MediaRepositoryImpl implements MediaRepository {
     return data as ImageEntity[];
   }
 
-  async deleteMedia(id: string, token?: string): Promise<void> {
+  async deleteMedia(id: number, token?: string): Promise<void> {
     const url = `${process.env.NEXT_PUBLIC_HOST_URI || ''}/api/upload/files/${id}`;
     
     const headers: Record<string, string> = {

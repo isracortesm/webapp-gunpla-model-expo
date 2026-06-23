@@ -12,6 +12,6 @@ export async function uploadMedia(file: File, token?: string) {
   return uploadMediaUseCase.execute(file, token);
 }
 
-export async function deleteMedia(id: string, token?: string) {
+export async function deleteMedia(id: number, token?: string) {
   await deleteMediaUseCase.execute(id, token);
 }

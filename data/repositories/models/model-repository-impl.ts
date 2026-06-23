@@ -63,18 +63,23 @@ export class ModelRepositoryImpl implements ModelRepository {
     description: string;
     userId: number;
     imageId?: number;
+    token?: string;
     references?: {
       type: string;
       name: string;
       url: string;
     }[];
   }): Promise<ModelEntity> {
+    const http = params.token
+      ? new HttpService(process.env.NEXT_PUBLIC_HOST_URI || '', params.token)
+      : this.http;
+
     const body = {
       data: {
         name: params.name,
         description: params.description,
-        user: params.userId,
-        image: params.imageId,
+        user: String(params.userId),
+        image: params.imageId ? String(params.imageId) : undefined,
         references: params.references?.map((ref) => ({
           type: ref.type,
           name: ref.name,
@@ -83,7 +88,7 @@ export class ModelRepositoryImpl implements ModelRepository {
       },
     };
 
-    const response = await this.http.post<{ data: any }>('/api/models', body);
+    const response = await http.post<{ data: any }>('/api/models', body);
     return mapModelDtoToEntity(response.data);
   }
 
