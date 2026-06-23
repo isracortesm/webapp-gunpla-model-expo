@@ -99,8 +99,12 @@ export class ModelRepositoryImpl implements ModelRepository {
     return mapModelDtoToEntity(response.data);
   }
 
-  async deleteModel(documentId: string): Promise<void> {
-    await this.http.delete(`/api/models/${documentId}`);
+  async deleteModel(documentId: string, token?: string): Promise<void> {
+    const http = token
+      ? new HttpService(process.env.NEXT_PUBLIC_HOST_URI || '', token)
+      : this.http;
+
+    await http.delete(`/api/models/${documentId}`);
   }
 }
 

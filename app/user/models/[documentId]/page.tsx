@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { useUnifiedDialog } from '@/features/dialogs/context/unified-dialog-provider';
@@ -18,8 +18,12 @@ export default function ModelDetailPage() {
   const [model, setModel] = useState<ModelEntity | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isDeleting, setIsDeleting] = useState(false);
+  const fetched = useRef(false);
 
   useEffect(() => {
+    if (fetched.current) return;
+    fetched.current = true;
+
     async function load() {
       showLoading('Loading model...');
       try {
@@ -43,7 +47,12 @@ export default function ModelDetailPage() {
         setIsDeleting(true);
         showLoading('Deleting model...');
         try {
-          await deleteModel(params.documentId);
+          const token = localStorage.getItem('auth_token') || undefined;
+          await deleteModel({
+            documentId: params.documentId,
+            imageId: model?.image?.id,
+            token,
+          });
           showSuccess('Model deleted successfully');
           router.push('/user/models');
         } catch {

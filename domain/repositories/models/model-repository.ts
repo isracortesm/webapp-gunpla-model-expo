@@ -25,5 +25,5 @@ export interface ModelRepository {
   getModel(modelId: number): Promise<ModelEntity>;
   getModelByDocumentId(documentId: string): Promise<ModelEntity>;
   createModel(params: CreateModelParams): Promise<ModelEntity>;
-  deleteModel(documentId: string): Promise<void>;
+  deleteModel(documentId: string, token?: string): Promise<void>;
 }

@@ -38,6 +38,10 @@ export class HttpService {
       throw error;
     }
 
+    if (response.status === 204 || response.status === 205) {
+      return undefined as T;
+    }
+
     return response.json() as Promise<T>;
   }
 
