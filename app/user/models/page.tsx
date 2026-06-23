@@ -70,7 +70,12 @@ export default function ModelsListPage() {
           onScroll={handleScroll}
         >
           {models.map((model, index) => (
-            <div key={`${model.id}-${index}`} className="model-card">
+            <div
+              key={`${model.id}-${index}`}
+              className="model-card"
+              onClick={() => router.push(`/user/models/${model.documentId}`)}
+              style={{ cursor: 'pointer' }}
+            >
               <div className="model-card-content">
                 <h2 className="model-card-title">{model.name}</h2>
                 <p className="model-card-subtitle">{model.description}</p>

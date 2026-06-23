@@ -1,0 +1,134 @@
+@reference "tailwindcss";
+
+.detail-page__container {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f9fafb;
+  padding: 1rem;
+}
+
+.detail-page__title {
+  position: absolute;
+  top: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  color: black;
+
+  @apply
+    px-6
+    py-1.5
+    text-2xl
+    md:text-5xl
+    font-semibold;
+}
+
+.detail-page__back-btn {
+  position: absolute;
+  top: 2rem;
+  left: 2rem;
+  @apply
+    rounded-full
+    px-6
+    py-1.5
+    text-sm
+    font-semibold
+    bg-[#383838]
+    hover:bg-[#2a2a2a]
+    transition-colors;
+}
+
+.detail-page__card-wrapper {
+  width: 100%;
+  max-width: 28rem;
+}
+
+.detail-card {
+  @apply
+  w-full
+  max-w-md p-8
+  space-y-4
+  bg-white
+  rounded-lg
+  shadow-xl;
+  padding: 24px;
+}
+
+.detail-image-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.detail-image-wrapper {
+  position: relative;
+  width: 140px;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid #e5e7eb;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+}
+
+.detail-image {
+  object-fit: cover;
+}
+
+.detail-image-placeholder {
+  width: 140px;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  background-color: #f3f4f6;
+  border: 2px dashed #d1d5db;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9ca3af;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.detail-field__label {
+  @apply
+  block
+  font-semibold
+  mb-1;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.detail-field__value {
+  @apply
+  w-full p-3
+  border rounded-md
+  mb-4;
+  color: black;
+  background-color: #f9fafb;
+  min-height: 2.75rem;
+}
+
+.detail-description {
+  min-height: 100px;
+  white-space: pre-wrap;
+}
+
+.detail-references-section {
+  margin-bottom: 1rem;
+}
+
+.delete-button {
+  @apply
+  w-full py-3
+  bg-red-600
+  text-white
+  font-bold
+  rounded-md
+  hover:bg-red-700
+  transition-colors
+  duration-200;
+}
+
+.delete-button:disabled {
+  @apply bg-gray-400 cursor-not-allowed;
+}
