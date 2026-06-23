@@ -75,6 +75,12 @@ export default function ModelDetailPage() {
       >
         Back
       </button>
+      <button
+        onClick={() => router.push(`/user/models/${params.documentId}/edit`)}
+        className="detail-page__edit-btn"
+      >
+        Edit
+      </button>
       <h1 className="detail-page__title">Model Detail</h1>
       <div className="detail-page__card-wrapper">
         <div className="detail-card">

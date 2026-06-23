@@ -25,6 +25,21 @@
     font-semibold;
 }
 
+.detail-page__edit-btn {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  @apply
+    rounded-full
+    px-6
+    py-1.5
+    text-sm
+    font-semibold
+    bg-[#383838]
+    hover:bg-[#2a2a2a]
+    transition-colors;
+}
+
 .detail-page__back-btn {
   position: absolute;
   top: 2rem;
