@@ -5,5 +5,6 @@ export interface AuthRepository {
   login(identifier: string, password: string): Promise<AuthResponseEntity>;
   forgotPassword(email: string): Promise<void>;
   resetPassword(request: ResetPasswordRequestEntity): Promise<AuthResponseEntity>;
+  changePassword(currentPassword: string, password: string, passwordConfirmation: string): Promise<AuthResponseEntity>;
   getCurrentUser(): Promise<UserEntity>;
 }

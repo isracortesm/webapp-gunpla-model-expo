@@ -2,6 +2,7 @@ import { RegisterUseCase } from '@/domain/usecases/auth/register-usecase';
 import { LoginUseCase } from '@/domain/usecases/auth/login-usecase';
 import { ForgotPasswordUseCase } from '@/domain/usecases/auth/forgot-password-usecase';
 import { ResetPasswordUseCase } from '@/domain/usecases/auth/reset-password-usecase';
+import { ChangePasswordUseCase } from '@/domain/usecases/auth/change-password-usecase';
 import { GetCurrentUserServiceCase } from '@/domain/usecases/auth/get-current-user-usecase';
 import { AuthRepositoryImpl } from '@/data/repositories/auth/auth-repository-impl';
 import { HttpService } from '@/data/services/http-client';
@@ -14,6 +15,7 @@ export class AuthService {
   private loginUseCase: LoginUseCase;
   private forgotPasswordUseCase: ForgotPasswordUseCase;
   private resetPasswordUseCase: ResetPasswordUseCase;
+  private changePasswordUseCase: ChangePasswordUseCase;
   private getCurrentUserUseCase: GetCurrentUserServiceCase;
 
   constructor() {
@@ -21,6 +23,7 @@ export class AuthService {
     this.loginUseCase = new LoginUseCase(repository);
     this.forgotPasswordUseCase = new ForgotPasswordUseCase(repository);
     this.resetPasswordUseCase = new ResetPasswordUseCase(repository);
+    this.changePasswordUseCase = new ChangePasswordUseCase(repository);
     this.getCurrentUserUseCase = new GetCurrentUserServiceCase(repository);
   }
 
@@ -38,6 +41,10 @@ export class AuthService {
 
   async resetPasswordUser(password: string, passwordConfirmation: string, code: string) {
     return this.resetPasswordUseCase.execute({ password, passwordConfirmation, code });
+  }
+
+  async changeUserPassword(currentPassword: string, password: string, passwordConfirmation: string) {
+    return this.changePasswordUseCase.execute(currentPassword, password, passwordConfirmation);
   }
 
   async getCurrentUser() {
@@ -71,6 +78,15 @@ export async function resetPasswordUser(
 ) {
   const service = new AuthService();
   return service.resetPasswordUser(password, passwordConfirmation, code);
+}
+
+export async function changePassword(
+  currentPassword: string,
+  password: string,
+  passwordConfirmation: string,
+) {
+  const service = new AuthService();
+  return service.changeUserPassword(currentPassword, password, passwordConfirmation);
 }
 
 export async function getCurrentUser() {

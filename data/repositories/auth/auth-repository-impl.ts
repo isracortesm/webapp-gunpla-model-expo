@@ -36,6 +36,26 @@ export class AuthRepositoryImpl implements AuthRepository {
     return this.http.post('/api/auth/reset-password', request as unknown as Record<string, unknown>);
   }
 
+  async changePassword(currentPassword: string, password: string, passwordConfirmation: string): Promise<AuthResponseEntity> {
+    const AUTH_TOKEN_KEY = 'auth_token';
+    let token: string | undefined;
+    try {
+      const stored = localStorage.getItem(AUTH_TOKEN_KEY);
+      if (stored && typeof stored === 'string') {
+        token = stored;
+      }
+    } catch (error) {
+      console.error(error);
+    }
+
+    const authHttpService = new HttpService(this.http['baseUrl'], token);
+    return authHttpService.post('/api/auth/change-password', {
+      currentPassword,
+      password,
+      passwordConfirmation,
+    });
+  }
+
   async getCurrentUser(): Promise<UserEntity> {
     console.log('AuthRepositoryImpl.getCurrentUser');
     

@@ -28,3 +28,9 @@ export interface ResetPasswordRequestEntity {
   passwordConfirmation: string;
   code: string;
 }
+
+export interface ChangePasswordRequestEntity {
+  currentPassword: string;
+  password: string;
+  passwordConfirmation: string;
+}
