@@ -33,6 +33,11 @@ export default function UserProfilePage() {
         className="profile-page__back-btn">
         Back
       </button>
+      <button
+        onClick={() => router.push('/user/profile/edit')}
+        className="profile-page__edit-btn">
+        Edit
+      </button>
       <h1 className="profile-page__title">Profile</h1>
       <div className="profile-page__card-wrapper">
         <ProfileCard user={user} />

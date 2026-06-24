@@ -41,6 +41,21 @@
     transition-colors;
 }
 
+.profile-page__edit-btn {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  @apply
+    rounded-full
+    px-6
+    py-1.5
+    text-sm
+    font-semibold
+    bg-[#383838]
+    hover:bg-[#2a2a2a]
+    transition-colors;
+}
+
 .profile-page__card-wrapper {
   width: 100%;
   max-width: 28rem; /* max-w-md */

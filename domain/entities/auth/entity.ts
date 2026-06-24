@@ -43,5 +43,5 @@ export interface UpdateUserParams {
     name: string;
     url: string;
   }[];
-  profileImage?: number;
+  profileImage?: number | null;
 }
