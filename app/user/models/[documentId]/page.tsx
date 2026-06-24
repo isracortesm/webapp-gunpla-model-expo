@@ -2,12 +2,10 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import Image from 'next/image';
 import { useUnifiedDialog } from '@/features/dialogs/context/unified-dialog-provider';
 import { getModelByDocumentId, deleteModel } from '@/features/models/service/models-service';
-import SocialNetworkIcons from '@/shared/components/ui/social-networks/SocialNetworkIcons';
+import ModelDetailCard from '@/components/ui/cards/ModelDetailCard';
 import type { ModelEntity } from '@/domain/entities/models/model-entity';
-import type { SocialNetworkItem } from '@/domain/entities/event-dashboard/entity';
 import './detail.css';
 
 export default function ModelDetailPage() {
@@ -83,50 +81,16 @@ export default function ModelDetailPage() {
       </button>
       <h1 className="detail-page__title">Model Detail</h1>
       <div className="detail-page__card-wrapper">
-        <div className="detail-card">
-          <div className="detail-image-container">
-            {model.image?.url ? (
-              <div className="detail-image-wrapper">
-                <Image
-                  src={model.image.url}
-                  alt={model.name}
-                  fill
-                  className="detail-image"
-                  sizes="140px"
-                />
-              </div>
-            ) : (
-              <div className="detail-image-placeholder">No Image</div>
-            )}
-          </div>
-
-          <div className="info-item">
-            <label>Model Name</label>
-            <span>{model.name}</span>
-          </div>
-
-          {model.description && (
-            <div className="info-item about-me">
-              <label>Description</label>
-              <p>{model.description}</p>
-            </div>
-          )}
-
-          {model.references && model.references.length > 0 && (
-            <div className="info-item">
-              <label>References</label>
-              <SocialNetworkIcons networks={model.references as SocialNetworkItem[]} />
-            </div>
-          )}
-
-          <button
-            onClick={handleDelete}
-            disabled={isDeleting}
-            className="delete-button"
-          >
-            {isDeleting ? 'Deleting...' : 'Delete Model'}
-          </button>
-        </div>
+        <ModelDetailCard model={model} />
+      </div>
+      <div className="detail-page__delete-wrapper">
+        <button
+          onClick={handleDelete}
+          disabled={isDeleting}
+          className="delete-button"
+        >
+          {isDeleting ? 'Deleting...' : 'Delete Model'}
+        </button>
       </div>
     </main>
   );

@@ -37,6 +37,13 @@ export default function UserProfilePage() {
       <div className="profile-page__card-wrapper">
         <ProfileCard user={user} />
       </div>
+      <div className="profile-page__change-password-wrapper">
+        <button
+          className="profile-page__change-password-btn"
+          onClick={() => {}}> 
+          Change Password
+        </button>
+      </div>
     </main>
   );
 }

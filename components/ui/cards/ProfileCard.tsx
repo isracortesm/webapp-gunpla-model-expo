@@ -49,11 +49,6 @@ export default function ProfileCard({ user }: ProfileCardProps) {
           )}
         </div>
 
-        <div className="profile-actions">
-          <button className="btn btn-primary" onClick={() => {}}>
-            Change Password
-          </button>
-        </div>
       </div>
     </div>
   );
