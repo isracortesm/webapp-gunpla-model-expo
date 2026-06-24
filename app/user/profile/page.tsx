@@ -40,7 +40,7 @@ export default function UserProfilePage() {
       <div className="profile-page__change-password-wrapper">
         <button
           className="profile-page__change-password-btn"
-          onClick={() => {}}> 
+            onClick={() => router.push('/user/change-password')}>
           Change Password
         </button>
       </div>
