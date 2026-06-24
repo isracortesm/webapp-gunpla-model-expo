@@ -1,4 +1,4 @@
-import { UserEntity, AuthResponseEntity, ResetPasswordRequestEntity } from '../../../domain/entities/auth/entity';
+import { UserEntity, AuthResponseEntity, ResetPasswordRequestEntity, UpdateUserParams } from '../../../domain/entities/auth/entity';
 
 export interface AuthRepository {
   register(username: string, email: string, password: string): Promise<AuthResponseEntity>;
@@ -6,5 +6,6 @@ export interface AuthRepository {
   forgotPassword(email: string): Promise<void>;
   resetPassword(request: ResetPasswordRequestEntity): Promise<AuthResponseEntity>;
   changePassword(currentPassword: string, password: string, passwordConfirmation: string): Promise<AuthResponseEntity>;
+  updateUser(userId: number, params: UpdateUserParams): Promise<UserEntity>;
   getCurrentUser(): Promise<UserEntity>;
 }

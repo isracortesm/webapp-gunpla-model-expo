@@ -34,3 +34,14 @@ export interface ChangePasswordRequestEntity {
   password: string;
   passwordConfirmation: string;
 }
+
+export interface UpdateUserParams {
+  username?: string;
+  aboutMe?: string;
+  socialNetworks?: {
+    type: string;
+    name: string;
+    url: string;
+  }[];
+  profileImage?: number;
+}

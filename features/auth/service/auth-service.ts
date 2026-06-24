@@ -3,9 +3,11 @@ import { LoginUseCase } from '@/domain/usecases/auth/login-usecase';
 import { ForgotPasswordUseCase } from '@/domain/usecases/auth/forgot-password-usecase';
 import { ResetPasswordUseCase } from '@/domain/usecases/auth/reset-password-usecase';
 import { ChangePasswordUseCase } from '@/domain/usecases/auth/change-password-usecase';
+import { UpdateUserUseCase } from '@/domain/usecases/auth/update-user-usecase';
 import { GetCurrentUserServiceCase } from '@/domain/usecases/auth/get-current-user-usecase';
 import { AuthRepositoryImpl } from '@/data/repositories/auth/auth-repository-impl';
 import { HttpService } from '@/data/services/http-client';
+import type { UpdateUserParams } from '@/domain/entities/auth/entity';
 
 const httpService = new HttpService();
 const repository = new AuthRepositoryImpl(httpService);
@@ -16,6 +18,7 @@ export class AuthService {
   private forgotPasswordUseCase: ForgotPasswordUseCase;
   private resetPasswordUseCase: ResetPasswordUseCase;
   private changePasswordUseCase: ChangePasswordUseCase;
+  private updateUserUseCase: UpdateUserUseCase;
   private getCurrentUserUseCase: GetCurrentUserServiceCase;
 
   constructor() {
@@ -24,6 +27,7 @@ export class AuthService {
     this.forgotPasswordUseCase = new ForgotPasswordUseCase(repository);
     this.resetPasswordUseCase = new ResetPasswordUseCase(repository);
     this.changePasswordUseCase = new ChangePasswordUseCase(repository);
+    this.updateUserUseCase = new UpdateUserUseCase(repository);
     this.getCurrentUserUseCase = new GetCurrentUserServiceCase(repository);
   }
 
@@ -45,6 +49,10 @@ export class AuthService {
 
   async changeUserPassword(currentPassword: string, password: string, passwordConfirmation: string) {
     return this.changePasswordUseCase.execute(currentPassword, password, passwordConfirmation);
+  }
+
+  async updateCurrentUser(userId: number, params: UpdateUserParams) {
+    return this.updateUserUseCase.execute(userId, params);
   }
 
   async getCurrentUser() {
@@ -87,6 +95,14 @@ export async function changePassword(
 ) {
   const service = new AuthService();
   return service.changeUserPassword(currentPassword, password, passwordConfirmation);
+}
+
+export async function updateCurrentUser(
+  userId: number,
+  params: UpdateUserParams,
+) {
+  const service = new AuthService();
+  return service.updateCurrentUser(userId, params);
 }
 
 export async function getCurrentUser() {

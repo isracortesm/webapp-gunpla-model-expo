@@ -1,5 +1,5 @@
 import { AuthRepository } from '../../../domain/repositories/auth/auth-repository';
-import { UserEntity, AuthResponseEntity, ResetPasswordRequestEntity } from '../../../domain/entities/auth/entity';
+import { UserEntity, AuthResponseEntity, ResetPasswordRequestEntity, UpdateUserParams } from '../../../domain/entities/auth/entity';
 import { HttpService } from '../../services/http-client';
 
 export class AuthRepositoryImpl implements AuthRepository {
@@ -53,6 +53,27 @@ export class AuthRepositoryImpl implements AuthRepository {
       currentPassword,
       password,
       passwordConfirmation,
+    });
+  }
+
+  async updateUser(userId: number, params: UpdateUserParams): Promise<UserEntity> {
+    const AUTH_TOKEN_KEY = 'auth_token';
+    let token: string | undefined;
+    try {
+      const stored = localStorage.getItem(AUTH_TOKEN_KEY);
+      if (stored && typeof stored === 'string') {
+        token = stored;
+      }
+    } catch (error) {
+      console.error(error);
+    }
+
+    const authHttpService = new HttpService(this.http['baseUrl'], token);
+    return authHttpService.put(`/api/users/${userId}`, {
+      username: params.username,
+      aboutMe: params.aboutMe,
+      socialNetworks: params.socialNetworks,
+      profileImage: params.profileImage,
     });
   }
 

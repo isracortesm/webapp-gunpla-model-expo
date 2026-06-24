@@ -50,8 +50,7 @@ export default function ChangePasswordPage() {
     <main className="change-password-page__container">
       <button
         onClick={() => router.back()}
-        className="change-password-page__back-btn"
-      >
+        className="change-password-page__back-btn">
         Back
       </button>
       <h1 className="change-password-page__title">Change Password</h1>
@@ -64,8 +63,7 @@ export default function ChangePasswordPage() {
             onChange={(e) => setCurrentPassword(e.target.value)}
             required
             placeholder="Enter current password"
-            className="text-input"
-          />
+            className="text-input"/>
 
           <label className="input-label">New Password</label>
           <input
@@ -74,8 +72,7 @@ export default function ChangePasswordPage() {
             onChange={(e) => setPassword(e.target.value)}
             required
             placeholder="Enter new password"
-            className="text-input"
-          />
+            className="text-input"/>
 
           <label className="input-label">Confirm New Password</label>
           <input
@@ -84,14 +81,12 @@ export default function ChangePasswordPage() {
             onChange={(e) => setPasswordConfirmation(e.target.value)}
             required
             placeholder="Confirm new password"
-            className="text-input"
-          />
+            className="text-input"/>
 
           <button
             type="submit"
             disabled={!currentPassword || !password || !passwordConfirmation || isSubmitting}
-            className="submit-btn"
-          >
+            className="submit-btn">
             {isSubmitting ? 'Changing...' : 'Change Password'}
           </button>
         </form>
