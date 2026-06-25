@@ -7,7 +7,7 @@ import { useAuthWithStorage, getStoredToken } from '@/features/auth/context/auth
 import { useUnifiedDialog } from '@/features/dialogs/context/unified-dialog-provider';
 import { uploadMedia } from '@/features/media/service/media-service';
 import { deleteMedia } from '@/features/media/service/media-service';
-import { createModel, updateModel } from '@/features/models/service/models-service';
+import { createModel, updateModel, createModelReference, deleteModelReference } from '@/features/models/service/models-service';
 import type { ModelEntity } from '@/domain/entities/models/model-entity';
 import './ModelFormCard.css';
 
@@ -25,6 +25,14 @@ const REFERENCES_TYPES = [
   'other',
 ] as const;
 
+interface ReferenceItem {
+  id: number;
+  documentId?: string;
+  type: string;
+  name: string;
+  url: string;
+}
+
 interface ModelFormCardProps {
   mode: 'create' | 'edit';
   initialData?: ModelEntity;
@@ -36,7 +44,7 @@ interface ModelFormCardProps {
 export default function ModelFormCard({ mode, initialData, documentId, onSuccess, onCancel }: ModelFormCardProps) {
   const router = useRouter();
   const { user } = useAuthWithStorage();
-  const { showLoading, hideLoading, showError } = useUnifiedDialog();
+  const { showLoading, hideLoading, showError, showSuccess } = useUnifiedDialog();
 
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -44,17 +52,30 @@ export default function ModelFormCard({ mode, initialData, documentId, onSuccess
   const [uploadedImage, setUploadedImage] = useState<{ id: number; documentId: string; url: string } | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [references, setReferences] = useState<{ type: string; name: string; url: string }[]>([]);
+  const [references, setReferences] = useState<ReferenceItem[]>([]);
+  const [originalReferenceIds, setOriginalReferenceIds] = useState<Set<number>>(new Set());
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const token = getStoredToken();
+  const isOriginalReference = (id: number) => originalReferenceIds.has(id);
 
   useEffect(() => {
     if (mode !== 'edit' || !initialData) return;
 
     setName(initialData.name);
     setDescription(initialData.description);
-    setReferences(initialData.references || []);
+
+    const backendRefs = initialData.references || [];
+    setOriginalReferenceIds(new Set(backendRefs.map((ref) => ref.id)));
+    setReferences(
+      backendRefs.map((ref) => ({
+        id: ref.id,
+        documentId: ref.documentId,
+        type: ref.type,
+        name: ref.name,
+        url: ref.url,
+      })),
+    );
 
     if (initialData.image?.url) {
       setUploadedImage({
@@ -105,17 +126,59 @@ export default function ModelFormCard({ mode, initialData, documentId, onSuccess
   }
 
   function addReference() {
-    setReferences((prev) => [...prev, { type: 'instagram', name: '', url: '' }]);
-  }
-
-  function removeReference(index: number) {
-    setReferences((prev) => prev.filter((_, i) => i !== index));
+    setReferences((prev) => [...prev, { id: Date.now(), type: 'instagram', name: '', url: '' }]);
   }
 
   function updateReference(index: number, field: 'type' | 'name' | 'url', value: string) {
     setReferences((prev) =>
       prev.map((ref, i) => (i === index ? { ...ref, [field]: value } : ref))
     );
+  }
+
+  async function handleSaveNewReference(index: number) {
+    if (!user || !documentId) return;
+    const ref = references[index];
+
+    if (!ref.type || !ref.name || !ref.url) {
+      showError('Please fill all fields before saving');
+      return;
+    }
+
+    showLoading('Saving reference...');
+    try {
+      const result = await createModelReference({
+        type: ref.type,
+        name: ref.name,
+        url: ref.url,
+        modelId: documentId,
+      }, token ?? undefined);
+
+      const newId = result.data.id;
+      const newDocumentId = result.data.documentId;
+      const updatedReferences = [...references];
+      updatedReferences[index] = { ...ref, id: newId, documentId: newDocumentId };
+      setReferences(updatedReferences);
+      setOriginalReferenceIds((prev) => new Set([...prev, newId]));
+
+      showSuccess('Reference saved');
+    } catch (error: unknown) {
+      showError(error instanceof Error ? error.message : 'Failed to save reference');
+    } finally {
+      hideLoading();
+    }
+  }
+
+  async function handleDeleteReference(docId: string) {
+    showLoading('Deleting reference...');
+    try {
+      await deleteModelReference(docId, token ?? undefined);
+      setReferences(references.filter((ref) => ref.documentId !== docId));
+      showSuccess('Reference deleted');
+    } catch (error: unknown) {
+      showError(error instanceof Error ? error.message : 'Failed to delete reference');
+    } finally {
+      hideLoading();
+    }
   }
 
   async function handleSubmit(e: FormEvent) {
@@ -132,7 +195,6 @@ export default function ModelFormCard({ mode, initialData, documentId, onSuccess
           userId: user.id,
           imageId: uploadedImage?.id,
           token: token ?? undefined,
-          references,
         });
       } else if (documentId) {
         await updateModel(documentId, {
@@ -141,7 +203,6 @@ export default function ModelFormCard({ mode, initialData, documentId, onSuccess
           userId: user.id,
           imageId: uploadedImage?.id,
           token: token ?? undefined,
-          references,
         });
       }
       onSuccess();
@@ -232,6 +293,7 @@ export default function ModelFormCard({ mode, initialData, documentId, onSuccess
           <div key={index} className="model-form-card__ref-item">
             <select
               value={ref.type}
+              disabled={isOriginalReference(ref.id)}
               onChange={(e) => updateReference(index, 'type', e.target.value)}
               className="model-form-card__ref-select"
             >
@@ -244,6 +306,8 @@ export default function ModelFormCard({ mode, initialData, documentId, onSuccess
             <input
               type="text"
               value={ref.name}
+              disabled={isOriginalReference(ref.id)}
+              readOnly={isOriginalReference(ref.id)}
               onChange={(e) => updateReference(index, 'name', e.target.value)}
               placeholder="Display name"
               className="model-form-card__ref-input"
@@ -251,17 +315,19 @@ export default function ModelFormCard({ mode, initialData, documentId, onSuccess
             <input
               type="text"
               value={ref.url}
+              disabled={isOriginalReference(ref.id)}
+              readOnly={isOriginalReference(ref.id)}
               onChange={(e) => updateReference(index, 'url', e.target.value)}
               placeholder="https://..."
               className="model-form-card__ref-input"
             />
             <button
               type="button"
-              onClick={() => removeReference(index)}
+              onClick={() => isOriginalReference(ref.id) && ref.documentId ? handleDeleteReference(ref.documentId) : handleSaveNewReference(index)}
               className="model-form-card__ref-remove"
-              title="Remove reference"
+              title={isOriginalReference(ref.id) ? 'Remove reference' : 'Save reference'}
             >
-              ✕
+              {isOriginalReference(ref.id) ? '✕' : '✓'}
             </button>
           </div>
         ))}

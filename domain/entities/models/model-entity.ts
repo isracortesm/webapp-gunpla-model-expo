@@ -35,6 +35,7 @@ export interface ImageEntity {
 
 export interface ReferenceEntity {
   id: number;
+  documentId?: string;
   type: string;
   name: string;
   url: string;

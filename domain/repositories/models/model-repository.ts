@@ -1,5 +1,6 @@
 import { ModelEntity } from '@/domain/entities/models/model-entity';
 import { PaginatedModelResult } from '@/domain/entities/models/paginated-model-result';
+import { CreateModelReferenceParams, ModelReferenceResponseEntity } from '@/domain/entities/model-references/entity';
 
 export interface GetModelsParams {
   page?: number;
@@ -46,5 +47,7 @@ export interface ModelRepository {
     url: string;
     userId: number;
   }): Promise<{ data: any }>;
+  createModelReference(params: CreateModelReferenceParams, token?: string): Promise<ModelReferenceResponseEntity>;
+  deleteModelReference(documentId: string, token?: string): Promise<void>;
 }
 

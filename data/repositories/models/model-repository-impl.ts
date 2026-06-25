@@ -1,10 +1,12 @@
 import { ModelRepository, UpdateModelParams } from '@/domain/repositories/models/model-repository';
+import { ModelReferenceRepository } from '@/domain/repositories/model-references/model-reference-repository';
+import { CreateModelReferenceParams, ModelReferenceResponseEntity } from '@/domain/entities/model-references/entity';
 import { HttpService } from '@/data/services/http-client';
 import { mapModelDtoToEntity } from '../../mappers/models/model-mapper';
 import { PaginatedModelResult } from '@/domain/entities/models/paginated-model-result';
 import { ModelEntity } from '@/domain/entities/models/model-entity';
 
-export class ModelRepositoryImpl implements ModelRepository {
+export class ModelRepositoryImpl implements ModelRepository, ModelReferenceRepository {
   private http: HttpService;
 
   constructor(http: HttpService) {
@@ -149,6 +151,31 @@ return await this.http.post('/api/user-networks', body);
 
 async deleteSocialNetwork(documentId: string): Promise<void> {
 await this.http.delete(`/api/user-networks/${documentId}`);
+}
+
+async createModelReference(params: CreateModelReferenceParams, token?: string): Promise<ModelReferenceResponseEntity> {
+  const http = token
+    ? new HttpService(process.env.NEXT_PUBLIC_HOST_URI || '', token)
+    : this.http;
+
+  const body = {
+    data: {
+      type: params.type,
+      name: params.name,
+      url: params.url,
+      model: params.modelId,
+    },
+  };
+
+  return http.post('/api/model-references', body);
+}
+
+async deleteModelReference(documentId: string, token?: string): Promise<void> {
+  const http = token
+    ? new HttpService(process.env.NEXT_PUBLIC_HOST_URI || '', token)
+    : this.http;
+
+  await http.delete(`/api/model-references/${documentId}`);
 }
 }
 

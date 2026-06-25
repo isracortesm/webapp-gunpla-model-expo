@@ -7,6 +7,8 @@ import { ModelRepositoryImpl } from "@/data/repositories/models/model-repository
 import { MediaRepositoryImpl } from "@/data/repositories/media/media-repository-impl";
 import { HttpService } from "@/data/services/http-client";
 import { DeleteSocialNetworkUseCase } from "@/domain/usecases/social-networks/delete-social-network-usecase";
+import { CreateModelReferenceUseCase } from "@/domain/usecases/model-references/create-model-reference-usecase";
+import { DeleteModelReferenceUseCase } from "@/domain/usecases/model-references/delete-model-reference-usecase";
 
 const httpService = new HttpService();
 const modelRepository = new ModelRepositoryImpl(httpService);
@@ -17,6 +19,8 @@ const createModelUseCase = new CreateModelUseCase(modelRepository);
 const updateModelUseCase = new UpdateModelUseCase(modelRepository);
 const deleteModelUseCase = new DeleteModelUseCase(modelRepository, mediaRepository);
 const deleteSocialNetworkUseCase = new DeleteSocialNetworkUseCase(modelRepository);
+const createModelReferenceUseCase = new CreateModelReferenceUseCase(modelRepository);
+const deleteModelReferenceUseCase = new DeleteModelReferenceUseCase(modelRepository);
 
 export async function getModels(page: number, pageSize: number, userId: number) {
   return getModelsUseCase.execute({
@@ -79,4 +83,14 @@ export async function createSocialNetwork(params: CreateSocialNetworkParams) {
 export async function deleteSocialNetwork(documentId: string): Promise<void> {
   const service = new AuthService();
   return service.deleteSocialNetwork(documentId);
+}
+
+import type { CreateModelReferenceParams } from '@/domain/entities/model-references/entity';
+
+export async function createModelReference(params: CreateModelReferenceParams, token?: string) {
+  return createModelReferenceUseCase.execute(params, token);
+}
+
+export async function deleteModelReference(documentId: string, token?: string): Promise<void> {
+  return deleteModelReferenceUseCase.execute(documentId, token);
 }
