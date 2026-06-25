@@ -6,6 +6,7 @@ import { DeleteModelUseCase } from "@/domain/usecases/models/delete-model-usecas
 import { ModelRepositoryImpl } from "@/data/repositories/models/model-repository-impl";
 import { MediaRepositoryImpl } from "@/data/repositories/media/media-repository-impl";
 import { HttpService } from "@/data/services/http-client";
+import { DeleteSocialNetworkUseCase } from "@/domain/usecases/social-networks/delete-social-network-usecase";
 
 const httpService = new HttpService();
 const modelRepository = new ModelRepositoryImpl(httpService);
@@ -15,6 +16,7 @@ const getModelByDocumentIdUseCase = new GetModelByDocumentIdUseCase(modelReposit
 const createModelUseCase = new CreateModelUseCase(modelRepository);
 const updateModelUseCase = new UpdateModelUseCase(modelRepository);
 const deleteModelUseCase = new DeleteModelUseCase(modelRepository, mediaRepository);
+const deleteSocialNetworkUseCase = new DeleteSocialNetworkUseCase(modelRepository);
 
 export async function getModels(page: number, pageSize: number, userId: number) {
   return getModelsUseCase.execute({
@@ -64,4 +66,17 @@ export async function deleteModel(params: {
   token?: string;
 }): Promise<void> {
   return deleteModelUseCase.execute(params);
+}
+
+import type { CreateSocialNetworkParams } from '@/domain/entities/social-networks/entity';
+import { AuthService } from '@/features/auth/service/auth-service';
+
+export async function createSocialNetwork(params: CreateSocialNetworkParams) {
+  const service = new AuthService();
+  return service.createSocialNetwork(params);
+}
+
+export async function deleteSocialNetwork(documentId: string): Promise<void> {
+  const service = new AuthService();
+  return service.deleteSocialNetwork(documentId);
 }

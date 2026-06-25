@@ -106,4 +106,27 @@ export class AuthRepositoryImpl implements AuthRepository {
 
     return;
   }
+
+  async createSocialNetwork(params: { type: string; name: string; url: string; userId: number }, token?: string): Promise<{ data: any }> {
+    console.log('AuthRepositoryImpl.createSocialNetwork');
+    
+    const authHttpService = new HttpService(this.http['baseUrl'], token);
+
+    const body = {
+      data: {
+        type: params.type,
+        name: params.name,
+        url: params.url,
+        user: String(params.userId),
+      },
+    };
+
+    return authHttpService.post('/api/user-networks', body);
+  }
+
+  async deleteSocialNetwork(documentId: string, token?: string): Promise<void> {
+    console.log('AuthRepositoryImpl.deleteSocialNetwork');
+    const authHttpService = new HttpService(this.http['baseUrl'], token);
+    await authHttpService.delete(`/api/user-networks/${documentId}`);
+  }
 }

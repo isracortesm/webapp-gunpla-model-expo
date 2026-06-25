@@ -53,6 +53,7 @@ export interface ActivityEntity {
 
 export interface SocialNetworkItem {
   id: number;
+  documentId?: string;
   type: string;
   name: string;
   url: string;

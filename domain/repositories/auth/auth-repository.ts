@@ -1,5 +1,7 @@
 import { UserEntity, AuthResponseEntity, ResetPasswordRequestEntity, UpdateUserParams } from '../../../domain/entities/auth/entity';
 
+import { CreateSocialNetworkParams, SocialNetworkResponseEntity } from '@/domain/entities/social-networks/entity';
+
 export interface AuthRepository {
   register(username: string, email: string, password: string): Promise<AuthResponseEntity>;
   login(identifier: string, password: string): Promise<AuthResponseEntity>;
@@ -8,4 +10,6 @@ export interface AuthRepository {
   changePassword(currentPassword: string, password: string, passwordConfirmation: string): Promise<AuthResponseEntity>;
   updateUser(userId: number, params: UpdateUserParams, token?: string): Promise<UserEntity>;
   getCurrentUser(): Promise<UserEntity>;
+  createSocialNetwork(params: CreateSocialNetworkParams): Promise<SocialNetworkResponseEntity>;
+  deleteSocialNetwork(documentId: string): Promise<void>;
 }

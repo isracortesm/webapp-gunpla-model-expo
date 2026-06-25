@@ -129,5 +129,27 @@ export class ModelRepositoryImpl implements ModelRepository {
 
     await http.delete(`/api/models/${documentId}`);
   }
+
+  async createSocialNetwork(params: {
+    type: string;
+    name: string;
+    url: string;
+    userId: number;
+  }): Promise<{ data: any }> {
+    const body = {
+      data: {
+        type: params.type,
+        name: params.name,
+        url: params.url,
+        user: String(params.userId),
+      },
+    };
+return await this.http.post('/api/user-networks', body);
 }
+
+async deleteSocialNetwork(documentId: string): Promise<void> {
+await this.http.delete(`/api/user-networks/${documentId}`);
+}
+}
+
 

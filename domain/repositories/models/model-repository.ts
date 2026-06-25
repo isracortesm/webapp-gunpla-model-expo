@@ -40,4 +40,11 @@ export interface ModelRepository {
   createModel(params: CreateModelParams): Promise<ModelEntity>;
   updateModel(documentId: string, params: UpdateModelParams): Promise<ModelEntity>;
   deleteModel(documentId: string, token?: string): Promise<void>;
+  createSocialNetwork(params: {
+    type: string;
+    name: string;
+    url: string;
+    userId: number;
+  }): Promise<{ data: any }>;
 }
+

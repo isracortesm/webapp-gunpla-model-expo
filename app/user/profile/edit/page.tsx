@@ -6,11 +6,12 @@ import Image from 'next/image';
 import { useAuthWithStorage, getStoredToken } from '@/features/auth/context/auth-provider';
 import { useUnifiedDialog } from '@/features/dialogs/context/unified-dialog-provider';
 import { uploadMedia, deleteMedia } from '@/features/media/service/media-service';
-import { updateCurrentUser } from '@/features/auth/service/auth-service';
+import { updateCurrentUser, createSocialNetwork, deleteSocialNetwork } from '@/features/auth/service/auth-service';
 import type { SocialNetworkItem } from '@/domain/entities/event-dashboard/entity';
 import './edit.css';
 
 const SOCIAL_NETWORK_TYPES = [
+  'email',
   'instagram',
   'facebook',
   'twitter',
@@ -39,7 +40,9 @@ export default function EditProfilePage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const originalNetworkIds = useRef<Set<number>>(new Set());
+  const [originalNetworkIds, setOriginalNetworkIds] = useState<Set<number>>(new Set());
+
+  const isOriginalNetwork = (id: number) => originalNetworkIds.has(id);
 
   useEffect(() => {
     if (!user) return;
@@ -47,10 +50,11 @@ export default function EditProfilePage() {
     setUsername(user.username || '');
     setAboutMe(user.aboutMe || '');
     const backendNetworks = user.socialNetworks ?? [];
-    originalNetworkIds.current = new Set(backendNetworks.map((sn) => sn.id));
+    setOriginalNetworkIds(new Set(backendNetworks.map((sn) => sn.id)));
     setSocialNetworks(
       backendNetworks.map((sn: SocialNetworkItem) => ({
         id: sn.id,
+        documentId: sn.documentId,
         type: sn.type,
         name: sn.name,
         url: sn.url,
@@ -81,6 +85,7 @@ export default function EditProfilePage() {
       });
       setUploadedMediaId(result[0].id);
       setUploadedImage(result[0].url);
+      await refreshCurrentUser();
       showSuccess('Image uploaded successfully');
     } catch (error: unknown) {
       showError(error instanceof Error ? error.message : 'Failed to upload image');
@@ -98,6 +103,7 @@ export default function EditProfilePage() {
       await deleteMedia(uploadedMediaId, token);
       setUploadedImage(null);
       setUploadedMediaId(null);
+      await refreshCurrentUser();
       showSuccess('Profile image removed');
     } catch (error: unknown) {
       showError(error instanceof Error ? error.message : 'Failed to remove profile image');
@@ -111,16 +117,62 @@ export default function EditProfilePage() {
     ]);
   };
 
-  const handleRemoveNetwork = (index: number) => {
-    setSocialNetworks(socialNetworks.filter((_, i) => i !== index));
-  };
-
   const handleUpdateNetwork = (index: number, field: keyof SocialNetworkItem, value: string) => {
     setSocialNetworks(
       socialNetworks.map((network, i) =>
         i === index ? { ...network, [field]: value } : network,
       ),
     );
+  };
+
+  const handleSaveNewNetwork = async (index: number) => {
+    if (!user) return;
+    const sn = socialNetworks[index];
+
+    if (!sn.type || !sn.name || !sn.url) {
+      showError('Please fill all fields before saving');
+      return;
+    }
+
+    showLoading('Saving social network...');
+    try {
+      const token = getStoredToken();
+      const result = await createSocialNetwork({
+        type: sn.type,
+        name: sn.name,
+        url: sn.url,
+        userId: user.id,
+      }, token ?? undefined);
+
+      const newId = result.data.id;
+      const newDocumentId = result.data.documentId;
+      const updatedNetworks = [...socialNetworks];
+      updatedNetworks[index] = { ...sn, id: newId, documentId: newDocumentId };
+      setSocialNetworks(updatedNetworks);
+      setOriginalNetworkIds((prev) => new Set([...prev, newId]));
+
+      await refreshCurrentUser();
+      showSuccess('Social network saved');
+    } catch (error: unknown) {
+      showError(error instanceof Error ? error.message : 'Failed to save social network');
+    } finally {
+      hideLoading();
+    }
+  };
+
+  const handleDeleteSocialNetwork = async (documentId: string) => {
+    showLoading('Deleting social network...');
+    try {
+      const token = getStoredToken();
+      await deleteSocialNetwork(documentId, token ?? undefined);
+      setSocialNetworks(socialNetworks.filter((sn) => sn.documentId !== documentId));
+      await refreshCurrentUser();
+      showSuccess('Social network deleted');
+    } catch (error: unknown) {
+      showError(error instanceof Error ? error.message : 'Failed to delete social network');
+    } finally {
+      hideLoading();
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -135,21 +187,20 @@ export default function EditProfilePage() {
       const params: Parameters<typeof updateCurrentUser>[1] = {
         username,
         aboutMe: aboutMe || undefined,
-        socialNetworks: socialNetworks
-          .filter((sn) => sn.type && sn.name && sn.url)
-          .map((sn) => {
-            const entry: { id?: number; type: string; name: string; url: string } = {
-              type: sn.type, name: sn.name, url: sn.url,
-            };
-            if (originalNetworkIds.current.has(sn.id)) {
-              entry.id = sn.id;
-            }
-            return entry;
-          }),
       };
 
       const token = getStoredToken();
+      
+      // Update basic profile fields
       await updateCurrentUser(user.id, params, token ?? undefined);
+      
+      // Create new social networks (those not in originalNetworkIds)
+      for (const sn of socialNetworks.filter((s) => !originalNetworkIds.has(s.id))) {
+        if (sn.type && sn.name && sn.url) {
+          await createSocialNetwork({ type: sn.type, name: sn.name, url: sn.url, userId: user.id }, token ?? undefined);
+        }
+      }
+
       await refreshCurrentUser();
       showSuccess('Profile updated successfully');
       router.push('/user/profile');
@@ -250,6 +301,7 @@ export default function EditProfilePage() {
               <div key={index} className="edit-page__form-ref-item">
                 <select
                   value={ref.type}
+                  disabled={isOriginalNetwork(ref.id)}
                   onChange={(e) => handleUpdateNetwork(index, 'type', e.target.value)}
                   className="edit-page__form-ref-select"
                 >
@@ -263,6 +315,8 @@ export default function EditProfilePage() {
                 <input
                   type="text"
                   value={ref.name}
+                  disabled={isOriginalNetwork(ref.id)}
+                  readOnly={isOriginalNetwork(ref.id)}
                   onChange={(e) => handleUpdateNetwork(index, 'name', e.target.value)}
                   placeholder="Display name"
                   className="edit-page__form-ref-input"
@@ -270,17 +324,19 @@ export default function EditProfilePage() {
                 <input
                   type="text"
                   value={ref.url}
+                  disabled={isOriginalNetwork(ref.id)}
+                  readOnly={isOriginalNetwork(ref.id)}
                   onChange={(e) => handleUpdateNetwork(index, 'url', e.target.value)}
                   placeholder="https://..."
                   className="edit-page__form-ref-input"
                 />
                 <button
                   type="button"
-                  onClick={() => handleRemoveNetwork(index)}
+                  onClick={() => isOriginalNetwork(ref.id) && ref.documentId ? handleDeleteSocialNetwork(ref.documentId) : handleSaveNewNetwork(index)}
                   className="edit-page__form-ref-remove"
-                  title="Remove reference"
+                  title={isOriginalNetwork(ref.id) ? 'Remove reference' : 'Save reference'}
                 >
-                  ✕
+                  {isOriginalNetwork(ref.id) ? '✕' : '✓'}
                 </button>
               </div>
             ))}

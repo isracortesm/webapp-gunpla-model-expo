@@ -8,6 +8,7 @@ import { GetCurrentUserServiceCase } from '@/domain/usecases/auth/get-current-us
 import { AuthRepositoryImpl } from '@/data/repositories/auth/auth-repository-impl';
 import { HttpService } from '@/data/services/http-client';
 import type { UpdateUserParams } from '@/domain/entities/auth/entity';
+import type { CreateSocialNetworkParams } from '@/domain/entities/social-networks/entity';
 
 const httpService = new HttpService();
 const repository = new AuthRepositoryImpl(httpService);
@@ -57,6 +58,14 @@ export class AuthService {
 
   async getCurrentUser() {
     return this.getCurrentUserUseCase.execute();
+  }
+
+  async createSocialNetwork(params: CreateSocialNetworkParams, token?: string) {
+    return repository.createSocialNetwork(params, token);
+  }
+
+  async deleteSocialNetwork(documentId: string, token?: string): Promise<void> {
+    return repository.deleteSocialNetwork(documentId, token);
   }
 }
 
@@ -109,4 +118,14 @@ export async function updateCurrentUser(
 export async function getCurrentUser() {
   const service = new AuthService();
   return service.getCurrentUser();
+}
+
+export async function createSocialNetwork(params: CreateSocialNetworkParams, token?: string) {
+  const service = new AuthService();
+  return service.createSocialNetwork(params, token);
+}
+
+export async function deleteSocialNetwork(documentId: string, token?: string): Promise<void> {
+  const service = new AuthService();
+  return service.deleteSocialNetwork(documentId, token);
 }
