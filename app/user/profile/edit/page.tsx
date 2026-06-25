@@ -3,11 +3,10 @@
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { useAuthWithStorage } from '@/features/auth/context/auth-provider';
+import { useAuthWithStorage, getStoredToken } from '@/features/auth/context/auth-provider';
 import { useUnifiedDialog } from '@/features/dialogs/context/unified-dialog-provider';
 import { uploadMedia, deleteMedia } from '@/features/media/service/media-service';
 import { updateCurrentUser } from '@/features/auth/service/auth-service';
-import type { UserEntity } from '@/domain/entities/auth/entity';
 import type { SocialNetworkItem } from '@/domain/entities/event-dashboard/entity';
 import './edit.css';
 
@@ -28,7 +27,7 @@ const SOCIAL_NETWORK_TYPES = [
 
 export default function EditProfilePage() {
   const router = useRouter();
-  const { user, fetchCurrentUser } = useAuthWithStorage();
+  const { user, refreshCurrentUser } = useAuthWithStorage();
   const { showLoading, hideLoading, showError, showSuccess } = useUnifiedDialog();
 
   const [username, setUsername] = useState('');
@@ -40,29 +39,29 @@ export default function EditProfilePage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const getProfileImageId = (profileImage: UserEntity['profileImage']): number | undefined => {
-    if (!profileImage) return undefined;
-    if (typeof profileImage === 'object' && 'id' in profileImage) return (profileImage as { id: number }).id;
-    return undefined;
-  };
+  const originalNetworkIds = useRef<Set<number>>(new Set());
 
   useEffect(() => {
     if (!user) return;
 
     setUsername(user.username || '');
     setAboutMe(user.aboutMe || '');
+    const backendNetworks = user.socialNetworks ?? [];
+    originalNetworkIds.current = new Set(backendNetworks.map((sn) => sn.id));
     setSocialNetworks(
-      user.socialNetworks?.map((sn: SocialNetworkItem) => ({
+      backendNetworks.map((sn: SocialNetworkItem) => ({
         id: sn.id,
         type: sn.type,
         name: sn.name,
         url: sn.url,
-      })) ?? [],
+      })),
     );
 
     if (user.profileImage && typeof user.profileImage === 'object' && 'url' in user.profileImage) {
       setUploadedImage(user.profileImage.url);
+      if ('id' in user.profileImage) {
+        setUploadedMediaId((user.profileImage as { id: number }).id);
+      }
     } else if (typeof user.profileImage === 'string') {
       setUploadedImage(user.profileImage);
     }
@@ -75,7 +74,11 @@ export default function EditProfilePage() {
     setIsUploading(true);
     try {
       const token = localStorage.getItem('auth_token') ?? undefined;
-      const result = await uploadMedia(file, token);
+      const result = await uploadMedia(file, token, {
+        ref: 'plugin::users-permissions.user',
+        refId: user!.id,
+        field: 'profileImage',
+      });
       setUploadedMediaId(result[0].id);
       setUploadedImage(result[0].url);
       showSuccess('Image uploaded successfully');
@@ -88,18 +91,13 @@ export default function EditProfilePage() {
   };
 
   const handleRemoveImage = async () => {
-    if (!uploadedImage || !user?.profileImage) return;
+    if (!uploadedMediaId) return;
 
     try {
-      const imageId = getProfileImageId(user.profileImage);
-      if (!imageId) {
-        setUploadedImage(null);
-        return;
-      }
-
       const token = localStorage.getItem('auth_token') ?? undefined;
-      await deleteMedia(imageId, token);
+      await deleteMedia(uploadedMediaId, token);
       setUploadedImage(null);
+      setUploadedMediaId(null);
       showSuccess('Profile image removed');
     } catch (error: unknown) {
       showError(error instanceof Error ? error.message : 'Failed to remove profile image');
@@ -137,18 +135,22 @@ export default function EditProfilePage() {
       const params: Parameters<typeof updateCurrentUser>[1] = {
         username,
         aboutMe: aboutMe || undefined,
-        socialNetworks: socialNetworks.filter((sn) => sn.type && sn.name && sn.url),
+        socialNetworks: socialNetworks
+          .filter((sn) => sn.type && sn.name && sn.url)
+          .map((sn) => {
+            const entry: { id?: number; type: string; name: string; url: string } = {
+              type: sn.type, name: sn.name, url: sn.url,
+            };
+            if (originalNetworkIds.current.has(sn.id)) {
+              entry.id = sn.id;
+            }
+            return entry;
+          }),
       };
 
-      if (uploadedMediaId !== null) {
-        params.profileImage = uploadedMediaId;
-      } else if (!uploadedImage && user?.profileImage) {
-        const imageId = getProfileImageId(user.profileImage);
-        params.profileImage = imageId ?? null;
-      }
-
-      const updatedUser = await updateCurrentUser(user.id, params);
-      fetchCurrentUser(updatedUser);
+      const token = getStoredToken();
+      await updateCurrentUser(user.id, params, token ?? undefined);
+      await refreshCurrentUser();
       showSuccess('Profile updated successfully');
       router.push('/user/profile');
     } catch (error: unknown) {

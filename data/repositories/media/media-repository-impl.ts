@@ -10,9 +10,14 @@ export class MediaRepositoryImpl implements MediaRepository {
     this.http = http;
   }
 
-  async uploadMedia(file: File, token?: string): Promise<ImageEntity[]> {
+  async uploadMedia(file: File, token?: string, fileInfo?: { ref?: string; refId?: number; field?: string }): Promise<ImageEntity[]> {
     const formData = new FormData();
     formData.append('files', file);
+    if (fileInfo) {
+      if (fileInfo.ref) formData.append('ref', fileInfo.ref);
+      if (fileInfo.refId) formData.append('refId', String(fileInfo.refId));
+      if (fileInfo.field) formData.append('field', fileInfo.field);
+    }
 
     // Since the current HttpService only supports JSON, we use fetch directly
     // for multipart/form-data to ensure correct boundary handling.

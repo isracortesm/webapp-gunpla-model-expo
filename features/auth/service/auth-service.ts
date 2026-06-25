@@ -51,8 +51,8 @@ export class AuthService {
     return this.changePasswordUseCase.execute(currentPassword, password, passwordConfirmation);
   }
 
-  async updateCurrentUser(userId: number, params: UpdateUserParams) {
-    return this.updateUserUseCase.execute(userId, params);
+  async updateCurrentUser(userId: number, params: UpdateUserParams, token?: string) {
+    return this.updateUserUseCase.execute(userId, params, token);
   }
 
   async getCurrentUser() {
@@ -100,9 +100,10 @@ export async function changePassword(
 export async function updateCurrentUser(
   userId: number,
   params: UpdateUserParams,
+  token?: string,
 ) {
   const service = new AuthService();
-  return service.updateCurrentUser(userId, params);
+  return service.updateCurrentUser(userId, params, token);
 }
 
 export async function getCurrentUser() {

@@ -8,7 +8,7 @@ export class UpdateUserUseCase {
     this.repository = repository;
   }
 
-  async execute(userId: number, params: UpdateUserParams): Promise<UserEntity> {
-    return this.repository.updateUser(userId, params);
+  async execute(userId: number, params: UpdateUserParams, token?: string): Promise<UserEntity> {
+    return this.repository.updateUser(userId, params, token);
   }
 }

@@ -56,18 +56,7 @@ export class AuthRepositoryImpl implements AuthRepository {
     });
   }
 
-  async updateUser(userId: number, params: UpdateUserParams): Promise<UserEntity> {
-    const AUTH_TOKEN_KEY = 'auth_token';
-    let token: string | undefined;
-    try {
-      const stored = localStorage.getItem(AUTH_TOKEN_KEY);
-      if (stored && typeof stored === 'string') {
-        token = stored;
-      }
-    } catch (error) {
-      console.error(error);
-    }
-
+  async updateUser(userId: number, params: UpdateUserParams, token?: string): Promise<UserEntity> {
     const authHttpService = new HttpService(this.http['baseUrl'], token);
     return authHttpService.put(`/api/users/${userId}`, {
       username: params.username,

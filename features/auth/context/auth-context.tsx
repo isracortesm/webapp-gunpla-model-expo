@@ -10,6 +10,7 @@ interface AuthContextValue {
   login: (jwt?: string) => void;
   logout: () => void;
   fetchCurrentUser: (user: UserEntity) => void;
+  refreshCurrentUser: () => Promise<UserEntity | null>;
 }
 
 export const AuthContext = React.createContext<AuthContextValue>({
@@ -19,6 +20,7 @@ export const AuthContext = React.createContext<AuthContextValue>({
   login: () => {},
   logout: () => {},
   fetchCurrentUser: async () => {},
+  refreshCurrentUser: async () => null,
 });
 
 export function useAuth() {

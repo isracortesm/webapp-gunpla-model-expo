@@ -8,7 +8,7 @@ export class UploadMediaUseCase {
     this.repository = repository;
   }
 
-  async execute(file: File, token?: string): Promise<ImageEntity[]> {
-    return this.repository.uploadMedia(file, token);
+  async execute(file: File, token?: string, fileInfo?: { ref?: string; refId?: number; field?: string }): Promise<ImageEntity[]> {
+    return this.repository.uploadMedia(file, token, fileInfo);
   }
 }

@@ -8,8 +8,8 @@ const repository = new MediaRepositoryImpl(httpService);
 const uploadMediaUseCase = new UploadMediaUseCase(repository);
 const deleteMediaUseCase = new DeleteMediaUseCase(repository);
 
-export async function uploadMedia(file: File, token?: string) {
-  return uploadMediaUseCase.execute(file, token);
+export async function uploadMedia(file: File, token?: string, fileInfo?: { ref?: string; refId?: number; field?: string }) {
+  return uploadMediaUseCase.execute(file, token, fileInfo);
 }
 
 export async function deleteMedia(id: number, token?: string) {

@@ -15,14 +15,19 @@ export default function ProfileCard({ user }: ProfileCardProps) {
     <div className="card-container">
       <div className="profile-card">
         <div className="profile-header">
-          <div className="avatar-wrapper">
-            <Image
-              src={avatarSrc}
-              alt={`${user.username}'s avatar`}
-              width={120}
-              height={120}
-              className="avatar-image"
-            />
+          <div className="detail-image-container">
+            {user.profileImage?.url ? (
+              <div className="detail-image-wrapper">
+                <Image
+                  src={user.profileImage.url}
+                  alt={user.username}
+                  fill
+                  className="detail-image"
+                  sizes="140px"/>
+              </div>
+            ) : (
+              <div className="detail-image-placeholder">No Image</div>
+            )}
           </div>
           <h2 className="profile-name">{user.username}</h2>
         </div>
