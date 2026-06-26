@@ -187,15 +187,46 @@ export default function ModelFormCard({ mode, initialData, documentId, onSuccess
 
     setIsSubmitting(true);
     showLoading(mode === 'create' ? 'Creating model...' : 'Updating model...');
+
+    const validReferences = references
+      .filter((ref) => ref.type.trim() && ref.name.trim() && ref.url.trim())
+      .map((ref) => ({
+        type: ref.type,
+        name: ref.name,
+        url: ref.url,
+      }));
+
     try {
       if (mode === 'create') {
-        await createModel({
+        const createdModel = await createModel({
           name,
           description,
           userId: user.id,
           imageId: uploadedImage?.id,
           token: token ?? undefined,
         });
+
+        const referenceErrors: string[] = [];
+        for (const ref of validReferences) {
+          try {
+            await createModelReference({
+              type: ref.type,
+              name: ref.name,
+              url: ref.url,
+              modelId: createdModel.documentId,
+            }, token ?? undefined);
+          } catch (err: unknown) {
+            const message = err instanceof Error ? err.message : 'Failed to save reference';
+            referenceErrors.push(`${ref.name || ref.url}: ${message}`);
+          }
+        }
+
+        if (referenceErrors.length > 0) {
+          showError(
+            `Model created, but some references could not be saved:\n${referenceErrors.join('\n')}`,
+            'References Error'
+          );
+        }
       } else if (documentId) {
         await updateModel(documentId, {
           name,

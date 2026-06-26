@@ -2,5 +2,5 @@ import { CreateSocialNetworkParams, SocialNetworkResponseEntity } from '@/domain
 
 export interface SocialNetworkRepository {
   createSocialNetwork(params: CreateSocialNetworkParams): Promise<SocialNetworkResponseEntity>;
-  deleteSocialNetwork(documentId: string): Promise<void>;
+  deleteSocialNetwork(networkId: number): Promise<void>;
 }
