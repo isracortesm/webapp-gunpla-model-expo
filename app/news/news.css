@@ -1,0 +1,116 @@
+@reference "tailwindcss";
+
+.news-page__container {
+  @apply
+    min-h-screen
+    w-full
+    flex
+    flex-col
+    items-center
+    px-6
+    pt-24
+    pb-32;
+  background-color: var(--background);
+}
+
+.news-page__title {
+  @apply
+    text-3xl
+    font-bold
+    mb-8
+    text-center;
+}
+
+.news-list__container {
+  @apply
+    flex
+    flex-col
+    gap-4
+    w-full
+    max-h-[calc(100vh-16rem)]
+    overflow-y-auto
+    pr-2;
+}
+
+.news-card {
+  @apply
+    relative
+    flex
+    items-stretch
+    justify-between
+    overflow-hidden
+    rounded-2xl
+    bg-zinc-900/20
+    border
+    border-zinc-700/30
+    p-4
+    gap-4
+    transition-transform
+    hover:scale-[1.01];
+}
+
+.news-card-content {
+  @apply
+    flex
+    flex-col
+    justify-center
+    flex-1
+    min-w-0;
+}
+
+.news-card-title {
+  @apply
+    text-lg
+    font-semibold
+    truncate;
+}
+
+.news-card-subtitle {
+  @apply
+    text-sm
+    text-zinc-400
+    line-clamp-2
+    mt-1;
+}
+
+.news-card-date {
+  @apply
+    text-xs
+    text-zinc-500
+    mt-3;
+}
+
+.news-card-image-container {
+  @apply
+    relative
+    w-24
+    h-24
+    flex-shrink-0
+    rounded-xl
+    overflow-hidden
+    bg-zinc-800;
+}
+
+.news-card-gradient-overlay {
+  @apply
+    absolute
+    inset-0
+    bg-gradient-to-l
+    from-black/40
+    to-transparent;
+}
+
+.news-page__count {
+  @apply
+    text-sm
+    text-zinc-500
+    text-center
+    mt-6;
+}
+
+.news-page__empty {
+  @apply
+    text-center
+    text-zinc-400
+    py-12;
+}

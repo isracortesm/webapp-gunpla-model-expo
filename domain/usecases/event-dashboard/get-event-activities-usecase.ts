@@ -1,4 +1,5 @@
 import { ActivityEntity } from '../../../domain/entities/event-dashboard/entity';
+import { PaginatedResult } from '../../../domain/entities/common/paginated-result';
 import { EventDashboardRepository } from '../../../domain/repositories/event-dashboard/event-dashboard-repository';
 
 export class GetEventActivitiesUseCase {
@@ -8,7 +9,10 @@ export class GetEventActivitiesUseCase {
     this.repository = repository;
   }
 
-  async execute(eventId: number): Promise<ActivityEntity[]> {
-    return this.repository.getActivitiesByEvent(eventId);
+  async execute(
+    eventId: number,
+    params?: { page?: number; pageSize?: number }
+  ): Promise<PaginatedResult<ActivityEntity>> {
+    return this.repository.getActivitiesByEvent(eventId, params);
   }
 }

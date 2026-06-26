@@ -22,7 +22,7 @@ interface StrapiCategoryResponse {
   description: string;
 }
 
-interface StrapiEventResponse {
+export interface StrapiEventResponse {
   id: number;
   eventId: string;
   name: string;
@@ -37,7 +37,7 @@ interface StrapiEventResponse {
   socialNetworks?: StrapiSocialNetworkResponse[];
 }
 
-interface StrapiNewsResponse {
+export interface StrapiNewsResponse {
   id: number;
   title: string;
   subtitle: string;
@@ -47,7 +47,7 @@ interface StrapiNewsResponse {
   thumbnail?: StrapiMediaResponse;
 }
 
-interface StrapiActivityResponse {
+export interface StrapiActivityResponse {
   id: number;
   name: string;
   shortDescription: string;

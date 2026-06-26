@@ -1,4 +1,5 @@
 import { NewsEntity } from '../../../domain/entities/event-dashboard/entity';
+import { PaginatedResult } from '../../../domain/entities/common/paginated-result';
 import { EventDashboardRepository } from '../../../domain/repositories/event-dashboard/event-dashboard-repository';
 
 export class GetEventNewsUseCase {
@@ -8,7 +9,10 @@ export class GetEventNewsUseCase {
     this.repository = repository;
   }
 
-  async execute(eventId: number): Promise<NewsEntity[]> {
-    return this.repository.getNewsByEvent(eventId);
+  async execute(
+    eventId: number,
+    params?: { page?: number; pageSize?: number }
+  ): Promise<PaginatedResult<NewsEntity>> {
+    return this.repository.getNewsByEvent(eventId, params);
   }
 }
