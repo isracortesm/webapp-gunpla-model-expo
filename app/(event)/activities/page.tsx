@@ -129,6 +129,22 @@ export default function ActivitiesListPage() {
               <div className="activity-card-content">
                 <h2 className="activity-card-title">{activity.name}</h2>
                 <p className="activity-card-subtitle">{activity.shortDescription}</p>
+                <div className="activity-card-meta">
+                  <span
+                    className={
+                      activity.costType === 'free'
+                        ? 'activity-card-cost-chip--free'
+                        : 'activity-card-cost-chip--paid'
+                    }
+                  >
+                    {activity.costType === 'free' ? 'Free' : `Paid $${Math.round(activity.cost ?? 0)}`}
+                  </span>
+                  {activity.capacity != null && (
+                    <span className="activity-card-capacity">
+                      Capacity: {activity.capacity}
+                    </span>
+                  )}
+                </div>
                 <time className="activity-card-date" dateTime={activity.startDate}>
                   {formatDate(activity.startDate)}
                 </time>

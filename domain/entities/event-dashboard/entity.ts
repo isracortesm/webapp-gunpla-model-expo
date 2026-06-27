@@ -44,11 +44,12 @@ export interface ActivityEntity {
   id: number;
   name: string;
   shortDescription: string;
-  description: string;
+  description?: string;
   costType: 'free' | 'paid';
   cost: number | null;
   startDate: string;
   endDate: string;
+  capacity?: number;
   image?: MediaEntity;
   category?: CategoryEntity;
 }

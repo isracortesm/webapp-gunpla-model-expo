@@ -81,7 +81,14 @@ export class EventDashboardRepositoryImpl implements EventDashboardRepository {
   ): Promise<PaginatedResult<ActivityEntity>> {
     const queryParams: Record<string, string | string[]> = {
       'filters[event][$eq]': String(eventId),
-      populate: ['image', 'category'],
+      'populate[image][fields][0]': 'url',
+      'fields[0]': 'name',
+      'fields[1]': 'shortDescription',
+      'fields[2]': 'costType',
+      'fields[3]': 'cost',
+      'fields[4]': 'startDate',
+      'fields[5]': 'endDate',
+      'fields[6]': 'capacity',
     };
 
     if (params?.page) {

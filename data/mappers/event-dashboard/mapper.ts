@@ -53,11 +53,12 @@ export interface StrapiActivityResponse {
   id: number;
   name: string;
   shortDescription: string;
-  description: string;
+  description?: string;
   costType: 'free' | 'paid';
   cost: number | null;
   startDate: string;
   endDate: string;
+  capacity?: number;
   image?: StrapiMediaResponse;
   category?: StrapiCategoryResponse;
 }
@@ -144,6 +145,7 @@ export function mapActivityDtoToEntity(dto: StrapiActivityResponse): ActivityEnt
     cost: dto.cost,
     startDate: dto.startDate,
     endDate: dto.endDate,
+    capacity: dto.capacity,
     image,
     category,
   };

@@ -77,6 +77,47 @@
   color: #374151;
 }
 
+.activity-card-meta {
+  @apply
+    flex
+    items-center
+    gap-2
+    mt-2;
+}
+
+.activity-card-cost-chip--free {
+  @apply
+    inline-flex
+    items-center
+    rounded-full
+    px-3
+    py-0.5
+    text-xs
+    font-semibold;
+  background-color: #bbf7d0;
+  color: #166534;
+}
+
+.activity-card-cost-chip--paid {
+  @apply
+    inline-flex
+    items-center
+    rounded-full
+    px-3
+    py-0.5
+    text-xs
+    font-semibold;
+  background-color: #bfdbfe;
+  color: #1e40af;
+}
+
+.activity-card-capacity {
+  @apply
+    text-xs
+    font-medium;
+  color: #6b7280;
+}
+
 .activity-card-date {
   @apply
     text-xs
