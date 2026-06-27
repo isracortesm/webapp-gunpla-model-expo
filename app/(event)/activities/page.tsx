@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { getEvent, getEventActivities } from '@/features/event-dashboard/service/event-dashboard-service';
 import { useUnifiedDialog } from '@/features/dialogs/context/unified-dialog-provider';
 import { ActivityEntity, EventEntity } from '@/domain/entities/event-dashboard/entity';
@@ -10,6 +11,7 @@ import './activities.css';
 const EVENT_CODE = 'HMKGME26';
 
 export default function ActivitiesListPage() {
+  const router = useRouter();
   const { showLoading, hideLoading, showError } = useUnifiedDialog();
   const [event, setEvent] = useState<EventEntity | null>(null);
   const [activities, setActivities] = useState<ActivityEntity[]>([]);
@@ -125,7 +127,7 @@ export default function ActivitiesListPage() {
       <div className="max-w-4xl mx-auto w-full">
         <div className="activities-list__container" onScroll={handleScroll}>
           {activities.map((activity, index) => (
-            <article key={`${activity.id}-${index}`} className="activity-card">
+            <article key={`${activity.id}-${index}`} className="activity-card" onClick={() => router.push(`/activities/${activity.documentId}`)} style={{ cursor: 'pointer' }}>
               <div className="activity-card-content">
                 <h2 className="activity-card-title">{activity.name}</h2>
                 <p className="activity-card-subtitle">{activity.shortDescription}</p>
