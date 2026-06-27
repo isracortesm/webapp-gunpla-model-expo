@@ -7,18 +7,15 @@ import UserProfileDropdown from "./UserProfileDropdown";
 import "./ToolbarGroup.css";
 
 export default function ToolbarGroup() {
-  const { user, isAuthenticated } = useAuth();
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
 
   return (
     <div className="toolbar-group-container">
       <FloatingToolbar onProfileClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)} />
-      {isAuthenticated && user && (
-        <UserProfileDropdown
-          isOpen={isProfileMenuOpen}
-          onClose={() => setIsProfileMenuOpen(false)}
-        />
-      )}
+      <UserProfileDropdown
+        isOpen={isProfileMenuOpen}
+        onClose={() => setIsProfileMenuOpen(false)}
+      />
     </div>
   );
 }
