@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { getEvent, getEventNews } from '@/features/event-dashboard/service/event-dashboard-service';
 import { useUnifiedDialog } from '@/features/dialogs/context/unified-dialog-provider';
 import { NewsEntity, EventEntity } from '@/domain/entities/event-dashboard/entity';
@@ -10,6 +11,7 @@ import './news.css';
 const EVENT_CODE = 'HMKGME26';
 
 export default function NewsListPage() {
+  const router = useRouter();
   const { showLoading, hideLoading, showError } = useUnifiedDialog();
   const [event, setEvent] = useState<EventEntity | null>(null);
   const [news, setNews] = useState<NewsEntity[]>([]);
@@ -123,7 +125,12 @@ export default function NewsListPage() {
       <div className="max-w-4xl mx-auto w-full">
         <div className="news-list__container" onScroll={handleScroll}>
           {news.map((item, index) => (
-            <article key={`${item.id}-${index}`} className="news-card">
+            <article
+              key={`${item.id}-${index}`}
+              className="news-card"
+              onClick={() => router.push(`/news/${item.documentId}`)}
+              style={{ cursor: 'pointer' }}
+            >
               <div className="news-card-content">
                 <h2 className="news-card-title">{item.title}</h2>
                 <p className="news-card-subtitle">{item.subtitle}</p>
