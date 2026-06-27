@@ -40,13 +40,13 @@
     justify-between
     overflow-hidden
     rounded-2xl
-    bg-zinc-900/20
-    border
-    border-zinc-700/30
     p-4
     gap-4
     transition-transform
     hover:scale-[1.01];
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
 .news-card-content {
@@ -63,21 +63,22 @@
     text-lg
     font-semibold
     truncate;
+  color: #111827;
 }
 
 .news-card-subtitle {
   @apply
     text-sm
-    text-zinc-400
     line-clamp-2
     mt-1;
+  color: #374151;
 }
 
 .news-card-date {
   @apply
     text-xs
-    text-zinc-500
     mt-3;
+  color: #6b7280;
 }
 
 .news-card-image-container {
@@ -87,8 +88,8 @@
     h-24
     flex-shrink-0
     rounded-xl
-    overflow-hidden
-    bg-zinc-800;
+    overflow-hidden;
+  background-color: #f3f4f6;
 }
 
 .news-card-gradient-overlay {
@@ -96,7 +97,7 @@
     absolute
     inset-0
     bg-gradient-to-l
-    from-black/40
+    from-black/10
     to-transparent;
 }
 
