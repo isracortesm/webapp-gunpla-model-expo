@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef } from 'react';
 import MainEventCard from "@/components/ui/cards/MainEventCard";
 import ToolbarGroup from "@/components/ui/toolbar/ToolbarGroup";
-import BottomNavigationBar from "@/components/ui/navigation/BottomNavigationBar";
 import { EventEntity } from "@/domain/entities/event-dashboard/entity";
 import { getEvent } from "@/features/event-dashboard/service/event-dashboard-service";
 import { useUnifiedDialog } from '@/features/dialogs/context/unified-dialog-provider';
@@ -51,7 +50,6 @@ export default function Home() {
     <div className="main-content">
       <ToolbarGroup />
       {event && <MainEventCard event={event} />}
-      <BottomNavigationBar />
     </div>
   );
 }

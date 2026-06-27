@@ -5,7 +5,6 @@ import Image from 'next/image';
 import { getEvent, getEventNews } from '@/features/event-dashboard/service/event-dashboard-service';
 import { useUnifiedDialog } from '@/features/dialogs/context/unified-dialog-provider';
 import { NewsEntity, EventEntity } from '@/domain/entities/event-dashboard/entity';
-import BottomNavigationBar from '@/components/ui/navigation/BottomNavigationBar';
 import './news.css';
 
 const EVENT_CODE = 'HMKGME26';
@@ -114,7 +113,6 @@ export default function NewsListPage() {
     return (
       <main className="news-page__container">
         <div className="news-page__empty">Event not found</div>
-        <BottomNavigationBar />
       </main>
     );
   }
@@ -166,8 +164,6 @@ export default function NewsListPage() {
           Page {page} of {pageCount || 1}
         </div>
       </div>
-
-      <BottomNavigationBar />
     </main>
   );
 }

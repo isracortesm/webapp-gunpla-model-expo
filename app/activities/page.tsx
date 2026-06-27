@@ -5,7 +5,6 @@ import Image from 'next/image';
 import { getEvent, getEventActivities } from '@/features/event-dashboard/service/event-dashboard-service';
 import { useUnifiedDialog } from '@/features/dialogs/context/unified-dialog-provider';
 import { ActivityEntity, EventEntity } from '@/domain/entities/event-dashboard/entity';
-import BottomNavigationBar from '@/components/ui/navigation/BottomNavigationBar';
 import './activities.css';
 
 const EVENT_CODE = 'HMKGME26';
@@ -116,7 +115,6 @@ export default function ActivitiesListPage() {
     return (
       <main className="activities-page__container">
         <div className="activities-page__empty">Event not found</div>
-        <BottomNavigationBar />
       </main>
     );
   }
@@ -168,8 +166,6 @@ export default function ActivitiesListPage() {
           Page {page} of {pageCount || 1}
         </div>
       </div>
-
-      <BottomNavigationBar />
     </main>
   );
 }

@@ -1,12 +1,14 @@
 import Image from "next/image";
+import Link from "next/link";
 import { useAuth } from "@/features/auth/context/auth-context";
 import "./FloatingToolbar.css";
 
 interface FloatingToolbarProps {
   onProfileClick?: () => void;
+  showNavLinks?: boolean;
 }
 
-export default function FloatingToolbar({ onProfileClick }: FloatingToolbarProps) {
+export default function FloatingToolbar({ onProfileClick, showNavLinks = false }: FloatingToolbarProps) {
   const { user, isAuthenticated } = useAuth();
 
   return (
@@ -24,6 +26,17 @@ export default function FloatingToolbar({ onProfileClick }: FloatingToolbarProps
           className={`object-cover rounded-full ${!isAuthenticated ? 'opacity-50' : ''}`}
         />
       </button>
+
+      {showNavLinks && (
+        <div className="flex items-center gap-2">
+          <Link href="/news" className="floating-toolbar__nav-btn--secondary">
+            News
+          </Link>
+          <Link href="/activities" className="floating-toolbar__nav-btn--primary">
+            Activities
+          </Link>
+        </div>
+      )}
     </div>
   );
 }
