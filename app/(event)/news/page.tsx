@@ -119,7 +119,6 @@ export default function NewsListPage() {
 
   return (
     <main className="news-page__container">
-      <h1 className="news-page__title">News</h1>
 
       <div className="max-w-4xl mx-auto w-full">
         <div className="news-list__container" onScroll={handleScroll}>

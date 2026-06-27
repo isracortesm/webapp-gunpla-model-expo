@@ -18,7 +18,7 @@
     overflow-hidden
     shadow-lg
     border
-    bg-black/10
+    bg-black/30
     backdrop-blur-md
     border-zinc-700/30;
 
@@ -42,7 +42,7 @@
 }
 
 .user-profile-dropdown__email {
-  @apply text-xs text-zinc-400 truncate;
+  @apply text-xs text-zinc-300 truncate;
 }
 
 .user-profile-dropdown__divider {

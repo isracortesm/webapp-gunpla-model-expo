@@ -121,7 +121,6 @@ export default function ActivitiesListPage() {
 
   return (
     <main className="activities-page__container">
-      <h1 className="activities-page__title">Activities</h1>
 
       <div className="max-w-4xl mx-auto w-full">
         <div className="activities-list__container" onScroll={handleScroll}>
