@@ -105,11 +105,11 @@ export default function ModelsListPage() {
             </div>
           ))}
           
-          {!hasMore && models.length > 0 && (
+          {!hasMore && (
             <div className="model-card model-card--add" onClick={() => router.push('/user/models/create')}>
               <div className="model-card-content">
-                <h2 className="model-card-title">+ Add New Model</h2>
-                <p className="model-card-subtitle">Create a new Gunpla model</p>
+                <h2 className="model-card-title">+ Add Model</h2>
+                <p className="model-card-subtitle">Create a new model</p>
               </div>
             </div>
           )}

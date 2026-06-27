@@ -11,7 +11,10 @@ const NAV_VISIBLE_ROUTES = ['/', '/news', '/activities'];
 export default function ToolbarGroup() {
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const pathname = usePathname();
-  const showNavLinks = pathname ? NAV_VISIBLE_ROUTES.includes(pathname) : false;
+  const isVisibleRoute = pathname ? NAV_VISIBLE_ROUTES.includes(pathname) : false;
+  const showNavLinks = isVisibleRoute;
+
+  if (!isVisibleRoute) return null;
 
   return (
     <div className="toolbar-group-container">

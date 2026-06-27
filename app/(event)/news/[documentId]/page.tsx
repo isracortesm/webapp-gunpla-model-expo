@@ -53,7 +53,7 @@ export default function NewsDetailPage() {
   return (
     <main className="news-detail__container">
       <button
-        onClick={() => router.push('/news')}
+        onClick={() => router.back()}
         className="news-detail__back-btn"
       >
         Back
