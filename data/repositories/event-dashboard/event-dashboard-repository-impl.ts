@@ -37,7 +37,11 @@ export class EventDashboardRepositoryImpl implements EventDashboardRepository {
   ): Promise<PaginatedResult<NewsEntity>> {
     const queryParams: Record<string, string | string[]> = {
       'filters[event][$eq]': String(eventId),
-      populate: ['thumbnail'],
+      'populate[thumbnail][fields][0]': 'url',
+      'fields[0]': 'title',
+      'fields[1]': 'subtitle',
+      'fields[2]': 'publishedAt',
+      'fields[3]': 'documentId',
     };
 
     if (params?.page) {
@@ -60,6 +64,15 @@ export class EventDashboardRepositoryImpl implements EventDashboardRepository {
         },
       },
     };
+  }
+
+  async getNewsByDocumentId(documentId: string): Promise<NewsEntity> {
+    const response = await this.httpService.get<{ data: StrapiNewsResponse }>(
+      `/api/news/${documentId}`,
+      { populate: ['thumbnail', 'user'] }
+    );
+
+    return mapNewsDtoToEntity(response.data);
   }
 
   async getActivitiesByEvent(

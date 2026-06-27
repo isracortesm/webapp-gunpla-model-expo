@@ -7,6 +7,7 @@ export interface EventDashboardRepository {
     eventId: number,
     params?: { page?: number; pageSize?: number }
   ): Promise<PaginatedResult<NewsEntity>>;
+  getNewsByDocumentId(documentId: string): Promise<NewsEntity>;
   getActivitiesByEvent(
     eventId: number,
     params?: { page?: number; pageSize?: number }

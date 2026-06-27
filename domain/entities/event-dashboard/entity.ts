@@ -30,12 +30,14 @@ export interface EventEntity {
 
 export interface NewsEntity {
   id: number;
+  documentId: string;
   title: string;
   subtitle: string;
   content: string;
   order: number;
   publishedAt: string;
   thumbnail?: MediaEntity;
+  user?: unknown;
 }
 
 export interface ActivityEntity {

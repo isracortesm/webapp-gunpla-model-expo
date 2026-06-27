@@ -39,12 +39,14 @@ export interface StrapiEventResponse {
 
 export interface StrapiNewsResponse {
   id: number;
+  documentId: string;
   title: string;
   subtitle: string;
   content: string;
   order: number;
   publishedAt: string;
   thumbnail?: StrapiMediaResponse;
+  user?: unknown;
 }
 
 export interface StrapiActivityResponse {
@@ -118,12 +120,14 @@ export function mapNewsDtoToEntity(dto: StrapiNewsResponse): NewsEntity {
 
   return {
     id: dto.id,
+    documentId: dto.documentId,
     title: dto.title,
     subtitle: dto.subtitle,
     content: dto.content,
     order: dto.order,
     publishedAt: dto.publishedAt,
     thumbnail,
+    user: dto.user,
   };
 }
 
