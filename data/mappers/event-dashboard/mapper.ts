@@ -1,4 +1,4 @@
-import { MediaEntity, CategoryEntity, EventEntity, NewsEntity, ActivityEntity } from '../../../domain/entities/event-dashboard/entity';
+import { MediaEntity, CategoryEntity, EventEntity, NewsEntity, ActivityEntity, CollaboratorEntity } from '../../../domain/entities/event-dashboard/entity';
 
 // Strapi v4 response types (flat structure without attributes wrapper)
 interface StrapiMediaResponse {
@@ -51,6 +51,7 @@ export interface StrapiNewsResponse {
 
 export interface StrapiActivityResponse {
   id: number;
+  documentId: string;
   name: string;
   shortDescription: string;
   description?: string;
@@ -61,6 +62,15 @@ export interface StrapiActivityResponse {
   capacity?: number;
   image?: StrapiMediaResponse;
   category?: StrapiCategoryResponse;
+  collaborators?: StrapiCollaboratorResponse[];
+}
+
+interface StrapiCollaboratorResponse {
+  id: number;
+  documentId?: string;
+  role: string;
+  description?: string;
+  user?: unknown;
 }
 
 interface StrapiSocialNetworkResponse {
@@ -138,6 +148,7 @@ export function mapActivityDtoToEntity(dto: StrapiActivityResponse): ActivityEnt
 
   return {
     id: dto.id,
+    documentId: dto.documentId,
     name: dto.name,
     shortDescription: dto.shortDescription,
     description: dto.description,
@@ -148,5 +159,12 @@ export function mapActivityDtoToEntity(dto: StrapiActivityResponse): ActivityEnt
     capacity: dto.capacity,
     image,
     category,
+    collaborators: dto.collaborators?.map((c) => ({
+      id: c.id,
+      documentId: c.documentId,
+      role: c.role,
+      description: c.description,
+      user: c.user,
+    })),
   };
 }

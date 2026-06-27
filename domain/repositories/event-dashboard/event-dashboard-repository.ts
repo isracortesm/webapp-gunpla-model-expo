@@ -12,4 +12,5 @@ export interface EventDashboardRepository {
     eventId: number,
     params?: { page?: number; pageSize?: number }
   ): Promise<PaginatedResult<ActivityEntity>>;
+  getActivityByDocumentId(documentId: string): Promise<ActivityEntity>;
 }

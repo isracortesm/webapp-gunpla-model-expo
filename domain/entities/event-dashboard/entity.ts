@@ -42,6 +42,7 @@ export interface NewsEntity {
 
 export interface ActivityEntity {
   id: number;
+  documentId: string;
   name: string;
   shortDescription: string;
   description?: string;
@@ -52,6 +53,15 @@ export interface ActivityEntity {
   capacity?: number;
   image?: MediaEntity;
   category?: CategoryEntity;
+  collaborators?: CollaboratorEntity[];
+}
+
+export interface CollaboratorEntity {
+  id: number;
+  documentId?: string;
+  role: string;
+  description?: string;
+  user?: unknown;
 }
 
 export interface SocialNetworkItem {

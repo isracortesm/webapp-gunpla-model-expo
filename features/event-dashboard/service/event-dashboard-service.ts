@@ -2,6 +2,7 @@ import { GetEventUseCase } from "@/domain/usecases/event-dashboard/get-event-use
 import { GetEventNewsUseCase } from "@/domain/usecases/event-dashboard/get-event-news-usecase";
 import { GetEventActivitiesUseCase } from "@/domain/usecases/event-dashboard/get-event-activities-usecase";
 import { GetNewsByDocumentIdUseCase } from "@/domain/usecases/event-dashboard/get-news-by-document-id-usecase";
+import { GetActivityByDocumentIdUseCase } from "@/domain/usecases/event-dashboard/get-activity-by-document-id-usecase";
 import { EventDashboardRepositoryImpl } from "@/data/repositories/event-dashboard/event-dashboard-repository-impl";
 import { HttpService } from "@/data/services/http-client";
 
@@ -11,6 +12,7 @@ const getEventUseCase = new GetEventUseCase(repository);
 const getEventNewsUseCase = new GetEventNewsUseCase(repository);
 const getEventActivitiesUseCase = new GetEventActivitiesUseCase(repository);
 const getNewsByDocumentIdUseCase = new GetNewsByDocumentIdUseCase(repository);
+const getActivityByDocumentIdUseCase = new GetActivityByDocumentIdUseCase(repository);
 
 export async function getEvent(eventCode: string) {
   return getEventUseCase.execute(eventCode);
@@ -34,4 +36,8 @@ export async function getEventActivities(
 
 export async function getNewsByDocumentId(documentId: string) {
   return getNewsByDocumentIdUseCase.execute(documentId);
+}
+
+export async function getActivityByDocumentId(documentId: string) {
+  return getActivityByDocumentIdUseCase.execute(documentId);
 }

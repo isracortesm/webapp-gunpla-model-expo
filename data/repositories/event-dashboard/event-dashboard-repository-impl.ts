@@ -112,4 +112,17 @@ export class EventDashboardRepositoryImpl implements EventDashboardRepository {
       },
     };
   }
+
+  async getActivityByDocumentId(documentId: string): Promise<ActivityEntity> {
+    const response = await this.httpService.get<{ data: StrapiActivityResponse }>(
+      `/api/activities/${documentId}`,
+      {
+        'populate[image]': 'true',
+        'populate[category]': 'true',
+        'populate[collaborators][populate][user]': 'true',
+      }
+    );
+
+    return mapActivityDtoToEntity(response.data);
+  }
 }
