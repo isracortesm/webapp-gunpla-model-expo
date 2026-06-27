@@ -112,6 +112,7 @@
 .event-card-description-container {
   border-radius: 16px;
   padding: 16px;
+  margin-bottom: 1rem;
   @media (min-width: 768px) {
     padding: 24px;
   }

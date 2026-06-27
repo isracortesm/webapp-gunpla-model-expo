@@ -59,6 +59,11 @@ export default function MainEventCard({ event }: MainEventCardProps) {
         {/* Subtitle */}
         <p className="event-card-subtitle">{subtitle}</p>
 
+        {/* Social Network Icons */}
+        {event.socialNetworks && event.socialNetworks.length > 0 && (
+          <SocialNetworkIcons networks={event.socialNetworks} />
+        )}
+
         {/* Markdown Description Container */}
         <div className="event-card-description-container">
           <ReactMarkdown
@@ -83,11 +88,6 @@ export default function MainEventCard({ event }: MainEventCardProps) {
             {event.description}
           </ReactMarkdown>
         </div>
-
-        {/* Social Network Icons */}
-        {event.socialNetworks && event.socialNetworks.length > 0 && (
-          <SocialNetworkIcons networks={event.socialNetworks} />
-        )}
       </div>
     </div>
   );
