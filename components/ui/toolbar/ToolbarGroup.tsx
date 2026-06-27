@@ -18,6 +18,7 @@ export default function ToolbarGroup() {
       <FloatingToolbar
         onProfileClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
         showNavLinks={showNavLinks}
+        pathname={pathname}
       />
       <UserProfileDropdown
         isOpen={isProfileMenuOpen}

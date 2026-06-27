@@ -6,9 +6,16 @@ import "./FloatingToolbar.css";
 interface FloatingToolbarProps {
   onProfileClick?: () => void;
   showNavLinks?: boolean;
+  pathname?: string | null;
 }
 
-export default function FloatingToolbar({ onProfileClick, showNavLinks = false }: FloatingToolbarProps) {
+const NAV_ITEMS = [
+  { href: '/', label: 'Home' },
+  { href: '/news', label: 'News' },
+  { href: '/activities', label: 'Activities' },
+];
+
+export default function FloatingToolbar({ onProfileClick, showNavLinks = false, pathname }: FloatingToolbarProps) {
   const { user, isAuthenticated } = useAuth();
 
   return (
@@ -29,12 +36,20 @@ export default function FloatingToolbar({ onProfileClick, showNavLinks = false }
 
       {showNavLinks && (
         <div className="flex items-center gap-2">
-          <Link href="/news" className="floating-toolbar__nav-btn--secondary">
-            News
-          </Link>
-          <Link href="/activities" className="floating-toolbar__nav-btn--primary">
-            Activities
-          </Link>
+          {NAV_ITEMS.map((item) => {
+            const isActive = pathname === item.href;
+
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`floating-toolbar__nav-btn ${isActive ? 'floating-toolbar__nav-btn--active' : ''}`}
+                aria-current={isActive ? 'page' : undefined}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
         </div>
       )}
     </div>
