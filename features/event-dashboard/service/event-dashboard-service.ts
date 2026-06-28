@@ -6,6 +6,7 @@ import { GetActivityByDocumentIdUseCase } from "@/domain/usecases/event-dashboar
 import { RegisterActivityParticipantUseCase } from "@/domain/usecases/event-dashboard/register-activity-participant-usecase";
 import { DeleteActivityParticipantUseCase } from "@/domain/usecases/event-dashboard/delete-activity-participant-usecase";
 import { CheckActivityRegistrationUseCase } from "@/domain/usecases/event-dashboard/check-activity-registration-usecase";
+import { GetUserActivitiesUseCase } from "@/domain/usecases/event-dashboard/get-user-activities-usecase";
 import { EventDashboardRepositoryImpl } from "@/data/repositories/event-dashboard/event-dashboard-repository-impl";
 import { HttpService } from "@/data/services/http-client";
 
@@ -19,6 +20,7 @@ const getActivityByDocumentIdUseCase = new GetActivityByDocumentIdUseCase(reposi
 const registerActivityParticipantUseCase = new RegisterActivityParticipantUseCase(repository);
 const deleteActivityParticipantUseCase = new DeleteActivityParticipantUseCase(repository);
 const checkActivityRegistrationUseCase = new CheckActivityRegistrationUseCase(repository);
+const getUserActivitiesUseCase = new GetUserActivitiesUseCase(repository);
 
 export async function getEvent(eventCode: string) {
   return getEventUseCase.execute(eventCode);
@@ -58,4 +60,13 @@ export async function deleteActivityParticipant(documentId: string, token?: stri
 
 export async function checkActivityRegistration(activityId: number, userId: number, token?: string): Promise<{ registered: boolean; participantDocumentId: string | null }> {
   return checkActivityRegistrationUseCase.execute(activityId, userId, token);
+}
+
+export async function getUserActivities(
+  userId: number,
+  page: number,
+  pageSize: number,
+  token?: string
+) {
+  return getUserActivitiesUseCase.execute(userId, { page, pageSize }, token);
 }

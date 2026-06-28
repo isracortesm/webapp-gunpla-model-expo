@@ -16,4 +16,9 @@ export interface EventDashboardRepository {
   registerActivityParticipant(activityId: string, userId: string, token?: string): Promise<ActivityParticipantEntity>;
   deleteActivityParticipant(documentId: string, token?: string): Promise<void>;
   checkActivityRegistration(activityId: number, userId: number, token?: string): Promise<{ total: number; participants: { documentId: string }[] }>;
+  getUserActivities(
+    userId: number,
+    params?: { page?: number; pageSize?: number },
+    token?: string
+  ): Promise<PaginatedResult<ActivityEntity>>;
 }

@@ -166,4 +166,43 @@ export class EventDashboardRepositoryImpl implements EventDashboardRepository {
       participants: response.data,
     };
   }
+
+  async getUserActivities(
+    userId: number,
+    params?: { page?: number; pageSize?: number },
+    token?: string
+  ): Promise<PaginatedResult<ActivityEntity>> {
+    const http = token
+      ? new HttpService(process.env.NEXT_PUBLIC_HOST_URI || '', token)
+      : this.httpService;
+
+    const queryParams: Record<string, string | string[]> = {
+      'populate[activity][populate][image]': 'true',
+      'filters[user][id][$eq]': String(userId),
+    };
+
+    if (params?.page) {
+      queryParams['pagination[page]'] = String(params.page);
+    }
+    if (params?.pageSize) {
+      queryParams['pagination[pageSize]'] = String(params.pageSize);
+    }
+
+    const response = await http.get<{
+      data: { activity: StrapiActivityResponse }[];
+      meta: { pagination: { page: number; pageSize: number; pageCount: number; total: number } };
+    }>('/api/activity-participants', queryParams);
+
+    return {
+      data: response.data.map((item) => mapActivityDtoToEntity(item.activity)),
+      meta: {
+        pagination: {
+          page: response.meta.pagination.page,
+          pageSize: response.meta.pagination.pageSize,
+          pageCount: response.meta.pagination.pageCount,
+          total: response.meta.pagination.total,
+        },
+      },
+    };
+  }
 }
