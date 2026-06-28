@@ -182,7 +182,7 @@ export default function ActivityDetailPage() {
                 {activity.category.description && (
                   <p className="activity-detail__category-description">{activity.category.description}</p>
                 )}
-                {user && !isChecking && (
+                {!isChecking && user && (
                   <div className="activity-detail__participation">
                     {isRegistered ? (
                       <button onClick={handleUnregister} className="activity-detail__cancel-btn">
@@ -193,6 +193,13 @@ export default function ActivityDetailPage() {
                         Participate
                       </button>
                     )}
+                  </div>
+                )}
+                {!isChecking && !user && (
+                  <div className="activity-detail__participation">
+                    <button onClick={() => router.push('/auth/register')} className="activity-detail__register-btn">
+                      Register to participate
+                    </button>
                   </div>
                 )}
               </div>
