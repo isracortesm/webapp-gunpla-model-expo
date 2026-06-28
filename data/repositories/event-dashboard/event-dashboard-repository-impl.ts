@@ -1,4 +1,4 @@
-import { EventEntity, NewsEntity, ActivityEntity } from '../../../domain/entities/event-dashboard/entity';
+import { EventEntity, NewsEntity, ActivityEntity, ActivityParticipantEntity } from '../../../domain/entities/event-dashboard/entity';
 import { PaginatedResult } from '../../../domain/entities/common/paginated-result';
 import { EventDashboardRepository } from '../../../domain/repositories/event-dashboard/event-dashboard-repository';
 import { HttpService } from '../../services/http-client';
@@ -124,5 +124,31 @@ export class EventDashboardRepositoryImpl implements EventDashboardRepository {
     );
 
     return mapActivityDtoToEntity(response.data);
+  }
+
+  async registerActivityParticipant(activityId: string, userId: string): Promise<ActivityParticipantEntity> {
+    const response = await this.httpService.post<{ data: ActivityParticipantEntity }>('/api/activity-participants', {
+      data: {
+        activity: activityId,
+        user: userId,
+      },
+    });
+
+    return response.data;
+  }
+
+  async deleteActivityParticipant(documentId: string): Promise<void> {
+    await this.httpService.delete<void>(`/api/activity-participants/${documentId}`);
+  }
+
+  async checkActivityRegistration(activityId: number, userId: number): Promise<number> {
+    const response = await this.httpService.get<{
+      data: unknown[];
+      meta: { pagination: { total: number } };
+    }>('/api/activity-participants', {
+      'filters[activity][id][$eq]': String(activityId),
+      'filters[user][id][$eq]': String(userId),
+    });
+    return response.meta.pagination.total;
   }
 }

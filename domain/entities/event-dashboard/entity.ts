@@ -71,3 +71,11 @@ export interface SocialNetworkItem {
   name: string;
   url: string;
 }
+
+export interface ActivityParticipantEntity {
+  id: string;
+  documentId: string;
+  statusName: string;
+  checkIn: boolean;
+  user: string;
+}

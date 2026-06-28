@@ -1,4 +1,4 @@
-import { EventEntity, NewsEntity, ActivityEntity } from '../../../domain/entities/event-dashboard/entity';
+import { EventEntity, NewsEntity, ActivityEntity, ActivityParticipantEntity } from '../../../domain/entities/event-dashboard/entity';
 import { PaginatedResult } from '../../../domain/entities/common/paginated-result';
 
 export interface EventDashboardRepository {
@@ -13,4 +13,7 @@ export interface EventDashboardRepository {
     params?: { page?: number; pageSize?: number }
   ): Promise<PaginatedResult<ActivityEntity>>;
   getActivityByDocumentId(documentId: string): Promise<ActivityEntity>;
+  registerActivityParticipant(activityId: string, userId: string): Promise<ActivityParticipantEntity>;
+  deleteActivityParticipant(documentId: string): Promise<void>;
+  checkActivityRegistration(activityId: number, userId: number): Promise<number>;
 }
