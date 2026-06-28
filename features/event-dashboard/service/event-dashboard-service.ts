@@ -56,6 +56,6 @@ export async function deleteActivityParticipant(documentId: string) {
   return deleteActivityParticipantUseCase.execute(documentId);
 }
 
-export async function checkActivityRegistration(activityId: number, userId: number): Promise<boolean> {
+export async function checkActivityRegistration(activityId: number, userId: number): Promise<{ registered: boolean; participantDocumentId: string | null }> {
   return checkActivityRegistrationUseCase.execute(activityId, userId);
 }

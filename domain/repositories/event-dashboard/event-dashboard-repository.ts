@@ -15,5 +15,5 @@ export interface EventDashboardRepository {
   getActivityByDocumentId(documentId: string): Promise<ActivityEntity>;
   registerActivityParticipant(activityId: string, userId: string): Promise<ActivityParticipantEntity>;
   deleteActivityParticipant(documentId: string): Promise<void>;
-  checkActivityRegistration(activityId: number, userId: number): Promise<number>;
+  checkActivityRegistration(activityId: number, userId: number): Promise<{ total: number; participants: { documentId: string }[] }>;
 }

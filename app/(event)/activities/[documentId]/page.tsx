@@ -1,20 +1,30 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import ReactMarkdown from 'react-markdown';
+import { useAuth } from '@/features/auth/context/auth-context';
 import { useUnifiedDialog } from '@/features/dialogs/context/unified-dialog-provider';
-import { getActivityByDocumentId } from '@/features/event-dashboard/service/event-dashboard-service';
+import {
+  getActivityByDocumentId,
+  checkActivityRegistration,
+  registerActivityParticipant,
+  deleteActivityParticipant,
+} from '@/features/event-dashboard/service/event-dashboard-service';
 import type { ActivityEntity } from '@/domain/entities/event-dashboard/entity';
 import './detail.css';
 
 export default function ActivityDetailPage() {
   const params = useParams<{ documentId: string }>();
   const router = useRouter();
-  const { showLoading, hideLoading, showError } = useUnifiedDialog();
+  const { user } = useAuth();
+  const { showLoading, hideLoading, showError, showConfirmation, showSuccess } = useUnifiedDialog();
   const [activity, setActivity] = useState<ActivityEntity | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isRegistered, setIsRegistered] = useState(false);
+  const [participantDocId, setParticipantDocId] = useState<string | null>(null);
+  const [isChecking, setIsChecking] = useState(true);
   const fetched = useRef(false);
 
   useEffect(() => {
@@ -35,6 +45,63 @@ export default function ActivityDetailPage() {
     }
     load();
   }, [params.documentId, showLoading, hideLoading, showError]);
+
+  const checkRegistration = useCallback(async (activityId: number, userId: number) => {
+    try {
+      const result = await checkActivityRegistration(activityId, userId);
+      setIsRegistered(result.registered);
+      setParticipantDocId(result.participantDocumentId);
+    } catch {
+      // Silently fail, user can still see the activity
+    } finally {
+      setIsChecking(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (activity && user && user.id) {
+      checkRegistration(activity.id, user.id);
+    } else if (activity && !user) {
+      setIsChecking(false);
+    }
+  }, [activity, user, checkRegistration]);
+
+  const handleRegister = async () => {
+    if (!activity || !user) return;
+    showLoading('Registering...');
+    try {
+      const result = await registerActivityParticipant(String(activity.id), String(user.id));
+      setIsRegistered(true);
+      setParticipantDocId(result.documentId);
+      showSuccess('Successfully registered!');
+    } catch {
+      showError('Failed to register', 'Error');
+    } finally {
+      hideLoading();
+    }
+  };
+
+  const handleUnregister = () => {
+    if (!participantDocId) return;
+
+    showConfirmation(
+      'Cancel participation',
+      'Are you sure you want to cancel your participation?',
+      async () => {
+        showLoading('Cancelling...');
+        try {
+          await deleteActivityParticipant(participantDocId);
+          setIsRegistered(false);
+          setParticipantDocId(null);
+          showSuccess('Participation cancelled');
+        } catch {
+          showError('Failed to cancel participation', 'Error');
+        } finally {
+          hideLoading();
+        }
+      },
+    );
+  };
 
   const formatDate = (dateString: string) => {
     try {
@@ -114,6 +181,19 @@ export default function ActivityDetailPage() {
                 <h4 className="activity-detail__category-name">{activity.category.name}</h4>
                 {activity.category.description && (
                   <p className="activity-detail__category-description">{activity.category.description}</p>
+                )}
+                {user && !isChecking && (
+                  <div className="activity-detail__participation">
+                    {isRegistered ? (
+                      <button onClick={handleUnregister} className="activity-detail__cancel-btn">
+                        Cancel participation
+                      </button>
+                    ) : (
+                      <button onClick={handleRegister} className="activity-detail__participate-btn">
+                        Participate
+                      </button>
+                    )}
+                  </div>
                 )}
               </div>
             </section>

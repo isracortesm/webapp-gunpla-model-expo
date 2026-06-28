@@ -7,8 +7,11 @@ export class CheckActivityRegistrationUseCase {
     this.repository = repository;
   }
 
-  async execute(activityId: number, userId: number): Promise<boolean> {
-    const total = await this.repository.checkActivityRegistration(activityId, userId);
-    return total > 0;
+  async execute(activityId: number, userId: number): Promise<{ registered: boolean; participantDocumentId: string | null }> {
+    const result = await this.repository.checkActivityRegistration(activityId, userId);
+    return {
+      registered: result.total > 0,
+      participantDocumentId: result.participants[0]?.documentId ?? null,
+    };
   }
 }

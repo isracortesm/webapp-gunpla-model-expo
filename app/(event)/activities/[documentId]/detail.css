@@ -166,6 +166,44 @@
   color: #374151;
 }
 
+.activity-detail__participation {
+  margin-top: 16px;
+}
+
+.activity-detail__participate-btn {
+  width: 100%;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border: none;
+  background-color: #16a34a;
+  color: white;
+}
+
+.activity-detail__participate-btn:hover {
+  background-color: #15803d;
+}
+
+.activity-detail__cancel-btn {
+  width: 100%;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border: none;
+  background-color: #dc2626;
+  color: white;
+}
+
+.activity-detail__cancel-btn:hover {
+  background-color: #b91c1c;
+}
+
 .activity-detail__collaborators-list {
   display: flex;
   flex-direction: column;

@@ -141,14 +141,17 @@ export class EventDashboardRepositoryImpl implements EventDashboardRepository {
     await this.httpService.delete<void>(`/api/activity-participants/${documentId}`);
   }
 
-  async checkActivityRegistration(activityId: number, userId: number): Promise<number> {
+  async checkActivityRegistration(activityId: number, userId: number): Promise<{ total: number; participants: { documentId: string }[] }> {
     const response = await this.httpService.get<{
-      data: unknown[];
+      data: { documentId: string }[];
       meta: { pagination: { total: number } };
     }>('/api/activity-participants', {
       'filters[activity][id][$eq]': String(activityId),
       'filters[user][id][$eq]': String(userId),
     });
-    return response.meta.pagination.total;
+    return {
+      total: response.meta.pagination.total,
+      participants: response.data,
+    };
   }
 }
