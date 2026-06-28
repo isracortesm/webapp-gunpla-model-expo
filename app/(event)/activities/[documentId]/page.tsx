@@ -19,6 +19,7 @@ export default function ActivityDetailPage() {
   const params = useParams<{ documentId: string }>();
   const router = useRouter();
   const { user } = useAuth();
+  const token = typeof window !== 'undefined' ? localStorage.getItem('auth_token') || undefined : undefined;
   const { showLoading, hideLoading, showError, showConfirmation, showSuccess } = useUnifiedDialog();
   const [activity, setActivity] = useState<ActivityEntity | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -48,7 +49,7 @@ export default function ActivityDetailPage() {
 
   const checkRegistration = useCallback(async (activityId: number, userId: number) => {
     try {
-      const result = await checkActivityRegistration(activityId, userId);
+      const result = await checkActivityRegistration(activityId, userId, token);
       setIsRegistered(result.registered);
       setParticipantDocId(result.participantDocumentId);
     } catch {
@@ -56,7 +57,7 @@ export default function ActivityDetailPage() {
     } finally {
       setIsChecking(false);
     }
-  }, []);
+  }, [token]);
 
   useEffect(() => {
     if (activity && user && user.id) {
@@ -70,7 +71,7 @@ export default function ActivityDetailPage() {
     if (!activity || !user) return;
     showLoading('Registering...');
     try {
-      const result = await registerActivityParticipant(String(activity.id), String(user.id));
+      const result = await registerActivityParticipant(String(activity.id), String(user.id), token);
       setIsRegistered(true);
       setParticipantDocId(result.documentId);
       showSuccess('Successfully registered!');
@@ -90,7 +91,7 @@ export default function ActivityDetailPage() {
       async () => {
         showLoading('Cancelling...');
         try {
-          await deleteActivityParticipant(participantDocId);
+          await deleteActivityParticipant(participantDocId, token);
           setIsRegistered(false);
           setParticipantDocId(null);
           showSuccess('Participation cancelled');

@@ -126,8 +126,12 @@ export class EventDashboardRepositoryImpl implements EventDashboardRepository {
     return mapActivityDtoToEntity(response.data);
   }
 
-  async registerActivityParticipant(activityId: string, userId: string): Promise<ActivityParticipantEntity> {
-    const response = await this.httpService.post<{ data: ActivityParticipantEntity }>('/api/activity-participants', {
+  async registerActivityParticipant(activityId: string, userId: string, token?: string): Promise<ActivityParticipantEntity> {
+    const http = token
+      ? new HttpService(process.env.NEXT_PUBLIC_HOST_URI || '', token)
+      : this.httpService;
+
+    const response = await http.post<{ data: ActivityParticipantEntity }>('/api/activity-participants', {
       data: {
         activity: activityId,
         user: userId,
@@ -137,12 +141,20 @@ export class EventDashboardRepositoryImpl implements EventDashboardRepository {
     return response.data;
   }
 
-  async deleteActivityParticipant(documentId: string): Promise<void> {
-    await this.httpService.delete<void>(`/api/activity-participants/${documentId}`);
+  async deleteActivityParticipant(documentId: string, token?: string): Promise<void> {
+    const http = token
+      ? new HttpService(process.env.NEXT_PUBLIC_HOST_URI || '', token)
+      : this.httpService;
+
+    await http.delete<void>(`/api/activity-participants/${documentId}`);
   }
 
-  async checkActivityRegistration(activityId: number, userId: number): Promise<{ total: number; participants: { documentId: string }[] }> {
-    const response = await this.httpService.get<{
+  async checkActivityRegistration(activityId: number, userId: number, token?: string): Promise<{ total: number; participants: { documentId: string }[] }> {
+    const http = token
+      ? new HttpService(process.env.NEXT_PUBLIC_HOST_URI || '', token)
+      : this.httpService;
+
+    const response = await http.get<{
       data: { documentId: string }[];
       meta: { pagination: { total: number } };
     }>('/api/activity-participants', {

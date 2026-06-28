@@ -7,7 +7,7 @@ export class DeleteActivityParticipantUseCase {
     this.repository = repository;
   }
 
-  async execute(documentId: string): Promise<void> {
-    return this.repository.deleteActivityParticipant(documentId);
+  async execute(documentId: string, token?: string): Promise<void> {
+    return this.repository.deleteActivityParticipant(documentId, token);
   }
 }

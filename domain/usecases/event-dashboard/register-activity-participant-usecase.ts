@@ -8,7 +8,7 @@ export class RegisterActivityParticipantUseCase {
     this.repository = repository;
   }
 
-  async execute(activityId: string, userId: string): Promise<ActivityParticipantEntity> {
-    return this.repository.registerActivityParticipant(activityId, userId);
+  async execute(activityId: string, userId: string, token?: string): Promise<ActivityParticipantEntity> {
+    return this.repository.registerActivityParticipant(activityId, userId, token);
   }
 }

@@ -146,11 +146,11 @@ export class ModelRepositoryImpl implements ModelRepository, ModelReferenceRepos
         user: String(params.userId),
       },
     };
-return await this.http.post('/api/user-networks', body);
+  return await this.http.post('/api/user-networks', body);
 }
 
 async deleteSocialNetwork(documentId: string): Promise<void> {
-await this.http.delete(`/api/user-networks/${documentId}`);
+  await this.http.delete(`/api/user-networks/${documentId}`);
 }
 
 async createModelReference(params: CreateModelReferenceParams, token?: string): Promise<ModelReferenceResponseEntity> {

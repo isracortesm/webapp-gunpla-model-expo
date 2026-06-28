@@ -13,7 +13,7 @@ export interface EventDashboardRepository {
     params?: { page?: number; pageSize?: number }
   ): Promise<PaginatedResult<ActivityEntity>>;
   getActivityByDocumentId(documentId: string): Promise<ActivityEntity>;
-  registerActivityParticipant(activityId: string, userId: string): Promise<ActivityParticipantEntity>;
-  deleteActivityParticipant(documentId: string): Promise<void>;
-  checkActivityRegistration(activityId: number, userId: number): Promise<{ total: number; participants: { documentId: string }[] }>;
+  registerActivityParticipant(activityId: string, userId: string, token?: string): Promise<ActivityParticipantEntity>;
+  deleteActivityParticipant(documentId: string, token?: string): Promise<void>;
+  checkActivityRegistration(activityId: number, userId: number, token?: string): Promise<{ total: number; participants: { documentId: string }[] }>;
 }

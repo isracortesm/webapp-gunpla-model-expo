@@ -48,14 +48,14 @@ export async function getActivityByDocumentId(documentId: string) {
   return getActivityByDocumentIdUseCase.execute(documentId);
 }
 
-export async function registerActivityParticipant(activityId: string, userId: string) {
-  return registerActivityParticipantUseCase.execute(activityId, userId);
+export async function registerActivityParticipant(activityId: string, userId: string, token?: string) {
+  return registerActivityParticipantUseCase.execute(activityId, userId, token);
 }
 
-export async function deleteActivityParticipant(documentId: string) {
-  return deleteActivityParticipantUseCase.execute(documentId);
+export async function deleteActivityParticipant(documentId: string, token?: string) {
+  return deleteActivityParticipantUseCase.execute(documentId, token);
 }
 
-export async function checkActivityRegistration(activityId: number, userId: number): Promise<{ registered: boolean; participantDocumentId: string | null }> {
-  return checkActivityRegistrationUseCase.execute(activityId, userId);
+export async function checkActivityRegistration(activityId: number, userId: number, token?: string): Promise<{ registered: boolean; participantDocumentId: string | null }> {
+  return checkActivityRegistrationUseCase.execute(activityId, userId, token);
 }
