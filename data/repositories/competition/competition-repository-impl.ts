@@ -1,7 +1,12 @@
-import { CompetitionEntity, CompetitionModelEntity } from '../../../domain/entities/competition/entity';
+import { CompetitionEntity, CompetitionModelEntity, CompetitionModelEntryEntity } from '../../../domain/entities/competition/entity';
 import { CompetitionRepository } from '../../../domain/repositories/competition/competition-repository';
 import { HttpService } from '../../services/http-client';
-import { mapCompetitionDtoToEntity, StrapiCompetitionResponse } from '../../mappers/competition/mapper';
+import {
+  mapCompetitionDtoToEntity,
+  mapCompetitionModelEntryDtoToEntity,
+  StrapiCompetitionResponse,
+  StrapiCompetitionModelEntryResponse,
+} from '../../mappers/competition/mapper';
 
 export class CompetitionRepositoryImpl implements CompetitionRepository {
   private httpService: HttpService;
@@ -48,5 +53,23 @@ export class CompetitionRepositoryImpl implements CompetitionRepository {
       : this.httpService;
 
     await http.delete<void>(`/api/competition-models/${documentId}`);
+  }
+
+  async getCompetitionModels(
+    competitionId: number,
+    userId: number,
+    token?: string
+  ): Promise<CompetitionModelEntryEntity[]> {
+    const http = token
+      ? new HttpService(process.env.NEXT_PUBLIC_HOST_URI || '', token)
+      : this.httpService;
+
+    const response = await http.get<{ data: StrapiCompetitionModelEntryResponse[] }>('/api/competition-models', {
+      'populate[model][populate][image]': 'true',
+      'filters[competition][id][$eq]': String(competitionId),
+      'filters[user][id][$eq]': String(userId),
+    });
+
+    return response.data.map(mapCompetitionModelEntryDtoToEntity);
   }
 }

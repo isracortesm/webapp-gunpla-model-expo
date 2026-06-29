@@ -28,3 +28,11 @@ export interface CompetitionModelEntity {
   id: string;
   documentId: string;
 }
+
+import { ModelEntity } from '../models/model-entity';
+
+export interface CompetitionModelEntryEntity {
+  id: number;
+  documentId: string;
+  model: ModelEntity;
+}

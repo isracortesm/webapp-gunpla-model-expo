@@ -1,4 +1,4 @@
-import { CompetitionEntity, CompetitionModelEntity } from '../../../domain/entities/competition/entity';
+import { CompetitionEntity, CompetitionModelEntity, CompetitionModelEntryEntity } from '../../../domain/entities/competition/entity';
 
 export interface CompetitionRepository {
   getCompetitions(token?: string): Promise<CompetitionEntity[]>;
@@ -7,4 +7,9 @@ export interface CompetitionRepository {
     token?: string
   ): Promise<CompetitionModelEntity>;
   deleteCompetitionModel(documentId: string, token?: string): Promise<void>;
+  getCompetitionModels(
+    competitionId: number,
+    userId: number,
+    token?: string
+  ): Promise<CompetitionModelEntryEntity[]>;
 }
