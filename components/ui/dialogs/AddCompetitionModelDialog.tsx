@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { getModels } from '@/features/models/service/models-service';
 import { registerCompetitionModel } from '@/features/competition/service/competition-service';
 import { useUnifiedDialog } from '@/features/dialogs/context/unified-dialog-provider';
-import type { CompetitionEntity, CompetitionCategoryEntity } from '@/domain/entities/competition/entity';
+import type { CompetitionEntity } from '@/domain/entities/competition/entity';
 import type { ModelEntity } from '@/domain/entities/models/model-entity';
 import './AddCompetitionModelDialog.css';
 
@@ -27,8 +27,8 @@ export default function AddCompetitionModelDialog({
   token,
 }: AddCompetitionModelDialogProps) {
   const { showLoading, hideLoading, showError, showSuccess } = useUnifiedDialog();
-  const [selectedCategory, setSelectedCategory] = useState<CompetitionCategoryEntity | null>(null);
-  const [expandedCategory, setExpandedCategory] = useState<number | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<typeof competition.categories[number] | null>(null);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedModelId, setSelectedModelId] = useState<string | null>(null);
   const [userModels, setUserModels] = useState<ModelEntity[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -36,6 +36,14 @@ export default function AddCompetitionModelDialog({
 
   useEffect(() => {
     if (!isOpen) return;
+
+    if (competition.categories.length > 0) {
+      setSelectedCategory(competition.categories[0]);
+    }
+    setIsDropdownOpen(false);
+    setSelectedModelId(null);
+    setSearchQuery('');
+    setUserModels([]);
 
     async function loadModels() {
       try {
@@ -46,7 +54,7 @@ export default function AddCompetitionModelDialog({
       }
     }
     loadModels();
-  }, [isOpen, userId, showError]);
+  }, [isOpen, userId, showError, competition.categories]);
 
   const availableModels = useMemo(() => {
     return userModels.filter((m) => !registeredModelIds.includes(m.documentId));
@@ -58,16 +66,7 @@ export default function AddCompetitionModelDialog({
     return availableModels.filter((m) => m.name.toLowerCase().includes(q));
   }, [availableModels, searchQuery]);
 
-  const resetState = () => {
-    setSelectedCategory(null);
-    setExpandedCategory(null);
-    setSelectedModelId(null);
-    setSearchQuery('');
-    setUserModels([]);
-  };
-
   const handleClose = () => {
-    resetState();
     onClose();
   };
 
@@ -96,16 +95,6 @@ export default function AddCompetitionModelDialog({
     }
   };
 
-  const handleCategoryClick = (cat: CompetitionCategoryEntity) => {
-    if (expandedCategory === cat.id) {
-      setExpandedCategory(null);
-      setSelectedCategory(null);
-    } else {
-      setExpandedCategory(cat.id);
-      setSelectedCategory(cat);
-    }
-  };
-
   if (!isOpen) return null;
 
   return (
@@ -115,44 +104,53 @@ export default function AddCompetitionModelDialog({
 
         <div className="add-model-dialog__section">
           <label className="add-model-dialog__label">Select Category</label>
-          <div className="add-model-dialog__category-list">
-            {competition.categories.map((cat) => {
-              const isExpanded = expandedCategory === cat.id;
+          <div className="add-model-dialog__category-selector-wrapper">
+            <button
+              className="add-model-dialog__category-selector"
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            >
+              <span>{selectedCategory?.name ?? 'Select a category'}</span>
+              <span className={`add-model-dialog__selector-chevron ${isDropdownOpen ? 'add-model-dialog__selector-chevron--open' : ''}`}>
+                ▼
+              </span>
+            </button>
 
-              return (
-                <div key={cat.id} className="add-model-dialog__category-item">
+            {isDropdownOpen && (
+              <div className="add-model-dialog__dropdown">
+                {competition.categories.map((cat) => (
                   <button
-                    className={`add-model-dialog__category-btn ${isExpanded ? 'add-model-dialog__category-btn--selected' : ''}`}
-                    onClick={() => handleCategoryClick(cat)}
+                    key={cat.id}
+                    className={`add-model-dialog__dropdown-item ${selectedCategory?.id === cat.id ? 'add-model-dialog__dropdown-item--selected' : ''}`}
+                    onClick={() => {
+                      setSelectedCategory(cat);
+                      setIsDropdownOpen(false);
+                    }}
                   >
-                    <span>{cat.name}</span>
-                    <span className={`add-model-dialog__chevron ${isExpanded ? 'add-model-dialog__chevron--open' : ''}`}>
-                      ▶
-                    </span>
+                    {cat.name}
+                    {selectedCategory?.id === cat.id && <span className="add-model-dialog__dropdown-check">✓</span>}
                   </button>
-
-                  {isExpanded && (
-                    <div className="add-model-dialog__category-body">
-                      <p className="add-model-dialog__category-desc">{cat.description}</p>
-                      <div className="add-model-dialog__criterias">
-                        <h4 className="add-model-dialog__criterias-title">Evaluation Criteria</h4>
-                        {cat.criterias.map((criteria) => (
-                          <div key={criteria.id} className="add-model-dialog__criteria-card">
-                            <div className="add-model-dialog__criteria-header">
-                              <span className="add-model-dialog__criteria-name">{criteria.name}</span>
-                              <span className="add-model-dialog__criteria-code">[{criteria.codeName}]</span>
-                              <span className="add-model-dialog__criteria-points">Max: {criteria.maxPoints} pts</span>
-                            </div>
-                            <p className="add-model-dialog__criteria-desc">{criteria.description}</p>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
+                ))}
+              </div>
+            )}
           </div>
+
+          {selectedCategory && (
+            <div className="add-model-dialog__category-content">
+              <p className="add-model-dialog__category-desc">{selectedCategory.description}</p>
+              <div className="add-model-dialog__criterias">
+                <h4 className="add-model-dialog__criterias-title">Evaluation Criteria</h4>
+                {selectedCategory.criterias.map((criteria) => (
+                  <div key={criteria.id} className="add-model-dialog__criteria-card">
+                    <div className="add-model-dialog__criteria-header">
+                      <span className="add-model-dialog__criteria-name">{criteria.name}</span>
+                      <span className="add-model-dialog__criteria-points">Max: {criteria.maxPoints} pts</span>
+                    </div>
+                    <p className="add-model-dialog__criteria-desc">{criteria.description}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="add-model-dialog__section">
