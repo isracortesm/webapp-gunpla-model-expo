@@ -28,8 +28,8 @@ export default function UserProfileDropdown({ isOpen, onClose }: UserProfileDrop
 
   const menuItems = isAuthenticated && user ? authenticatedMenuItems : guestMenuItems;
   const avatarSrc = isAuthenticated && user
-    ? user.profileImage?.thumbnailUrl || user.profileImage?.url || '/globe.svg'
-    : '/globe.svg';
+    ? user.profileImage?.thumbnailUrl || user.profileImage?.url || '/profile_holder.png'
+    : '/profile_holder.png';
   const displayName = isAuthenticated && user ? user.username : 'Guest';
 
   return (

@@ -26,7 +26,7 @@ export default function FloatingToolbar({ onProfileClick, showNavLinks = false, 
         className="floating-toolbar__profile-link object-cover rounded-full ring-1 ring-zinc-600/50 transition-transform hover:scale-110 cursor-pointer bg-transparent border-none p-0"
       >
         <Image
-          src={isAuthenticated && user ? user.profileImage?.thumbnailUrl || user.profileImage?.url || '/globe.svg' : '/globe.svg'}
+          src={isAuthenticated && user ? user.profileImage?.thumbnailUrl || user.profileImage?.url || '/profile_holder.png' : '/profile_holder.png'}
           alt={isAuthenticated && user ? `${user.username}'s avatar` : 'Profile avatar'}
           width={28}
           height={28}
