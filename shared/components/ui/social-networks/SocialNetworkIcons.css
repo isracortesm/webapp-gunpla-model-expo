@@ -2,7 +2,8 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-top: 24px;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 
 .social-network-icon-link {

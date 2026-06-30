@@ -1,5 +1,5 @@
 import { AuthRepository } from '../../../domain/repositories/auth/auth-repository';
-import { UserEntity, AuthResponseEntity, ResetPasswordRequestEntity } from '../../../domain/entities/auth/entity';
+import { UserEntity, AuthResponseEntity, ResetPasswordRequestEntity, UpdateUserParams } from '../../../domain/entities/auth/entity';
 import { HttpService } from '../../services/http-client';
 
 export class AuthRepositoryImpl implements AuthRepository {
@@ -34,6 +34,36 @@ export class AuthRepositoryImpl implements AuthRepository {
   async resetPassword(request: ResetPasswordRequestEntity): Promise<AuthResponseEntity> {
     console.log('AuthRepositoryImpl.resetPassword');
     return this.http.post('/api/auth/reset-password', request as unknown as Record<string, unknown>);
+  }
+
+  async changePassword(currentPassword: string, password: string, passwordConfirmation: string): Promise<AuthResponseEntity> {
+    const AUTH_TOKEN_KEY = 'auth_token';
+    let token: string | undefined;
+    try {
+      const stored = localStorage.getItem(AUTH_TOKEN_KEY);
+      if (stored && typeof stored === 'string') {
+        token = stored;
+      }
+    } catch (error) {
+      console.error(error);
+    }
+
+    const authHttpService = new HttpService(this.http['baseUrl'], token);
+    return authHttpService.post('/api/auth/change-password', {
+      currentPassword,
+      password,
+      passwordConfirmation,
+    });
+  }
+
+  async updateUser(userId: number, params: UpdateUserParams, token?: string): Promise<UserEntity> {
+    const authHttpService = new HttpService(this.http['baseUrl'], token);
+    return authHttpService.put(`/api/users/${userId}`, {
+      username: params.username,
+      aboutMe: params.aboutMe,
+      socialNetworks: params.socialNetworks,
+      profileImage: params.profileImage,
+    });
   }
 
   async getCurrentUser(): Promise<UserEntity> {
@@ -75,5 +105,28 @@ export class AuthRepositoryImpl implements AuthRepository {
     }
 
     return;
+  }
+
+  async createSocialNetwork(params: { type: string; name: string; url: string; userId: number }, token?: string): Promise<{ data: any }> {
+    console.log('AuthRepositoryImpl.createSocialNetwork');
+    
+    const authHttpService = new HttpService(this.http['baseUrl'], token);
+
+    const body = {
+      data: {
+        type: params.type,
+        name: params.name,
+        url: params.url,
+        user: String(params.userId),
+      },
+    };
+
+    return authHttpService.post('/api/user-networks', body);
+  }
+
+  async deleteSocialNetwork(documentId: string, token?: string): Promise<void> {
+    console.log('AuthRepositoryImpl.deleteSocialNetwork');
+    const authHttpService = new HttpService(this.http['baseUrl'], token);
+    await authHttpService.delete(`/api/user-networks/${documentId}`);
   }
 }

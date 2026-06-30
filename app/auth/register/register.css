@@ -1,5 +1,35 @@
 @reference "tailwindcss";
 
+.register-page__title {
+  position: absolute;
+  top: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  color: black;
+  
+  @apply
+    px-6
+    py-1.5
+    text-2xl
+    md:text-5xl
+    font-semibold;
+}
+
+.register-page__back-btn {
+  position: absolute;
+  top: 2rem;
+  left: 2rem;
+  @apply
+    rounded-full
+    px-6
+    py-1.5
+    text-sm
+    font-semibold
+    bg-[#383838]
+    hover:bg-[#2a2a2a]
+    transition-colors;
+}
+
 /* Register Page Styles */
 .register-page {
   @apply 

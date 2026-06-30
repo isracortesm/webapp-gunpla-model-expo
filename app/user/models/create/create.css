@@ -1,0 +1,236 @@
+@reference "tailwindcss";
+
+.create-page__container {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f9fafb;
+  padding: 1rem;
+}
+
+.create-page__title {
+  position: absolute;
+  top: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  color: black;
+  
+  @apply
+    px-6
+    py-1.5
+    text-2xl
+    md:text-5xl
+    font-semibold;
+}
+
+.create-page__back-btn {
+  position: absolute;
+  top: 2rem;
+  left: 2rem;
+  @apply
+    rounded-full
+    px-6
+    py-1.5
+    text-sm
+    font-semibold
+    bg-[#383838]
+    hover:bg-[#2a2a2a]
+    transition-colors;
+}
+
+.create-page__card-wrapper {
+  width: 100%;
+  max-width: 28rem;
+}
+
+.create-form {
+  @apply
+  w-full
+  max-w-md p-8
+  space-y-4
+  bg-white
+  rounded-lg
+  shadow-xl;
+  padding: 24px;
+}
+
+.input-label {
+  @apply
+  block
+  font-semibold
+  mb-2;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.text-input {
+  @apply
+  w-full p-3
+  border rounded-md
+  focus:outline-none focus:ring-blue-500 mb-4;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.text-area {
+  @apply
+  w-full p-3
+  border rounded-md
+  focus:outline-none focus:ring-blue-500 mb-4 resize-none;
+  color: rgba(0, 0, 0, 0.5);
+  min-height: 120px;
+}
+
+.image-upload-section {
+  @apply flex justify-center mb-8;
+}
+
+.image-upload-trigger {
+  @apply
+    w-32 h-32
+    rounded-full
+    border-2 border-dashed border-gray-300
+    flex flex-col
+    items-center
+    justify-center
+    cursor-pointer
+    hover:bg-gray-50
+    transition-all
+    text-gray-400;
+  background-color: #f9fafb;
+}
+
+.image-upload-trigger:hover {
+  @apply border-gray-400 text-gray-500;
+}
+
+.image-upload-trigger .upload-icon {
+  @apply text-3xl mb-1;
+}
+
+.image-upload-trigger .upload-text {
+  @apply text-xs font-medium;
+}
+
+.image-preview-container {
+  position: relative;
+  width: 140px;
+  aspect-ratio: 1;
+  margin: 0 auto 1rem;
+}
+
+.image-remove-button {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  z-index: 10;
+  width: 32px;
+  aspect-ratio: 1 / 1;
+
+  @apply
+    rounded-full
+    text-sm
+    font-semibold
+    bg-[#383838]
+    hover:bg-[#2a2a2a]
+    transition-colors;
+}
+
+.image-preview-wrapper {
+  position: relative;
+  width: 140px;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  overflow: hidden;
+  margin: 0 auto 1rem auto;
+  border: 3px solid #e5e7eb;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+}
+
+.image-preview__img {
+  object-fit: cover;          /* Asegura que la imagen llene el círculo sin deformarse */
+}
+
+.image-remove-button:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.hidden-input {
+  display: none;
+}
+
+.references-list {
+  @apply space-y-3 mb-4;
+}
+
+.reference-item {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.reference-select {
+  @apply
+    border rounded-md
+    focus:outline-none focus:ring-blue-500
+    text-sm;
+  color: rgba(0, 0, 0, 0.5);
+  padding: 0.5rem;
+  min-width: 120px;
+  flex-shrink: 0;
+}
+
+.reference-input {
+  @apply
+    w-full p-2
+    border rounded-md
+    focus:outline-none focus:ring-blue-500
+    text-sm;
+  color: rgba(0, 0, 0, 0.5);
+  flex: 1;
+  min-width: 0;
+}
+
+.reference-remove-btn {
+  @apply
+    w-7 h-7
+    rounded-full
+    text-xs
+    font-semibold
+    bg-[#383838]
+    hover:bg-[#2a2a2a]
+    transition-colors
+    flex-shrink-0;
+}
+
+.reference-remove-btn:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.add-reference-btn {
+  @apply
+    w-full py-2
+    border-2 border-dashed border-gray-300
+    rounded-md
+    text-sm
+    font-medium
+    text-gray-400
+    hover:border-gray-400 hover:text-gray-500
+    hover:bg-gray-50
+    transition-all
+    cursor-pointer;
+}
+
+.create-button {
+  @apply
+  w-full py-3
+  bg-black
+  text-white
+  font-bold
+  rounded-md
+  hover:bg-gray-800 transition-colors duration-200;
+}
+
+.create-button:disabled {
+  @apply bg-gray-400 cursor-not-allowed;
+}

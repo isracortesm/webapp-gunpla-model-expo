@@ -10,7 +10,7 @@
     justify-between
     px-4
     py-3
-    bg-black/10
+    bg-black/30
     backdrop-blur-md
     border-b
     border-zinc-700/30;
@@ -33,41 +33,21 @@
     hover:scale-110;
 }
 
-.floating-toolbar__register-btn {
-  @apply 
-    rounded-full 
-    px-4 
-    py-1.5 
-    text-sm 
-    font-semibold 
-    bg-transparent 
-    
-  border 
-  border-white/40 
-  hover:bg-zinc-900/20 
-  transition-colors;
-}
-
-.floating-toolbar__login-btn {
-  @apply 
-    rounded-full 
-    px-4 
-    py-1.5 
-    text-sm 
-    font-semibold 
-    bg-[#383838] 
-    hover:bg-[#2a2a2a] 
-    transition-colors;
-}
-
-.floating-toolbar__logout-btn {
+.floating-toolbar__nav-btn {
   @apply
     rounded-full
     px-4
     py-1.5
     text-sm
     font-semibold
-    bg-[#383838]
-    hover:bg-[#2a2a2a]
+    bg-transparent
+    hover:bg-zinc-900/20
     transition-colors;
+}
+
+.floating-toolbar__nav-btn--active {
+  @apply
+    border
+    border-white
+    bg-zinc-900/40;
 }

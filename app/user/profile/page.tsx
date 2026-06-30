@@ -4,6 +4,7 @@ import React from 'react';
 import { useAuthWithStorage } from '@/features/auth/context/auth-provider';
 import ProfileCard from '@/components/ui/cards/ProfileCard';
 import { useRouter } from 'next/navigation';
+import './profile.css';
 
 export default function UserProfilePage() {
   const { user, fetchCurrentUser } = useAuthWithStorage();
@@ -26,15 +27,27 @@ export default function UserProfilePage() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-gray-50 p-4">
-      <div className="w-full max-w-md">
-        <button 
-          onClick={() => router.push('/')}
-          className="mb-4 text-sm text-gray-600 hover:underline"
-        >
-          ← Back to Home
-        </button>
+    <main className="profile-page__container">
+      <button
+        onClick={() => router.push('/')}
+        className="profile-page__back-btn">
+        Back
+      </button>
+      <button
+        onClick={() => router.push('/user/profile/edit')}
+        className="profile-page__edit-btn">
+        Edit
+      </button>
+      <h1 className="profile-page__title">Profile</h1>
+      <div className="profile-page__card-wrapper">
         <ProfileCard user={user} />
+      </div>
+      <div className="profile-page__change-password-wrapper">
+        <button
+          className="profile-page__change-password-btn"
+            onClick={() => router.push('/user/change-password')}>
+          Change Password
+        </button>
       </div>
     </main>
   );

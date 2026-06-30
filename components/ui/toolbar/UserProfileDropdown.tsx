@@ -11,34 +11,45 @@ interface UserProfileDropdownProps {
 }
 
 export default function UserProfileDropdown({ isOpen, onClose }: UserProfileDropdownProps) {
-  const { user, logout } = useAuth();
+  const { user, isAuthenticated, logout } = useAuth();
 
-  if (!isOpen || !user) return null;
+  if (!isOpen) return null;
 
-  const menuItems = [
+  const authenticatedMenuItems = [
     { label: "My Profile", href: "/user/profile" },
-    { label: "My Activities", href: "user/activities" },
     { label: "My Models", href: "/user/models" },
+    { label: "My Activities", href: "/user/activities" },
   ];
+
+  const guestMenuItems = [
+    { label: "Register", href: "/auth/register" },
+    { label: "Login", href: "/auth/login" },
+  ];
+
+  const menuItems = isAuthenticated && user ? authenticatedMenuItems : guestMenuItems;
+  const avatarSrc = isAuthenticated && user
+    ? user.profileImage?.thumbnailUrl || user.profileImage?.url || '/profile_holder.png'
+    : '/profile_holder.png';
+  const displayName = isAuthenticated && user ? user.username : 'Guest';
 
   return (
     <div className="user-profile-dropdown__overlay" onClick={onClose}>
-      <div 
-        className="user-profile-dropdown__menu" 
+      <div
+        className="user-profile-dropdown__menu"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header with user info */}
+        {/* Header */}
         <div className="user-profile-dropdown__header">
           <Image
-            src={user.profileImage?.thumbnailUrl || user.profileImage?.url || '/globe.svg'}
-            alt={`${user.username}'s avatar`}
+            src={avatarSrc}
+            alt={isAuthenticated && user ? `${user.username}'s avatar` : 'Guest avatar'}
             width={48}
             height={48}
             className="user-profile-dropdown__avatar object-cover"
           />
           <div className="user-profile-dropdown__info">
-            <p className="user-profile-dropdown__username">{user.username}</p>
-            {user.email && (
+            <p className="user-profile-dropdown__username">{displayName}</p>
+            {isAuthenticated && user?.email && (
               <p className="user-profile-dropdown__email">{user.email}</p>
             )}
           </div>
@@ -50,7 +61,7 @@ export default function UserProfileDropdown({ isOpen, onClose }: UserProfileDrop
         {/* Menu Items */}
         <nav className="user-profile-dropdown__menu-items">
           {menuItems.map((item) => (
-            <Link 
+            <Link
               key={item.href}
               href={item.href}
               onClick={onClose}
@@ -61,16 +72,20 @@ export default function UserProfileDropdown({ isOpen, onClose }: UserProfileDrop
           ))}
         </nav>
 
-        {/* Divider */}
-        <hr className="user-profile-dropdown__divider" />
+        {isAuthenticated && user && (
+          <>
+            {/* Divider */}
+            <hr className="user-profile-dropdown__divider" />
 
-        {/* Logout Button */}
-        <button 
-          onClick={logout}
-          className="user-profile-dropdown__menu-item user-profile-dropdown__logout-btn"
-        >
-          Logout
-        </button>
+            {/* Logout Button */}
+            <button
+              onClick={logout}
+              className="user-profile-dropdown__menu-item user-profile-dropdown__logout-btn"
+            >
+              Logout
+            </button>
+          </>
+        )}
       </div>
     </div>
   );

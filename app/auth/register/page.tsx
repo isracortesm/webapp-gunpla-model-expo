@@ -35,8 +35,14 @@ export default function RegisterPage() {
 
   return (
     <div className="register-page">
+      <button
+          onClick={() => router.back()}
+          className="register-page__back-btn">
+          Back
+      </button>
+      <h1 className="register-page__title">Register</h1>
+
       <form onSubmit={handleSubmit} className="register-form">
-        <h1 className="register-title">Register</h1>
 
         <label htmlFor="username" className="input-label">Username</label>
         <input

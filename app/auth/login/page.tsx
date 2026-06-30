@@ -42,9 +42,14 @@ export default function LoginPage() {
 
   return (
     <div className="login-page">
-      <form onSubmit={handleSubmit} className="login-form">
-        <h1 className="login-title">Login</h1>
+      <button
+          onClick={() => router.back()}
+          className="login-page__back-btn">
+          Back
+      </button>
+      <h1 className="login-page__title">Login</h1>
 
+      <form onSubmit={handleSubmit} className="login-form">
         <label htmlFor="identifier" className="input-label">Username or Email</label>
         <input
           id="identifier"

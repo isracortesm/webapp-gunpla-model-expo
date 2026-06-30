@@ -2,7 +2,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px;
 }
 
 .profile-card {
@@ -11,7 +10,6 @@
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   padding: 32px;
   width: 100%;
-  max-width: 400px;
   border: 1px solid #e5e7eb;
 }
 
@@ -23,19 +21,38 @@
   text-align: center;
 }
 
-.avatar-wrapper {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  overflow: hidden;
-  border: 3px solid #f3f4f6;
-  margin-bottom: 16px;
+.detail-image-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
 }
 
-.avatar-image {
+.detail-image-wrapper {
+  position: relative;
+  width: 140px;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid #e5e7eb;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+}
+
+.detail-image {
   object-fit: cover;
-  width: 120px;
-  height: 120px;
+}
+
+.detail-image-placeholder {
+  width: 140px;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  background-color: #f3f4f6;
+  border: 2px dashed #d1d5db;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9ca3af;
+  font-size: 0.875rem;
+  font-weight: 500;
 }
 
 .profile-name {
@@ -56,6 +73,7 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
+  margin-bottom: 16px;
 }
 
 .info-item label {
@@ -69,6 +87,10 @@
   color: #374151;
 }
 
+.profile-card .info-item:last-of-type {
+  margin-bottom: 24px;
+}
+
 .about-me p {
   margin: 0;
   white-space: pre-wrap;
@@ -76,27 +98,4 @@
 
 .social-networks {
   margin-top: 8px;
-}
-
-.profile-actions {
-  display: flex;
-  justify-content: center;
-}
-
-.btn {
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.2s;
-  border: none;
-}
-
-.btn-primary {
-  background-color: #3b82f6;
-  color: white;
-}
-
-.btn-primary:hover {
-  background-color: #2563eb;
 }

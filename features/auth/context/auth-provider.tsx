@@ -3,6 +3,7 @@
 import React from 'react';
 import { AuthContext } from './auth-context';
 import { UserEntity } from '@/domain/entities/auth/entity';
+import { getCurrentUser } from '@/features/auth/service/auth-service';
 
 const AUTH_TOKEN_KEY = 'auth_token';
 const AUTH_USER_KEY = 'auth_user';
@@ -103,6 +104,18 @@ export function AuthProvider({
     [],
   );
 
+  const refreshCurrentUser = React.useCallback(async () => {
+    try {
+      const freshUser = await getCurrentUser();
+      setUser(freshUser);
+      storeUser(freshUser);
+      setIsAuthReady(true);
+      return freshUser;
+    } catch {
+      return null;
+    }
+  }, []);
+
   const value = React.useMemo(
     () => ({
       user,
@@ -111,8 +124,9 @@ export function AuthProvider({
       login,
       logout,
       fetchCurrentUser,
+      refreshCurrentUser,
     }),
-    [user, isAuthReady, login, logout, fetchCurrentUser],
+    [user, isAuthReady, login, logout, fetchCurrentUser, refreshCurrentUser],
   );
   return (
     <AuthContext.Provider value={value}>
@@ -122,7 +136,7 @@ export function AuthProvider({
 }
 
 export function useAuthWithStorage() {
-  const { user, login, logout, fetchCurrentUser } =
+  const { user, login, logout, fetchCurrentUser, refreshCurrentUser } =
     React.useContext(AuthContext);
 
   return {
@@ -130,5 +144,6 @@ export function useAuthWithStorage() {
     login,
     logout,
     fetchCurrentUser,
+    refreshCurrentUser,
   };
 }

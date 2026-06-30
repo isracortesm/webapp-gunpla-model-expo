@@ -34,6 +34,7 @@ export function mapModelDtoToEntity(dto: ModelDto): ModelEntity {
     } : null,
     references: dto.references?.map(ref => ({
       id: ref.id,
+      documentId: ref.documentId,
       type: ref.type,
       name: ref.name,
       url: ref.url,

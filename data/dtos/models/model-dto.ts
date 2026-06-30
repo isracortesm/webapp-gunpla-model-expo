@@ -35,6 +35,7 @@ export interface ImageDto {
 
 export interface ReferenceDto {
   id: number;
+  documentId?: string;
   type: string;
   name: string;
   url: string;

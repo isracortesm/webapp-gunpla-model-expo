@@ -1,21 +1,21 @@
 'use client';
 
-import { useState, FormEvent } from 'react';
+import { Suspense, useState, FormEvent } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { resetPasswordUser } from '@/features/auth/service/auth-service';
 import { useUnifiedDialog } from '@/features/dialogs/context/unified-dialog-provider';
 import '@/app/auth/reset-password/reset-password.css';
 
-export default function ResetPasswordPage() {
+function ResetPasswordForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { showError, showLoading, hideLoading } = useUnifiedDialog();
-  
+
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [verificationCode, setVerificationCode] = useState(() => searchParams.get('code') || '');
 
-async function handleSubmit(e: FormEvent) {
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     if (password !== confirmPassword) {
       showError('Passwords do not match.');
@@ -40,8 +40,14 @@ async function handleSubmit(e: FormEvent) {
 
   return (
     <div className="register-page">
+      <button
+          onClick={() => router.back()}
+          className="reset-page__back-btn">
+          Back
+      </button>
+      <h1 className="reset-page__title">Reset Password</h1>
+
       <form onSubmit={handleSubmit} className="register-form">
-        <h1 className="register-title">Reset Password</h1>
 
         <label htmlFor="verificationCode" className="input-label">Verification Code</label>
         <input
@@ -89,5 +95,17 @@ async function handleSubmit(e: FormEvent) {
         </p>
       </form>
     </div>
+  );
+}
+
+export default function ResetPasswordPage() {
+  return (
+    <Suspense fallback={
+      <div className="register-page">
+        <h1 className="reset-page__title">Reset Password</h1>
+      </div>
+    }>
+      <ResetPasswordForm />
+    </Suspense>
   );
 }

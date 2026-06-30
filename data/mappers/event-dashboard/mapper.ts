@@ -1,4 +1,4 @@
-import { MediaEntity, CategoryEntity, EventEntity, NewsEntity, ActivityEntity } from '../../../domain/entities/event-dashboard/entity';
+import { MediaEntity, CategoryEntity, EventEntity, NewsEntity, ActivityEntity, CollaboratorEntity } from '../../../domain/entities/event-dashboard/entity';
 
 // Strapi v4 response types (flat structure without attributes wrapper)
 interface StrapiMediaResponse {
@@ -20,9 +20,10 @@ interface StrapiCategoryResponse {
   id: number;
   name: string;
   description: string;
+  type?: 'competition' | 'workshop' | 'seminar';
 }
 
-interface StrapiEventResponse {
+export interface StrapiEventResponse {
   id: number;
   eventId: string;
   name: string;
@@ -37,27 +38,40 @@ interface StrapiEventResponse {
   socialNetworks?: StrapiSocialNetworkResponse[];
 }
 
-interface StrapiNewsResponse {
+export interface StrapiNewsResponse {
   id: number;
+  documentId: string;
   title: string;
   subtitle: string;
   content: string;
   order: number;
   publishedAt: string;
   thumbnail?: StrapiMediaResponse;
+  user?: unknown;
 }
 
-interface StrapiActivityResponse {
+export interface StrapiActivityResponse {
   id: number;
+  documentId: string;
   name: string;
   shortDescription: string;
-  description: string;
+  description?: string;
   costType: 'free' | 'paid';
   cost: number | null;
   startDate: string;
   endDate: string;
+  capacity?: number;
   image?: StrapiMediaResponse;
   category?: StrapiCategoryResponse;
+  collaborators?: StrapiCollaboratorResponse[];
+}
+
+interface StrapiCollaboratorResponse {
+  id: number;
+  documentId?: string;
+  role: string;
+  description?: string;
+  user?: unknown;
 }
 
 interface StrapiSocialNetworkResponse {
@@ -85,6 +99,7 @@ export function mapStrapiCategoryToEntity(dto: StrapiCategoryResponse): Category
     id: dto.id,
     name: dto.name,
     description: dto.description,
+    type: dto.type,
   };
 }
 
@@ -118,12 +133,14 @@ export function mapNewsDtoToEntity(dto: StrapiNewsResponse): NewsEntity {
 
   return {
     id: dto.id,
+    documentId: dto.documentId,
     title: dto.title,
     subtitle: dto.subtitle,
     content: dto.content,
     order: dto.order,
     publishedAt: dto.publishedAt,
     thumbnail,
+    user: dto.user,
   };
 }
 
@@ -133,6 +150,7 @@ export function mapActivityDtoToEntity(dto: StrapiActivityResponse): ActivityEnt
 
   return {
     id: dto.id,
+    documentId: dto.documentId,
     name: dto.name,
     shortDescription: dto.shortDescription,
     description: dto.description,
@@ -140,7 +158,15 @@ export function mapActivityDtoToEntity(dto: StrapiActivityResponse): ActivityEnt
     cost: dto.cost,
     startDate: dto.startDate,
     endDate: dto.endDate,
+    capacity: dto.capacity,
     image,
     category,
+    collaborators: dto.collaborators?.map((c) => ({
+      id: c.id,
+      documentId: c.documentId,
+      role: c.role,
+      description: c.description,
+      user: c.user,
+    })),
   };
 }

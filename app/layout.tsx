@@ -29,10 +29,10 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col text-white-site">
+      <body className="flex flex-col text-white-site">
         <UnifiedDialogProvider>
           <AuthProvider>
-            <main className="flex-1">{children}</main>
+            <main className="min-h-screen">{children}</main>
             <Footer socialNetworks={[{
                 type: "facebook",
                 name: "Facebook",
