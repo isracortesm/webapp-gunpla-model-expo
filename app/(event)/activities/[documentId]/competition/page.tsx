@@ -177,12 +177,14 @@ export default function CompetitionPage() {
                   </div>
                 );
               })}
-              <div className="model-card model-card--add" onClick={() => setIsDialogOpen(true)} style={{ cursor: 'pointer' }}>
+              {models.length < competition.modelsLimit && (
+                <div className="model-card model-card--add" onClick={() => setIsDialogOpen(true)} style={{ cursor: 'pointer' }}>
                   <div className="model-card-content">
                     <h2 className="model-card-title">+ Add Model</h2>
                     <p className="model-card-subtitle">Register a model to this competition</p>
                   </div>
-              </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
