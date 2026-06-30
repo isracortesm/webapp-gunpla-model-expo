@@ -4,9 +4,10 @@
   position: relative;
   min-height: 100vh;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  background-color: #f9fafb;
+  justify-content: flex-start;
+  background-color: #f9fafb; /* bg-gray-50 */
   padding: 1rem;
 }
 
@@ -43,4 +44,5 @@
 .edit-page__card-wrapper {
   width: 100%;
   max-width: 28rem;
+  margin-top: 5rem;
 }

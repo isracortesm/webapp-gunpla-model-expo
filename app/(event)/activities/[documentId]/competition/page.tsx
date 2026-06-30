@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { useAuthWithStorage } from '@/features/auth/context/auth-provider';
 import { useUnifiedDialog } from '@/features/dialogs/context/unified-dialog-provider';
 import { getCompetitions, getCompetitionModels, deleteCompetitionModel } from '@/features/competition/service/competition-service';
+import { getActivityByDocumentId, checkActivityRegistration, deleteActivityParticipant } from '@/features/event-dashboard/service/event-dashboard-service';
 import type { CompetitionEntity, CompetitionModelEntryEntity } from '@/domain/entities/competition/entity';
 import AddCompetitionModelDialog from '@/components/ui/dialogs/AddCompetitionModelDialog';
 import '../../../../user/models/models.css';
@@ -26,6 +27,9 @@ export default function CompetitionPage() {
   const [modelsLoaded, setModelsLoaded] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [modelRefreshKey, setModelRefreshKey] = useState(0);
+  const [participantDocId, setParticipantDocId] = useState<string | null>(null);
+  const [isRegistered, setIsRegistered] = useState(false);
+  const participantCheckedRef = useRef(false);
 
   const registeredModelIds = models.map((entry) => entry.model.documentId);
 
@@ -46,6 +50,23 @@ export default function CompetitionPage() {
     }
     load();
   }, [showLoading, hideLoading, showError]);
+
+  useEffect(() => {
+    if (!params.documentId || participantCheckedRef.current) return;
+    participantCheckedRef.current = true;
+
+    async function check() {
+      try {
+        const activity = await getActivityByDocumentId(params.documentId);
+        const result = await checkActivityRegistration(activity.id, user?.id ?? 0, token);
+        setIsRegistered(result.registered);
+        setParticipantDocId(result.participantDocumentId);
+      } catch {
+        // ignore
+      }
+    }
+    check();
+  }, [params.documentId, user, token]);
 
   const fetchModels = useCallback(async (currentPage: number, competitionId: number) => {
     if (!user?.id) return;
@@ -69,6 +90,25 @@ export default function CompetitionPage() {
       fetchModels(1, competition.id);
     }
   }, [competition, user, fetchModels, modelRefreshKey]);
+
+  const handleCancelParticipation = () => {
+    if (!participantDocId) return;
+
+    showConfirmation(
+      'Cancel participation',
+      'Are you sure you want to cancel your participation in this competition?',
+      async () => {
+        showLoading('Cancelling...');
+        try {
+          await deleteActivityParticipant(participantDocId, token);
+          router.push(`/activities/${params.documentId}`);
+        } catch {
+          showError('Failed to cancel participation', 'Error');
+          hideLoading();
+        }
+      },
+    );
+  };
 
   const handleModelsScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
     const target = e.currentTarget;
@@ -127,12 +167,20 @@ export default function CompetitionPage() {
         </div>
       </div>
 
+      {isRegistered && (
+        <div className="competition__cancel-section">
+          <button onClick={handleCancelParticipation} className="competition__cancel-participation-btn">
+            Cancel participation
+          </button>
+        </div>
+      )}
+
       {modelsLoaded && (
         <div className="competition__models-section">
           <h3 className="competition__models-title">Registered Models</h3>
           <div className="max-w-4xl mx-auto w-full">
             <div
-              className="models-list__container"
+              className="competition-list__container"
               onScroll={handleModelsScroll}
             >
               {models.map((entry) => {

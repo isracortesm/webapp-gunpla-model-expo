@@ -72,12 +72,18 @@ export default function ActivityDetailPage() {
     showLoading('Registering...');
     try {
       const result = await registerActivityParticipant(String(activity.id), String(user.id), token);
-      setIsRegistered(true);
       setParticipantDocId(result.documentId);
-      showSuccess('Successfully registered!');
+
+      if (activity.category?.type === 'competition') {
+        hideLoading();
+        router.push(`/activities/${params.documentId}/competition`);
+      } else {
+        setIsRegistered(true);
+        showSuccess('Successfully registered!');
+        hideLoading();
+      }
     } catch {
       showError('Failed to register', 'Error');
-    } finally {
       hideLoading();
     }
   };
@@ -186,9 +192,15 @@ export default function ActivityDetailPage() {
                 {!isChecking && user && (
                   <div className="activity-detail__participation">
                     {isRegistered ? (
-                      <button onClick={handleUnregister} className="activity-detail__cancel-btn">
-                        Cancel participation
-                      </button>
+                      activity.category?.type === 'competition' ? (
+                        <button onClick={() => router.push(`/activities/${params.documentId}/competition`)} className="activity-detail__edit-btn">
+                          Edit models
+                        </button>
+                      ) : (
+                        <button onClick={handleUnregister} className="activity-detail__cancel-btn">
+                          Cancel participation
+                        </button>
+                      )
                     ) : (
                       <button onClick={handleRegister} className="activity-detail__participate-btn">
                         Participate
@@ -203,21 +215,6 @@ export default function ActivityDetailPage() {
                     </button>
                   </div>
                 )}
-              </div>
-            </section>
-          )}
-
-          {!isChecking && isRegistered && activity.category?.type === 'competition' && (
-            <section className="activity-detail__section">
-              <div className="activity-detail__competition-card">
-                <p className="activity-detail__competition-text">
-                  This activity is a competition. You need to register your models to complete your register.
-                </p>
-                <button
-                  onClick={() => router.push(`/activities/${params.documentId}/competition`)}
-                  className="activity-detail__competition-btn">
-                  Edit models
-                </button>
               </div>
             </section>
           )}

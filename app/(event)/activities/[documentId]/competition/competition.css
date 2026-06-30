@@ -46,11 +46,11 @@
 }
 
 .competition__info {
-  padding: 24px;
+  padding: 2rem;
 }
 
 .competition__type {
-  font-size: clamp(20px, 5vw, 30px);
+  font-size: clamp(20px, 5vw, 20px);
   font-weight: bold;
   color: black;
   margin-bottom: 16px;
@@ -201,7 +201,7 @@
 }
 
 .competition__models-title {
-  font-size: 18px;
+  font-size: clamp(20px, 5vw, 20px);
   font-weight: 600;
   color: #111827;
   margin: 0 1rem 1rem 1rem;
@@ -223,4 +223,33 @@
 
 .competition__remove-btn:hover {
   background-color: #b91c1c;
+}
+
+.competition__cancel-section {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 2rem 2rem;
+}
+
+.competition__cancel-participation-btn {
+  width: 100%;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border: none;
+  background-color: #dc2626;
+  color: white;
+}
+
+.competition__cancel-participation-btn:hover {
+  background-color: #b91c1c;
+}
+
+.competition-list__container {
+  overflow-y: auto;
+  padding: 1rem 1rem 1rem 1rem;
 }
