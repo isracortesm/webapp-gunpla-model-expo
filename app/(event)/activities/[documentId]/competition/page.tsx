@@ -5,7 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { useAuthWithStorage } from '@/features/auth/context/auth-provider';
 import { useUnifiedDialog } from '@/features/dialogs/context/unified-dialog-provider';
-import { getCompetitions, getCompetitionModels } from '@/features/competition/service/competition-service';
+import { getCompetitions, getCompetitionModels, deleteCompetitionModel } from '@/features/competition/service/competition-service';
 import type { CompetitionEntity, CompetitionModelEntryEntity } from '@/domain/entities/competition/entity';
 import AddCompetitionModelDialog from '@/components/ui/dialogs/AddCompetitionModelDialog';
 import '../../../../user/models/models.css';
@@ -15,7 +15,7 @@ export default function CompetitionPage() {
   const params = useParams<{ documentId: string }>();
   const router = useRouter();
   const { user } = useAuthWithStorage();
-  const { showLoading, hideLoading, showError } = useUnifiedDialog();
+  const { showLoading, hideLoading, showError, showConfirmation, showSuccess } = useUnifiedDialog();
   const [competition, setCompetition] = useState<CompetitionEntity | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -81,6 +81,25 @@ export default function CompetitionPage() {
     }
   }, [hasMoreModels, modelsPage, modelsPageCount, competition, fetchModels]);
 
+  const handleDeleteModel = (entryDocumentId: string) => {
+    showConfirmation(
+      'Remove Model',
+      'Are you sure you want to remove this model from the competition?',
+      async () => {
+        showLoading('Removing model...');
+        try {
+          await deleteCompetitionModel(entryDocumentId, token);
+          showSuccess('Model removed successfully');
+          setModelRefreshKey((prev) => prev + 1);
+        } catch {
+          showError('Failed to remove model', 'Error');
+        } finally {
+          hideLoading();
+        }
+      },
+    );
+  };
+
   if (isLoading) return null;
 
   if (!competition) {
@@ -128,6 +147,12 @@ export default function CompetitionPage() {
                     <div className="model-card-content">
                       <h2 className="model-card-title">{model.name}</h2>
                       <p className="model-card-subtitle">{model.description}</p>
+                      <button
+                        onClick={() => handleDeleteModel(entry.documentId)}
+                        className="competition__remove-btn"
+                      >
+                        Remove
+                      </button>
                     </div>
                     <div className="model-card-image-container">
                       {model.image?.url ? (

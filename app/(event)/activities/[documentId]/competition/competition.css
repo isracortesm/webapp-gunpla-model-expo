@@ -206,3 +206,21 @@
   color: #111827;
   margin: 0 1rem 1rem 1rem;
 }
+
+.competition__remove-btn {
+  width: 100%;
+  padding: 10px 0;
+  margin-top: 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border: none;
+  background-color: #dc2626;
+  color: white;
+}
+
+.competition__remove-btn:hover {
+  background-color: #b91c1c;
+}
