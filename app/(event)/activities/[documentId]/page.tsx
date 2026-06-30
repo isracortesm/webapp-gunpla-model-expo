@@ -207,6 +207,21 @@ export default function ActivityDetailPage() {
             </section>
           )}
 
+          {!isChecking && isRegistered && activity.category?.type === 'competition' && (
+            <section className="activity-detail__section">
+              <div className="activity-detail__competition-card">
+                <p className="activity-detail__competition-text">
+                  This activity is a competition. You need to register your models to complete your register.
+                </p>
+                <button
+                  onClick={() => router.push(`/activities/${params.documentId}/competition`)}
+                  className="activity-detail__competition-btn">
+                  Edit models
+                </button>
+              </div>
+            </section>
+          )}
+
           {activity.collaborators && activity.collaborators.length > 0 && (
             <section className="activity-detail__section">
               <h3 className="activity-detail__section-title">Collaborators</h3>

@@ -11,6 +11,7 @@ export interface CategoryEntity {
   id: number;
   name: string;
   description: string;
+  type?: 'competition' | 'workshop' | 'seminar';
 }
 
 export interface EventEntity {

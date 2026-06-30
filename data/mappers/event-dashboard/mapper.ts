@@ -20,6 +20,7 @@ interface StrapiCategoryResponse {
   id: number;
   name: string;
   description: string;
+  type?: 'competition' | 'workshop' | 'seminar';
 }
 
 export interface StrapiEventResponse {
@@ -98,6 +99,7 @@ export function mapStrapiCategoryToEntity(dto: StrapiCategoryResponse): Category
     id: dto.id,
     name: dto.name,
     description: dto.description,
+    type: dto.type,
   };
 }
 

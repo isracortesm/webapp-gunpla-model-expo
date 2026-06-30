@@ -221,6 +221,38 @@
   background-color: #1f2937;
 }
 
+.activity-detail__competition-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.activity-detail__competition-text {
+  font-size: 14px;
+  line-height: 20px;
+  color: #374151;
+  margin-bottom: 16px;
+}
+
+.activity-detail__competition-btn {
+  width: 100%;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border: none;
+  background-color: #2563eb;
+  color: white;
+}
+
+.activity-detail__competition-btn:hover {
+  background-color: #1d4ed8;
+}
+
 .activity-detail__collaborators-list {
   display: flex;
   flex-direction: column;

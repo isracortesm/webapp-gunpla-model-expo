@@ -64,7 +64,6 @@
 
 /* Models List Container */
 .models-list__container {
-  height: 80vh;
   overflow-y: auto;
   padding: 16px;
 }
