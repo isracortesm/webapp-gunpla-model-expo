@@ -189,6 +189,11 @@ export default function ActivityDetailPage() {
                 {activity.category.description && (
                   <p className="activity-detail__category-description">{activity.category.description}</p>
                 )}
+                {isChecking && (
+                  <div className="activity-detail__participation">
+                    <div className="activity-detail__skeleton-btn" />
+                  </div>
+                )}
                 {!isChecking && user && (
                   <div className="activity-detail__participation">
                     {isRegistered ? (

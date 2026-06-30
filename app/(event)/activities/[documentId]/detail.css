@@ -170,6 +170,25 @@
   margin-top: 16px;
 }
 
+.activity-detail__skeleton-btn {
+  width: 100%;
+  height: 48px;
+  border-radius: 8px;
+  background: linear-gradient(
+    90deg,
+    #e5e7eb 25%,
+    #f3f4f6 50%,
+    #e5e7eb 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes skeleton-pulse {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
 .activity-detail__participate-btn {
   width: 100%;
   padding: 12px 20px;
