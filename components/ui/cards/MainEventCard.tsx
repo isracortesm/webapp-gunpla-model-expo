@@ -51,7 +51,7 @@ export default function MainEventCard({ event }: MainEventCardProps) {
             <span
               className={isPaid ? "event-card-payment-chip-paid" : "event-card-payment-chip-free"}
             >
-              {isPaid ? "Paid Event" : "Free Event"}
+              {isPaid ? `Costo $${Math.round(event.cost ?? 0)}` : "Gratuito"}
             </span>
           </div>
         </div>

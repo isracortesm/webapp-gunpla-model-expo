@@ -26,7 +26,7 @@ export default function ProfileCard({ user }: ProfileCardProps) {
                   sizes="140px"/>
               </div>
             ) : (
-              <div className="detail-image-placeholder">No Image</div>
+              <div className="detail-image-placeholder">Sin imagen</div>
             )}
           </div>
           <h2 className="profile-name">{user.username}</h2>
@@ -34,13 +34,13 @@ export default function ProfileCard({ user }: ProfileCardProps) {
 
         <div className="profile-info">
           <div className="info-item">
-            <label>Email</label>
+            <label>Correo electrónico</label>
             <span>{user.email}</span>
           </div>
           
           {user.aboutMe && (
             <div className="info-item about-me">
-              <label>About Me</label>
+              <label>Acerca de mí</label>
               <p>{user.aboutMe}</p>
               
             </div>
@@ -48,7 +48,7 @@ export default function ProfileCard({ user }: ProfileCardProps) {
 
           {user.socialNetworks && user.socialNetworks.length > 0 && (
             <div className="info-item social-networks">
-              <label>Social Networks</label>
+              <label>Redes sociales</label>
               <SocialNetworkIcons networks={user.socialNetworks} />
             </div>
           )}

@@ -281,7 +281,7 @@ export default function ModelFormCard({ mode, initialData, documentId, onSuccess
             ) : (
               <>
                 <span className="model-form-card__upload-icon">＋</span>
-                <span className="model-form-card__upload-text">Add Image</span>
+                <span className="model-form-card__upload-text">Agregar Imagen</span>
               </>
             )}
           </label>
