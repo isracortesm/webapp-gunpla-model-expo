@@ -18,11 +18,11 @@ function ResetPasswordForm() {
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     if (password !== confirmPassword) {
-      showError('Passwords do not match.');
+      showError('Las contraseñas no coinciden.');
       return;
     }
     try {
-      showLoading('Resetting password...');
+      showLoading('Restableciendo contraseña...');
       await resetPasswordUser(password, confirmPassword, verificationCode);
       router.push('/auth/reset-password/success/');
     } catch (err: unknown) {
@@ -31,7 +31,7 @@ function ResetPasswordForm() {
       } else if (err instanceof Error) {
         showError(err.message);
       } else {
-        showError('An unexpected error occurred.');
+        showError('Ocurrió un error inesperado.');
       }
     } finally {
       hideLoading();
@@ -43,42 +43,42 @@ function ResetPasswordForm() {
       <button
           onClick={() => router.back()}
           className="reset-page__back-btn">
-          Back
+          Volver
       </button>
-      <h1 className="reset-page__title">Reset Password</h1>
+      <h1 className="reset-page__title">Restablecer Contraseña</h1>
 
       <form onSubmit={handleSubmit} className="register-form">
 
-        <label htmlFor="verificationCode" className="input-label">Verification Code</label>
+        <label htmlFor="verificationCode" className="input-label">Código de verificación</label>
         <input
           id="verificationCode"
           type="text"
           value={verificationCode}
           onChange={(e) => setVerificationCode(e.target.value)}
           required
-          placeholder="Enter verification code sent via email"
+          placeholder="Ingresa el código enviado a tu correo"
           className="text-input no-autofill"
         />
 
-        <label htmlFor="password" className="input-label">New Password</label>
+        <label htmlFor="password" className="input-label">Nueva Contraseña</label>
         <input
           id="password"
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-          placeholder="Enter new password"
+          placeholder="Ingresa tu nueva contraseña"
           className="password-input no-autofill"
         />
 
-        <label htmlFor="confirmPassword" className="input-label">Confirm Password</label>
+        <label htmlFor="confirmPassword" className="input-label">Confirmar Contraseña</label>
         <input
           id="confirmPassword"
           type="password"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
           required
-          placeholder="Confirm new password"
+          placeholder="Confirma tu nueva contraseña"
           className="password-input no-autofill"
         />
 
@@ -86,12 +86,12 @@ function ResetPasswordForm() {
           type="submit"
           disabled={!verificationCode || !password || !confirmPassword}
           className="register-button">
-          Reset Password
+          Restablecer Contraseña
         </button>
 
         <p className="login-link-text">
-          Remembered your password?{' '}
-          <a href="/auth/login" className="login-link">Login</a>
+          ¿Recordaste tu contraseña?{' '}
+          <a href="/auth/login" className="login-link">Iniciar Sesión</a>
         </p>
       </form>
     </div>
@@ -102,7 +102,7 @@ export default function ResetPasswordPage() {
   return (
     <Suspense fallback={
       <div className="register-page">
-        <h1 className="reset-page__title">Reset Password</h1>
+        <h1 className="reset-page__title">Restablecer Contraseña</h1>
       </div>
     }>
       <ResetPasswordForm />

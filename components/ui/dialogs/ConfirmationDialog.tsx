@@ -15,10 +15,10 @@ interface ConfirmationDialogProps {
 
 export default function ConfirmationDialog({
   isOpen,
-  title = 'Confirmation',
+  title = 'Confirmacion',
   message,
-  confirmText = 'Confirm',
-  cancelText = 'Cancel',
+  confirmText = 'Confirmar',
+  cancelText = 'Cancelar',
   onConfirm,
   onCancel,
 }: ConfirmationDialogProps) {

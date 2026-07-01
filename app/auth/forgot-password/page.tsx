@@ -15,7 +15,7 @@ export default function ForgotPasswordPage() {
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     try {
-      showLoading('Sending reset code...');
+      showLoading('Enviando código de recuperación...');
       await forgotPasswordUser(email);
       router.push('/auth/forgot-password/success');
     } catch (err: unknown) {
@@ -24,7 +24,7 @@ export default function ForgotPasswordPage() {
       } else if (err instanceof Error) {
         showError(err.message);
       } else {
-        showError('An unexpected error occurred.');
+        showError('Ocurrió un error inesperado.');
       }
     } finally {
       hideLoading();
@@ -36,20 +36,20 @@ export default function ForgotPasswordPage() {
       <button
           onClick={() => router.back()}
           className="forgot-page__back-btn">
-          Back
+          Volver
       </button>
-      <h1 className="forgot-page__title">Forgot Password</h1>
+      <h1 className="forgot-page__title">Recuperar Contraseña</h1>
 
       <form onSubmit={handleSubmit} className="register-form">
 
-          <label htmlFor="email" className="input-label">Email</label>
+          <label htmlFor="email" className="input-label">Correo electrónico</label>
           <input
             id="email"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            placeholder="Enter your email"
+            placeholder="Ingresa tu correo"
             className="text-input no-autofill"
           />
 
@@ -57,12 +57,12 @@ export default function ForgotPasswordPage() {
             type="submit"
             disabled={!email}
             className="register-button">
-            Send Reset Code
+            Enviar Código
           </button>
 
           <p className="login-link-text">
-            Remembered your password?{' '}
-            <a href="/auth/login" className="login-link">Login</a>
+            ¿Recordaste tu contraseña?{' '}
+            <a href="/auth/login" className="login-link">Iniciar Sesión</a>
           </p>
         </form>
     </div>

@@ -52,7 +52,7 @@ export default function AddCompetitionModelDialog({
         const result = await getModels(1, 30, userId);
         setUserModels(result.data);
       } catch {
-        showError('Failed to load models', 'Error');
+        showError('Error al cargar modelos', 'Error');
       }
     }
     loadModels();
@@ -76,7 +76,7 @@ export default function AddCompetitionModelDialog({
     if (!selectedCategory || !selectedModelId) return;
 
     setSubmitting(true);
-    showLoading('Registering model...');
+    showLoading('Registrando modelo...');
     try {
       await registerCompetitionModel(
         {
@@ -87,10 +87,10 @@ export default function AddCompetitionModelDialog({
         },
         token,
       );
-      showSuccess('Model registered successfully!');
+      showSuccess('¡Modelo registrado correctamente!');
       handleClose();
     } catch {
-      showError('Failed to register model', 'Error');
+      showError('Error al registrar modelo', 'Error');
     } finally {
       hideLoading();
       setSubmitting(false);
@@ -102,16 +102,16 @@ export default function AddCompetitionModelDialog({
   return (
     <div className="add-model-dialog__overlay" onClick={handleClose}>
       <div className="add-model-dialog__modal" onClick={(e) => e.stopPropagation()}>
-        <h2 className="add-model-dialog__title">Register Model to Competition</h2>
+        <h2 className="add-model-dialog__title">Registrar Modelo a la Competencia</h2>
 
         <div className="add-model-dialog__section">
-          <label className="add-model-dialog__label">Select Category</label>
+          <label className="add-model-dialog__label">Seleccionar Categoría</label>
           <div className="add-model-dialog__category-selector-wrapper">
             <button
               className="add-model-dialog__category-selector"
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             >
-              <span>{selectedCategory?.name ?? 'Select a category'}</span>
+              <span>{selectedCategory?.name ?? 'Seleccionar una categoría'}</span>
               <span className={`add-model-dialog__selector-chevron ${isDropdownOpen ? 'add-model-dialog__selector-chevron--open' : ''}`}>
                 ▼
               </span>
@@ -140,7 +140,7 @@ export default function AddCompetitionModelDialog({
             <div className="add-model-dialog__category-content">
               <p className="add-model-dialog__category-desc">{selectedCategory.description}</p>
               <div className="add-model-dialog__criterias">
-                <h4 className="add-model-dialog__criterias-title">Evaluation Criteria</h4>
+                <h4 className="add-model-dialog__criterias-title">Criterios de Evaluación</h4>
                 {selectedCategory.criterias.map((criteria) => (
                   <div key={criteria.id} className="add-model-dialog__criteria-card">
                     <div className="add-model-dialog__criteria-header">
@@ -156,20 +156,20 @@ export default function AddCompetitionModelDialog({
         </div>
 
         <div className="add-model-dialog__section">
-          <label className="add-model-dialog__label">Select Model</label>
+          <label className="add-model-dialog__label">Seleccionar Modelo</label>
           <input
             type="text"
             className="add-model-dialog__search"
-            placeholder="Search models..."
+            placeholder="Buscar modelos..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
           <div className="add-model-dialog__model-list">
             {filteredModels.length === 0 && (
               <div className="add-model-dialog__empty">
-                <p>No models available</p>
+                <p>No hay modelos disponibles</p>
                 <button onClick={() => router.push('/user/models')} className="add-model-dialog__create-model-btn">
-                  Create a model
+                  Crear un modelo
                 </button>
               </div>
             )}
@@ -197,14 +197,14 @@ export default function AddCompetitionModelDialog({
 
         <div className="add-model-dialog__actions">
           <button onClick={handleClose} className="add-model-dialog__cancel-btn">
-            Cancel
+            Cancelar
           </button>
           <button
             onClick={handleSubmit}
             disabled={!selectedCategory || !selectedModelId || submitting}
             className="add-model-dialog__submit-btn"
           >
-            {submitting ? 'Registering...' : 'Register Model'}
+            {submitting ? 'Registrando...' : 'Registrar Modelo'}
           </button>
         </div>
       </div>

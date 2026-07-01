@@ -18,7 +18,7 @@ export default function LoginPage() {
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     try {
-      showLoading('Logging in...');
+      showLoading('Iniciando sesión...');
       const loginRes = await loginUser(identifier, password);
       login(loginRes.jwt);
       
@@ -35,7 +35,7 @@ export default function LoginPage() {
       } else if (err instanceof Error) {
         showError(err.message);
       } else {
-        showError('An unexpected error occurred.');
+        showError('Ocurrió un error inesperado.');
       }
     }
   }
@@ -45,30 +45,30 @@ export default function LoginPage() {
       <button
           onClick={() => router.back()}
           className="login-page__back-btn">
-          Back
+          Volver
       </button>
-      <h1 className="login-page__title">Login</h1>
+      <h1 className="login-page__title">Iniciar Sesión</h1>
 
       <form onSubmit={handleSubmit} className="login-form">
-        <label htmlFor="identifier" className="input-label">Username or Email</label>
+        <label htmlFor="identifier" className="input-label">Usuario o Correo</label>
         <input
           id="identifier"
           type="text"
           value={identifier}
           onChange={(e) => setIdentifier(e.target.value)}
           required
-          placeholder="Enter username or email"
+          placeholder="Ingresa tu usuario o correo"
           className="text-input no-autofill"
         />
 
-        <label htmlFor="password" className="input-label">Password</label>
+        <label htmlFor="password" className="input-label">Contraseña</label>
         <input
           id="password"
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-          placeholder="Enter password"
+          placeholder="Ingresa tu contraseña"
           className="password-input no-autofill"
         />
 
@@ -76,16 +76,16 @@ export default function LoginPage() {
           type="submit"
           disabled={!identifier || !password}
           className="login-button">
-          Login
+          Iniciar Sesión
         </button>
 
         <p className="register-link-text">
-          Don't have an account?{' '}
-          <a href="/auth/register" className="register-link">Register</a>
+          ¿No tienes cuenta?{' '}
+          <a href="/auth/register" className="register-link">Registrarse</a>
         </p>
 
         <a href="/auth/forgot-password" className="forgot-password-link">
-          Forgot password?
+          ¿Olvidaste tu contraseña?
         </a>
       </form>
     </div>

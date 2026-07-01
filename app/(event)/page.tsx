@@ -20,7 +20,7 @@ export default function Home() {
 
     async function fetchEvent() {
       try {
-        showLoading('Loading event...');
+        showLoading('Cargando evento...');
         const eventCode = "HMKGME26";
         const data = await getEvent(eventCode);
         setEvent(data);
@@ -30,7 +30,7 @@ export default function Home() {
         } else if (err instanceof Error) {
           showError(err.message);
         } else {
-          showError('An unexpected error occurred.');
+          showError('Ocurrió un error inesperado.');
         }
       } finally {
         hideLoading();
@@ -42,7 +42,7 @@ export default function Home() {
   }, []);
 
   if (!event && !isLoading) {
-    return <div className="main-content">Event not found</div>;
+    return <div className="main-content">Evento no encontrado</div>;
   }
 
   return (

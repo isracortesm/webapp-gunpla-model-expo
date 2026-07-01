@@ -82,17 +82,17 @@ export function UnifiedDialogProvider({ children }: UnifiedDialogProviderProps) 
   // Confirmation state
   const [confirmationState, setConfirmationState] = useState<ConfirmationState>({
     isOpen: false,
-    title: 'Confirm',
+    title: 'Confirmacion',
     message: '',
-    confirmText: 'Confirm',
-    cancelText: 'Cancel',
+    confirmText: 'Confirmar',
+    cancelText: 'Cancelar',
     onConfirm: () => {},
     onCancel: () => {},
   });
 
   // Loading methods
   const showLoading = useCallback((message?: string) => {
-    setLoadingState({ message: message || 'Loading...' });
+    setLoadingState({ message: message || 'Cargando...' });
   }, []);
 
   const hideLoading = useCallback(() => {
@@ -133,8 +133,8 @@ export function UnifiedDialogProvider({ children }: UnifiedDialogProviderProps) 
         isOpen: true,
         title,
         message,
-        confirmText: confirmText || 'Confirm',
-        cancelText: cancelText || 'Cancel',
+        confirmText: confirmText || 'Confirmar',
+        cancelText: cancelText || 'Cancelar',
         onConfirm,
         onCancel: onCancel || (() => {}),
       });

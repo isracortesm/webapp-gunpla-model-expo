@@ -12,13 +12,13 @@ interface FooterProps {
 }
 
 const EXPLORA_LINKS = [
-  { label: "Activities", href: "/activities" },
-  { label: "News", href: "/news" },
+  { label: "Actividades", href: "/activities" },
+  { label: "Noticias", href: "/news" },
 ];
 
 const LEGAL_LINKS = [
-  { label: "Privacy Policy", href: "/legal/privacy" },
-  { label: "Terms and Conditions", href: "/legal/terms" },
+  { label: "Plitica de privacidad", href: "/legal/privacy" },
+  { label: "Terminos y condiciones", href: "/legal/terms" },
 ];
 
 export const Footer: FC<FooterProps> = ({ socialNetworks }) => {
@@ -41,7 +41,7 @@ export const Footer: FC<FooterProps> = ({ socialNetworks }) => {
 
         {/* Community Column */}
         <div className="footer-column">
-          <h3 className="footer-heading">Community</h3>
+          <h3 className="footer-heading">Comunidad</h3>
           <ul className="footer-links-list">
             {socialNetworks && socialNetworks.length > 0 ? (
               socialNetworks.map((network, index) => (
@@ -93,7 +93,7 @@ export const Footer: FC<FooterProps> = ({ socialNetworks }) => {
       {/* Footer Bottom */}
       <div className="footer-bottom">
         <p className="footer-copyright">
-          &copy; 2026 Hobby City. All rights reserved.
+          &copy; 2026 Hobby City. Todos los derechos reservados.
         </p>
       </div>
     </footer>

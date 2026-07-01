@@ -33,12 +33,12 @@ export default function ActivityDetailPage() {
     fetched.current = true;
 
     async function load() {
-      showLoading('Loading activity...');
+      showLoading('Cargando actividad...');
       try {
         const data = await getActivityByDocumentId(params.documentId);
         setActivity(data);
       } catch {
-        showError('Failed to load activity', 'Error');
+        showError('Error al cargar la actividad', 'Error');
       } finally {
         hideLoading();
         setIsLoading(false);
@@ -79,11 +79,11 @@ export default function ActivityDetailPage() {
         router.push(`/activities/${params.documentId}/competition`);
       } else {
         setIsRegistered(true);
-        showSuccess('Successfully registered!');
+        showSuccess('¡Registrado correctamente!');
         hideLoading();
       }
     } catch {
-      showError('Failed to register', 'Error');
+      showError('Error al registrarse', 'Error');
       hideLoading();
     }
   };
@@ -92,17 +92,17 @@ export default function ActivityDetailPage() {
     if (!participantDocId) return;
 
     showConfirmation(
-      'Cancel participation',
-      'Are you sure you want to cancel your participation?',
+      'Cancelar participación',
+      '¿Estás seguro de que deseas cancelar tu participación?',
       async () => {
-        showLoading('Cancelling...');
+        showLoading('Cancelando...');
         try {
           await deleteActivityParticipant(participantDocId, token);
           setIsRegistered(false);
           setParticipantDocId(null);
-          showSuccess('Participation cancelled');
+          showSuccess('Participación cancelada');
         } catch {
-          showError('Failed to cancel participation', 'Error');
+          showError('Error al cancelar la participación', 'Error');
         } finally {
           hideLoading();
         }
@@ -132,7 +132,7 @@ export default function ActivityDetailPage() {
         onClick={() => router.push('/activities')}
         className="activity-detail__back-btn"
       >
-        Back
+        Volver
       </button>
 
       <div className="activity-detail__card">
@@ -162,28 +162,28 @@ export default function ActivityDetailPage() {
                     : 'activity-detail__cost-chip--paid'
                 }
               >
-                {activity.costType === 'free' ? 'Free' : `Paid $${Math.round(activity.cost ?? 0)}`}
+                {activity.costType === 'free' ? 'Gratuito' : `Costo $${Math.round(activity.cost ?? 0)}`}
               </span>
               {activity.capacity != null && (
                 <span className="activity-detail__capacity">
-                  Capacity: {activity.capacity}
+                  Aforo: {activity.capacity}
                 </span>
               )}
             </div>
 
             <div className="activity-detail__dates">
               <time className="activity-detail__date" dateTime={activity.startDate}>
-                Starts: {formatDate(activity.startDate)}
+                Inicia: {formatDate(activity.startDate)}
               </time>
               <time className="activity-detail__date" dateTime={activity.endDate}>
-                Ends: {formatDate(activity.endDate)}
+                Termina: {formatDate(activity.endDate)}
               </time>
             </div>
           </div>
 
           {activity.category && (
             <section className="activity-detail__section">
-              <h3 className="activity-detail__section-title">Category</h3>
+              <h3 className="activity-detail__section-title">Categoría</h3>
               <div className="activity-detail__category-card">
                 <h4 className="activity-detail__category-name">{activity.category.name}</h4>
                 {activity.category.description && (
@@ -199,16 +199,16 @@ export default function ActivityDetailPage() {
                     {isRegistered ? (
                       activity.category?.type === 'competition' ? (
                         <button onClick={() => router.push(`/activities/${params.documentId}/competition`)} className="activity-detail__edit-btn">
-                          Edit models
+                          Editar modelos
                         </button>
                       ) : (
                         <button onClick={handleUnregister} className="activity-detail__cancel-btn">
-                          Cancel participation
+                          Cancelar participación
                         </button>
                       )
                     ) : (
                       <button onClick={handleRegister} className="activity-detail__participate-btn">
-                        Participate
+                        Participar
                       </button>
                     )}
                   </div>
@@ -216,7 +216,7 @@ export default function ActivityDetailPage() {
                 {!isChecking && !user && (
                   <div className="activity-detail__participation">
                     <button onClick={() => router.push('/auth/register')} className="activity-detail__register-btn">
-                      Register to participate
+                      Registrarse para participar
                     </button>
                   </div>
                 )}
@@ -226,7 +226,7 @@ export default function ActivityDetailPage() {
 
           {activity.collaborators && activity.collaborators.length > 0 && (
             <section className="activity-detail__section">
-              <h3 className="activity-detail__section-title">Collaborators</h3>
+              <h3 className="activity-detail__section-title">Colaboradores</h3>
               <div className="activity-detail__collaborators-list">
                 {activity.collaborators.map((collab) => {
                   const username = (collab.user as { username?: string })?.username;

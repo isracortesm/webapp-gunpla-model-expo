@@ -22,12 +22,12 @@ export default function EditModelPage() {
     fetched.current = true;
 
     async function load() {
-      showLoading('Loading model...');
+      showLoading('Cargando modelo...');
       try {
         const data = await getModelByDocumentId(params.documentId);
         setModel(data);
       } catch {
-        showError('Failed to load model', 'Error');
+        showError('Error al cargar el modelo', 'Error');
       } finally {
         hideLoading();
         setIsLoading(false);
@@ -44,9 +44,9 @@ export default function EditModelPage() {
         onClick={() => router.push(`/user/models/${params.documentId}`)}
         className="edit-page__back-btn"
       >
-        Back
+        Volver
       </button>
-      <h1 className="edit-page__title">Edit Model</h1>
+      <h1 className="edit-page__title">Editar modelo</h1>
       <div className="edit-page__card-wrapper">
         <ModelFormCard
           mode="edit"

@@ -22,12 +22,12 @@ export default function NewsDetailPage() {
     fetched.current = true;
 
     async function load() {
-      showLoading('Loading news...');
+      showLoading('Cargando noticia...');
       try {
         const data = await getNewsByDocumentId(params.documentId);
         setNews(data);
       } catch {
-        showError('Failed to load news', 'Error');
+        showError('Error al cargar la noticia', 'Error');
       } finally {
         hideLoading();
         setIsLoading(false);
@@ -56,7 +56,7 @@ export default function NewsDetailPage() {
         onClick={() => router.back()}
         className="news-detail__back-btn"
       >
-        Back
+        Volver
       </button>
 
       <div className="news-detail__card">

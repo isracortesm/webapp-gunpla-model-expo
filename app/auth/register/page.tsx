@@ -17,7 +17,7 @@ export default function RegisterPage() {
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     try {
-      showLoading('Registering...');
+      showLoading('Registrando...');
       await registerUser(username, email, password);
       router.push('/auth/register/success');
     } catch (err: unknown) {
@@ -26,7 +26,7 @@ export default function RegisterPage() {
       } else if (err instanceof Error) {
         showError(err.message);
       } else {
-        showError('An unexpected error occurred.');
+        showError('Ocurrió un error inesperado.');
       }
     } finally {
       hideLoading();
@@ -38,42 +38,42 @@ export default function RegisterPage() {
       <button
           onClick={() => router.back()}
           className="register-page__back-btn">
-          Back
+          Volver
       </button>
-      <h1 className="register-page__title">Register</h1>
+      <h1 className="register-page__title">Registrarse</h1>
 
       <form onSubmit={handleSubmit} className="register-form">
 
-        <label htmlFor="username" className="input-label">Username</label>
+        <label htmlFor="username" className="input-label">Nombre de usuario</label>
         <input
           id="username"
           type="text"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           required
-          placeholder="Enter username"
+          placeholder="Ingresa tu nombre de usuario"
           className="text-input no-autofill"
         />
 
-        <label htmlFor="email" className="input-label">Email</label>
+        <label htmlFor="email" className="input-label">Correo electrónico</label>
         <input
           id="email"
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          placeholder="Enter email"
+          placeholder="Ingresa tu correo"
           className="text-input no-autofill"
         />
 
-        <label htmlFor="password" className="input-label">Password</label>
+        <label htmlFor="password" className="input-label">Contraseña</label>
         <input
           id="password"
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-          placeholder="Enter password"
+          placeholder="Ingresa tu contraseña"
           className="password-input no-autofill"
         />
 
@@ -81,12 +81,12 @@ export default function RegisterPage() {
           type="submit"
           disabled={!username || !email || !password}
           className="register-button">
-          Register
+          Registrarse
         </button>
 
         <p className="login-link-text">
-          Already have an account?{' '}
-          <a href="/auth/login" className="login-link">Login</a>
+          ¿Ya tienes cuenta?{' '}
+          <a href="/auth/login" className="login-link">Iniciar Sesión</a>
         </p>
       </form>
     </div>

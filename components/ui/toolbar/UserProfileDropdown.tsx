@@ -16,21 +16,21 @@ export default function UserProfileDropdown({ isOpen, onClose }: UserProfileDrop
   if (!isOpen) return null;
 
   const authenticatedMenuItems = [
-    { label: "My Profile", href: "/user/profile" },
-    { label: "My Models", href: "/user/models" },
-    { label: "My Activities", href: "/user/activities" },
+    { label: "Mi Perfil", href: "/user/profile" },
+    { label: "Mis Modelos", href: "/user/models" },
+    { label: "Mis Actividades", href: "/user/activities" },
   ];
 
   const guestMenuItems = [
-    { label: "Register", href: "/auth/register" },
-    { label: "Login", href: "/auth/login" },
+    { label: "Registrarse", href: "/auth/register" },
+    { label: "Iniciar Sesión", href: "/auth/login" },
   ];
 
   const menuItems = isAuthenticated && user ? authenticatedMenuItems : guestMenuItems;
   const avatarSrc = isAuthenticated && user
     ? user.profileImage?.thumbnailUrl || user.profileImage?.url || '/profile_holder.png'
     : '/profile_holder.png';
-  const displayName = isAuthenticated && user ? user.username : 'Guest';
+  const displayName = isAuthenticated && user ? user.username : 'Invitado';
 
   return (
     <div className="user-profile-dropdown__overlay" onClick={onClose}>
@@ -82,7 +82,7 @@ export default function UserProfileDropdown({ isOpen, onClose }: UserProfileDrop
               onClick={logout}
               className="user-profile-dropdown__menu-item user-profile-dropdown__logout-btn"
             >
-              Logout
+              Cerrar Sesión
             </button>
           </>
         )}

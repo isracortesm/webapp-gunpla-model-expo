@@ -10,9 +10,9 @@ interface FloatingToolbarProps {
 }
 
 const NAV_ITEMS = [
-  { href: '/', label: 'Home' },
-  { href: '/news', label: 'News' },
-  { href: '/activities', label: 'Activities' },
+  { href: '/', label: 'Inicio' },
+  { href: '/news', label: 'Noticias' },
+  { href: '/activities', label: 'Actividades' },
 ];
 
 export default function FloatingToolbar({ onProfileClick, showNavLinks = false, pathname }: FloatingToolbarProps) {

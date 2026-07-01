@@ -86,9 +86,9 @@ export default function EditProfilePage() {
       setUploadedMediaId(result[0].id);
       setUploadedImage(result[0].url);
       await refreshCurrentUser();
-      showSuccess('Image uploaded successfully');
+      showSuccess('Imagen subida correctamente');
     } catch (error: unknown) {
-      showError(error instanceof Error ? error.message : 'Failed to upload image');
+      showError(error instanceof Error ? error.message : 'Error al subir la imagen');
     } finally {
       setIsUploading(false);
       if (fileInputRef.current) fileInputRef.current.value = '';
@@ -104,9 +104,9 @@ export default function EditProfilePage() {
       setUploadedImage(null);
       setUploadedMediaId(null);
       await refreshCurrentUser();
-      showSuccess('Profile image removed');
+      showSuccess('Imagen de perfil eliminada');
     } catch (error: unknown) {
-      showError(error instanceof Error ? error.message : 'Failed to remove profile image');
+      showError(error instanceof Error ? error.message : 'Error al eliminar la imagen de perfil');
     }
   };
 
@@ -134,7 +134,7 @@ export default function EditProfilePage() {
       return;
     }
 
-    showLoading('Saving social network...');
+    showLoading('Guardando red social...');
     try {
       const token = getStoredToken();
       const result = await createSocialNetwork({
@@ -152,9 +152,9 @@ export default function EditProfilePage() {
       setOriginalNetworkIds((prev) => new Set([...prev, newId]));
 
       await refreshCurrentUser();
-      showSuccess('Social network saved');
+      showSuccess('Red social guardada');
     } catch (error: unknown) {
-      showError(error instanceof Error ? error.message : 'Failed to save social network');
+      showError(error instanceof Error ? error.message : 'Error al guardar red social');
     } finally {
       hideLoading();
     }
@@ -167,9 +167,9 @@ export default function EditProfilePage() {
       await deleteSocialNetwork(documentId, token ?? undefined);
       setSocialNetworks(socialNetworks.filter((sn) => sn.documentId !== documentId));
       await refreshCurrentUser();
-      showSuccess('Social network deleted');
+      showSuccess('Red social eliminada');
     } catch (error: unknown) {
-      showError(error instanceof Error ? error.message : 'Failed to delete social network');
+      showError(error instanceof Error ? error.message : 'Error al eliminar red social');
     } finally {
       hideLoading();
     }
@@ -181,7 +181,7 @@ export default function EditProfilePage() {
     if (!user) return;
 
     setIsSubmitting(true);
-    showLoading('Saving changes...');
+    showLoading('Guardando cambios...');
 
     try {
       const params: Parameters<typeof updateCurrentUser>[1] = {
@@ -202,10 +202,10 @@ export default function EditProfilePage() {
       }
 
       await refreshCurrentUser();
-      showSuccess('Profile updated successfully');
+      showSuccess('Perfil actualizado correctamente');
       router.push('/user/profile');
     } catch (error: unknown) {
-      showError(error instanceof Error ? error.message : 'Failed to update profile');
+      showError(error instanceof Error ? error.message : 'Error al actualizar el perfil');
     } finally {
       setIsSubmitting(false);
       hideLoading();
@@ -218,9 +218,9 @@ export default function EditProfilePage() {
         onClick={() => router.push('/user/profile')}
         className="edit-page__back-btn"
       >
-        Back
+        Volver
       </button>
-      <h1 className="edit-page__title">Edit Profile</h1>
+      <h1 className="edit-page__title">Editar Perfil</h1>
       <div className="edit-page__card-wrapper">
         <form onSubmit={handleSubmit} className="edit-page__form">
           {/* Image Upload */}
@@ -252,11 +252,11 @@ export default function EditProfilePage() {
                 title="Upload image"
               >
                 {isUploading ? (
-                  <span className="edit-page__form-upload-status">Uploading...</span>
+                    <span className="edit-page__form-upload-status">Subiendo...</span>
                 ) : (
                   <>
                     <span className="edit-page__form-upload-icon">＋</span>
-                    <span className="edit-page__form-upload-text">Add Image</span>
+                    <span className="edit-page__form-upload-text">Agregar Imagen</span>
                   </>
                 )}
               </label>
@@ -273,7 +273,7 @@ export default function EditProfilePage() {
           </div>
 
           {/* Username */}
-          <label htmlFor="username" className="edit-page__form-label">Username</label>
+          <label htmlFor="username" className="edit-page__form-label">Nombre de usuario</label>
           <input
             id="username"
             type="text"
@@ -285,7 +285,7 @@ export default function EditProfilePage() {
           />
 
           {/* About Me */}
-          <label htmlFor="aboutMe" className="edit-page__form-label">About Me</label>
+          <label htmlFor="aboutMe" className="edit-page__form-label">Acerca de mí</label>
           <textarea
             id="aboutMe"
             value={aboutMe}
@@ -295,32 +295,42 @@ export default function EditProfilePage() {
           />
 
           {/* Social Networks */}
-          <label className="edit-page__form-label">Social Networks</label>
+          <label className="edit-page__form-label">Redes Sociales</label>
           <div className="edit-page__form-references">
             {socialNetworks.map((ref, index) => (
               <div key={index} className="edit-page__form-ref-item">
-                <select
-                  value={ref.type}
-                  disabled={isOriginalNetwork(ref.id)}
-                  onChange={(e) => handleUpdateNetwork(index, 'type', e.target.value)}
-                  className="edit-page__form-ref-select"
-                >
-                  <option value="">Select type</option>
-                  {SOCIAL_NETWORK_TYPES.map((type) => (
-                    <option key={type} value={type}>
-                      {type}
-                    </option>
-                  ))}
-                </select>
-                <input
-                  type="text"
-                  value={ref.name}
-                  disabled={isOriginalNetwork(ref.id)}
-                  readOnly={isOriginalNetwork(ref.id)}
-                  onChange={(e) => handleUpdateNetwork(index, 'name', e.target.value)}
-                  placeholder="Display name"
-                  className="edit-page__form-ref-input"
-                />
+                <div className="edit-page__form-ref-row">
+                  <select
+                    value={ref.type}
+                    disabled={isOriginalNetwork(ref.id)}
+                    onChange={(e) => handleUpdateNetwork(index, 'type', e.target.value)}
+                    className="edit-page__form-ref-select"
+                  >
+                    <option value="">Seleccionar tipo</option>
+                    {SOCIAL_NETWORK_TYPES.map((type) => (
+                      <option key={type} value={type}>
+                        {type}
+                      </option>
+                    ))}
+                  </select>
+                  <input
+                    type="text"
+                    value={ref.name}
+                    disabled={isOriginalNetwork(ref.id)}
+                    readOnly={isOriginalNetwork(ref.id)}
+                    onChange={(e) => handleUpdateNetwork(index, 'name', e.target.value)}
+                    placeholder="Display name"
+                    className="edit-page__form-ref-input"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => isOriginalNetwork(ref.id) && ref.documentId ? handleDeleteSocialNetwork(ref.documentId) : handleSaveNewNetwork(index)}
+                    className="edit-page__form-ref-remove"
+                    title={isOriginalNetwork(ref.id) ? 'Eliminar referencia' : 'Guardar referencia'}
+                  >
+                    {isOriginalNetwork(ref.id) ? '✕' : '✓'}
+                  </button>
+                </div>
                 <input
                   type="text"
                   value={ref.url}
@@ -328,16 +338,8 @@ export default function EditProfilePage() {
                   readOnly={isOriginalNetwork(ref.id)}
                   onChange={(e) => handleUpdateNetwork(index, 'url', e.target.value)}
                   placeholder="https://..."
-                  className="edit-page__form-ref-input"
+                  className="edit-page__form-ref-input-url"
                 />
-                <button
-                  type="button"
-                  onClick={() => isOriginalNetwork(ref.id) && ref.documentId ? handleDeleteSocialNetwork(ref.documentId) : handleSaveNewNetwork(index)}
-                  className="edit-page__form-ref-remove"
-                  title={isOriginalNetwork(ref.id) ? 'Remove reference' : 'Save reference'}
-                >
-                  {isOriginalNetwork(ref.id) ? '✕' : '✓'}
-                </button>
               </div>
             ))}
             <button
@@ -345,7 +347,7 @@ export default function EditProfilePage() {
               onClick={handleAddNetwork}
               className="edit-page__form-add-ref"
             >
-              + Add Reference
+              + Agregar Referencia
             </button>
           </div>
 
@@ -355,7 +357,7 @@ export default function EditProfilePage() {
             disabled={!username || isSubmitting}
             className="edit-page__form-submit"
           >
-            {isSubmitting ? 'Saving...' : 'Save Changes'}
+            {isSubmitting ? 'Guardando...' : 'Guardar Cambios'}
           </button>
         </form>
       </div>

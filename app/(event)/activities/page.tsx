@@ -27,14 +27,14 @@ export default function ActivitiesListPage() {
       if (hasFetchedRef.current) return;
       hasFetchedRef.current = true;
 
-      showLoading('Loading event...');
+      showLoading('Cargando evento...');
       let eventData: EventEntity | null = null;
       try {
         eventData = await getEvent(EVENT_CODE);
         setEvent(eventData);
       } catch (error) {
         console.error('Error fetching event:', error);
-        showError('Failed to load event', 'Error');
+        showError('Error al cargar el evento', 'Error');
         setIsReady(true);
         return;
       } finally {
@@ -46,7 +46,7 @@ export default function ActivitiesListPage() {
         return;
       }
 
-      showLoading('Fetching activities...');
+      showLoading('Cargando actividades...');
       try {
         const result = await getEventActivities(eventData.id, 1, pageSize);
         setActivities(result.data);
@@ -54,7 +54,7 @@ export default function ActivitiesListPage() {
         setHasMore(1 < result.meta.pagination.pageCount);
       } catch (error) {
         console.error('Error fetching activities:', error);
-        showError('Failed to fetch activities', 'Error');
+        showError('Error al cargar actividades', 'Error');
       } finally {
         hideLoading();
         setIsReady(true);
@@ -116,7 +116,7 @@ export default function ActivitiesListPage() {
   if (!event) {
     return (
       <main className="activities-page__container">
-        <div className="activities-page__empty">Event not found</div>
+        <div className="activities-page__empty">Evento no encontrado</div>
       </main>
     );
   }
@@ -139,11 +139,11 @@ export default function ActivitiesListPage() {
                         : 'activity-card-cost-chip--paid'
                     }
                   >
-                    {activity.costType === 'free' ? 'Free' : `Paid $${Math.round(activity.cost ?? 0)}`}
+                    {activity.costType === 'free' ? 'Gratuito' : `Costo $${Math.round(activity.cost ?? 0)}`}
                   </span>
                   {activity.capacity != null && (
                     <span className="activity-card-capacity">
-                      Capacity: {activity.capacity}
+                    Aforo: {activity.capacity}
                     </span>
                   )}
                 </div>
@@ -175,12 +175,12 @@ export default function ActivitiesListPage() {
           ))}
 
           {activities.length === 0 && (
-            <div className="activities-page__empty">No activities available</div>
+            <div className="activities-page__empty">No hay actividades disponibles</div>
           )}
         </div>
 
         <div className="activities-page__count">
-          Page {page} of {pageCount || 1}
+          Página {page} de {pageCount || 1}
         </div>
       </div>
     </main>

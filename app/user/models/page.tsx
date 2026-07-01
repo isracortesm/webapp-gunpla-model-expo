@@ -24,7 +24,7 @@ export default function ModelsListPage() {
   const fetchModels = useCallback(async (currentPage: number) => {
     if (!user || !user.id) return;
     
-    showLoading('Fetching models...');
+    showLoading('Cargando modelos...');
     try {
       const result = await getModels(currentPage, pageSize, user.id);
  
@@ -33,7 +33,7 @@ export default function ModelsListPage() {
       setHasMore(currentPage < result.meta.pagination.pageCount);
     } catch (error) {
       console.error('Error fetching models:', error);
-      showError('Failed to fetch models', 'Error');
+      showError('Error al cargar modelos', 'Error');
     } finally {
       hideLoading();
     }
@@ -59,10 +59,10 @@ export default function ModelsListPage() {
       <button
         onClick={() => router.push('/')}
         className="models-page__back-btn">
-        Back
+        Volver
       </button>
       
-      <h1 className="models-page__title">My Models</h1>
+      <h1 className="models-page__title">Mis Modelos</h1>
 
       <div className="max-w-4xl mx-auto w-full">
         <div
@@ -108,8 +108,8 @@ export default function ModelsListPage() {
           {!hasMore && (
             <div className="model-card model-card--add" onClick={() => router.push('/user/models/create')}>
               <div className="model-card-content">
-                <h2 className="model-card-title">+ Add Model</h2>
-                <p className="model-card-subtitle">Create a new model</p>
+                <h2 className="model-card-title">+ Agregar Modelo</h2>
+                <p className="model-card-subtitle">Crear un nuevo modelo</p>
               </div>
             </div>
           )}

@@ -19,24 +19,24 @@ export default function ChangePasswordPage() {
     e.preventDefault();
 
     if (password !== passwordConfirmation) {
-      showError('Passwords do not match', 'Error');
+      showError('Las contraseñas no coinciden', 'Error');
       return;
     }
 
     showConfirmation(
-      'Change Password',
-      'Are you sure you want to change your password?',
+      'Cambiar Contraseña',
+      '¿Estás seguro de que deseas cambiar tu contraseña?',
       async () => {
         setIsSubmitting(true);
-        showLoading('Changing password...');
+        showLoading('Cambiando contraseña...');
         try {
           const response = await changePassword(currentPassword, password, passwordConfirmation);
           localStorage.setItem('auth_token', response.jwt);
           localStorage.setItem('auth_user', JSON.stringify(response.user));
-          showSuccess('Password changed successfully');
+          showSuccess('Contraseña cambiada correctamente');
           router.back();
         } catch (err: unknown) {
-          const message = err instanceof Error ? err.message : 'Failed to change password';
+          const message = err instanceof Error ? err.message : 'Error al cambiar la contraseña';
           showError(message, 'Error');
         } finally {
           hideLoading();
@@ -51,43 +51,43 @@ export default function ChangePasswordPage() {
       <button
         onClick={() => router.back()}
         className="change-password-page__back-btn">
-        Back
+        Volver
       </button>
-      <h1 className="change-password-page__title">Change Password</h1>
+      <h1 className="change-password-page__title">Cambiar Contraseña</h1>
       <div className="change-password-page__card-wrapper">
         <form onSubmit={handleSubmit} className="change-password-form">
-          <label className="input-label">Current Password</label>
+          <label className="input-label">Contraseña Actual</label>
           <input
             type="password"
             value={currentPassword}
             onChange={(e) => setCurrentPassword(e.target.value)}
             required
-            placeholder="Enter current password"
+            placeholder="Ingresa tu contraseña actual"
             className="text-input"/>
 
-          <label className="input-label">New Password</label>
+          <label className="input-label">Nueva Contraseña</label>
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            placeholder="Enter new password"
+            placeholder="Ingresa tu nueva contraseña"
             className="text-input"/>
 
-          <label className="input-label">Confirm New Password</label>
+          <label className="input-label">Confirmar Nueva Contraseña</label>
           <input
             type="password"
             value={passwordConfirmation}
             onChange={(e) => setPasswordConfirmation(e.target.value)}
             required
-            placeholder="Confirm new password"
+            placeholder="Confirma tu nueva contraseña"
             className="text-input"/>
 
           <button
             type="submit"
             disabled={!currentPassword || !password || !passwordConfirmation || isSubmitting}
             className="submit-btn">
-            {isSubmitting ? 'Changing...' : 'Change Password'}
+            {isSubmitting ? 'Cambiando...' : 'Cambiar Contraseña'}
           </button>
         </form>
       </div>

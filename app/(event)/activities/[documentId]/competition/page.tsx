@@ -37,12 +37,12 @@ export default function CompetitionPage() {
 
   useEffect(() => {
     async function load() {
-      showLoading('Loading competition...');
+      showLoading('Cargando competencia...');
       try {
         const result = await getCompetitions(token);
         setCompetition(result[0] ?? null);
       } catch {
-        showError('Failed to load competition', 'Error');
+        showError('Error al cargar la competencia', 'Error');
       } finally {
         hideLoading();
         setIsLoading(false);
@@ -71,14 +71,14 @@ export default function CompetitionPage() {
   const fetchModels = useCallback(async (currentPage: number, competitionId: number) => {
     if (!user?.id) return;
 
-    showLoading('Loading models...');
+    showLoading('Cargando modelos...');
     try {
       const result = await getCompetitionModels(competitionId, user.id, token);
       setModels(result);
       setModelsPageCount(1);
       setHasMoreModels(false);
     } catch {
-      showError('Failed to load models', 'Error');
+      showError('Error al cargar modelos', 'Error');
     } finally {
       hideLoading();
       setModelsLoaded(true);
@@ -95,15 +95,15 @@ export default function CompetitionPage() {
     if (!participantDocId) return;
 
     showConfirmation(
-      'Cancel participation',
-      'Are you sure you want to cancel your participation in this competition?',
+      'Cancelar participación',
+      '¿Estás seguro de que deseas cancelar tu participación en esta competencia?',
       async () => {
-        showLoading('Cancelling...');
+        showLoading('Cancelando...');
         try {
           await deleteActivityParticipant(participantDocId, token);
           router.push(`/activities/${params.documentId}`);
         } catch {
-          showError('Failed to cancel participation', 'Error');
+          showError('Error al cancelar la participación', 'Error');
           hideLoading();
         }
       },
@@ -123,16 +123,16 @@ export default function CompetitionPage() {
 
   const handleDeleteModel = (entryDocumentId: string) => {
     showConfirmation(
-      'Remove Model',
-      'Are you sure you want to remove this model from the competition?',
+      'Eliminar modelo',
+      '¿Estás seguro de que deseas eliminar este modelo de la competencia?',
       async () => {
-        showLoading('Removing model...');
+        showLoading('Eliminando modelo...');
         try {
           await deleteCompetitionModel(entryDocumentId, token);
-          showSuccess('Model removed successfully');
+          showSuccess('Modelo eliminado correctamente');
           setModelRefreshKey((prev) => prev + 1);
         } catch {
-          showError('Failed to remove model', 'Error');
+          showError('Error al eliminar modelo', 'Error');
         } finally {
           hideLoading();
         }
@@ -145,39 +145,39 @@ export default function CompetitionPage() {
   if (!competition) {
     return (
       <main className="competition__container">
-        <button onClick={() => router.back()} className="competition__back-btn">Back</button>
-        <h1 className="competition__title">Competition</h1>
-        <p className="competition__empty">No competitions available</p>
+        <button onClick={() => router.back()} className="competition__back-btn">Volver</button>
+        <h1 className="competition__title">Competencia</h1>
+        <p className="competition__empty">No hay competencias disponibles</p>
       </main>
     );
   }
 
   return (
     <main className="competition__container">
-      <button onClick={() => router.back()} className="competition__back-btn">Back</button>
-      <h1 className="competition__title">Competition</h1>
+      <button onClick={() => router.back()} className="competition__back-btn">Volver</button>
+      <h1 className="competition__title">Competencia</h1>
 
       <div className="competition__card">
         <div className="competition__info">
-          <h2 className="competition__type">{competition.type === 'criteriaByCategory' ? 'Criteria by Category' : competition.type}</h2>
+          <h2 className="competition__type">{competition.type === 'criteriaByCategory' ? 'Criterios por Categoría' : competition.type}</h2>
           <p className="competition__limit">
-            In this competition you can register up to <strong>{competition.modelsLimit}</strong> models.
+            En esta competencia puedes registrar hasta <strong>{competition.modelsLimit}</strong> modelos.
           </p>
-          <p className="competition__discover">Add your models and discover our categories.</p>
+          <p className="competition__discover">Agrega tus modelos y descubre nuestras categorías.</p>
         </div>
       </div>
 
       {isRegistered && (
         <div className="competition__cancel-section">
           <button onClick={handleCancelParticipation} className="competition__cancel-participation-btn">
-            Cancel participation
+            Cancelar participación
           </button>
         </div>
       )}
 
       {modelsLoaded && (
         <div className="competition__models-section">
-          <h3 className="competition__models-title">Registered Models</h3>
+          <h3 className="competition__models-title">Modelos Registrados</h3>
           <div className="max-w-4xl mx-auto w-full">
             <div
               className="competition-list__container"
@@ -228,8 +228,8 @@ export default function CompetitionPage() {
               {models.length < competition.modelsLimit && (
                 <div className="model-card model-card--add" onClick={() => setIsDialogOpen(true)} style={{ cursor: 'pointer' }}>
                   <div className="model-card-content">
-                    <h2 className="model-card-title">+ Add Model</h2>
-                    <p className="model-card-subtitle">Register a model to this competition</p>
+                    <h2 className="model-card-title">+ Agregar Modelo</h2>
+                    <p className="model-card-subtitle">Registrar un modelo a esta competencia</p>
                   </div>
                 </div>
               )}

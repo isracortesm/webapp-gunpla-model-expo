@@ -27,14 +27,14 @@ export default function NewsListPage() {
       if (hasFetchedRef.current) return;
       hasFetchedRef.current = true;
 
-      showLoading('Loading event...');
+      showLoading('Cargando evento...');
       let eventData: EventEntity | null = null;
       try {
         eventData = await getEvent(EVENT_CODE);
         setEvent(eventData);
       } catch (error) {
         console.error('Error fetching event:', error);
-        showError('Failed to load event', 'Error');
+        showError('Error al cargar el evento', 'Error');
         setIsReady(true);
         return;
       } finally {
@@ -46,7 +46,7 @@ export default function NewsListPage() {
         return;
       }
 
-      showLoading('Fetching news...');
+      showLoading('Cargando noticias...');
       try {
         const result = await getEventNews(eventData.id, 1, pageSize);
         setNews(result.data);
@@ -54,7 +54,7 @@ export default function NewsListPage() {
         setHasMore(1 < result.meta.pagination.pageCount);
       } catch (error) {
         console.error('Error fetching news:', error);
-        showError('Failed to fetch news', 'Error');
+        showError('Error al cargar noticias', 'Error');
       } finally {
         hideLoading();
         setIsReady(true);
@@ -114,7 +114,7 @@ export default function NewsListPage() {
   if (!event) {
     return (
       <main className="news-page__container">
-        <div className="news-page__empty">Event not found</div>
+        <div className="news-page__empty">Evento no encontrado</div>
       </main>
     );
   }
@@ -162,12 +162,12 @@ export default function NewsListPage() {
           ))}
 
           {news.length === 0 && (
-            <div className="news-page__empty">No news available</div>
+            <div className="news-page__empty">No hay noticias disponibles</div>
           )}
         </div>
 
         <div className="news-page__count">
-          Page {page} of {pageCount || 1}
+          Página {page} de {pageCount || 1}
         </div>
       </div>
     </main>

@@ -34,7 +34,7 @@ export default function UserActivitiesListPage() {
 
       const token = localStorage.getItem('auth_token') || undefined;
 
-      showLoading('Loading activities...');
+      showLoading('Cargando actividades...');
       try {
         const result = await getUserActivities(user.id, 1, pageSize, token);
         setActivities(result.data);
@@ -42,7 +42,7 @@ export default function UserActivitiesListPage() {
         setHasMore(1 < result.meta.pagination.pageCount);
       } catch (error) {
         console.error('Error fetching activities:', error);
-        showError('Failed to fetch activities', 'Error');
+        showError('Error al cargar actividades', 'Error');
       } finally {
         hideLoading();
         setIsReady(true);
@@ -57,7 +57,7 @@ export default function UserActivitiesListPage() {
 
     const token = localStorage.getItem('auth_token') || undefined;
 
-    showLoading('Loading activities...');
+    showLoading('Cargando actividades...');
     try {
       const result = await getUserActivities(user.id, page + 1, pageSize, token);
       setActivities((prev) => [...prev, ...result.data]);
@@ -66,7 +66,7 @@ export default function UserActivitiesListPage() {
       setPage((prev) => prev + 1);
     } catch (error) {
       console.error('Error fetching activities:', error);
-      showError('Failed to fetch activities', 'Error');
+      showError('Error al cargar actividades', 'Error');
     } finally {
       hideLoading();
     }
@@ -106,12 +106,12 @@ export default function UserActivitiesListPage() {
   return (
     <main className="user-activities__container">
       <button
-        onClick={() => router.push('/')}
+        onClick={() => router.back()}
         className="user-activities__back-btn">
-        Back
+        Volver
       </button>
 
-      <h1 className="user-activities__title">My Activities</h1>
+      <h1 className="user-activities__title">Mis Actividades</h1>
 
       <div className="max-w-4xl mx-auto w-full">
         <div className="user-activities-list__container" onScroll={handleScroll}>
@@ -165,9 +165,9 @@ export default function UserActivitiesListPage() {
 
           {activities.length === 0 && (
             <div className="activities-page__empty">
-              <p>No registered activities</p>
+              <p>No hay actividades registradas</p>
               <button onClick={() => router.push('/activities')} className="user-activities__browse-btn">
-                Browse activities
+                Explorar actividades
               </button>
             </div>
           )}

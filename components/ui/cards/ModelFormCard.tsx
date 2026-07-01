@@ -91,15 +91,15 @@ export default function ModelFormCard({ mode, initialData, documentId, onSuccess
     if (!file || !token) return;
 
     setIsUploading(true);
-    showLoading('Uploading image...');
+    showLoading('Subiendo imagen...');
     try {
       const result = await uploadMedia(file, token);
       const img = result[0];
       setUploadedImage({ id: img.id, documentId: img.documentId, url: img.url });
       setImageFile(file);
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Failed to upload image';
-      showError(message, 'Upload Error');
+      const message = err instanceof Error ? err.message : 'Error al subir la imagen';
+      showError(message, 'Error de subida');
     } finally {
       hideLoading();
       setIsUploading(false);
@@ -109,7 +109,7 @@ export default function ModelFormCard({ mode, initialData, documentId, onSuccess
   async function handleRemoveImage() {
     if (!uploadedImage || !token) return;
 
-    showLoading('Removing image...');
+    showLoading('Eliminando imagen...');
     try {
       await deleteMedia(uploadedImage.id, token);
       setUploadedImage(null);
@@ -118,7 +118,7 @@ export default function ModelFormCard({ mode, initialData, documentId, onSuccess
         fileInputRef.current.value = '';
       }
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Failed to remove image';
+      const message = err instanceof Error ? err.message : 'Error al eliminar la imagen';
       showError(message, 'Error');
     } finally {
       hideLoading();
@@ -140,11 +140,11 @@ export default function ModelFormCard({ mode, initialData, documentId, onSuccess
     const ref = references[index];
 
     if (!ref.type || !ref.name || !ref.url) {
-      showError('Please fill all fields before saving');
+      showError('Completa todos los campos antes de guardar');
       return;
     }
 
-    showLoading('Saving reference...');
+    showLoading('Guardando referencia...');
     try {
       const result = await createModelReference({
         type: ref.type,
@@ -160,22 +160,22 @@ export default function ModelFormCard({ mode, initialData, documentId, onSuccess
       setReferences(updatedReferences);
       setOriginalReferenceIds((prev) => new Set([...prev, newId]));
 
-      showSuccess('Reference saved');
+      showSuccess('Referencia guardada');
     } catch (error: unknown) {
-      showError(error instanceof Error ? error.message : 'Failed to save reference');
+      showError(error instanceof Error ? error.message : 'Error al guardar referencia');
     } finally {
       hideLoading();
     }
   }
 
   async function handleDeleteReference(docId: string) {
-    showLoading('Deleting reference...');
+    showLoading('Eliminando referencia...');
     try {
       await deleteModelReference(docId, token ?? undefined);
       setReferences(references.filter((ref) => ref.documentId !== docId));
-      showSuccess('Reference deleted');
+      showSuccess('Referencia eliminada');
     } catch (error: unknown) {
-      showError(error instanceof Error ? error.message : 'Failed to delete reference');
+      showError(error instanceof Error ? error.message : 'Error al eliminar referencia');
     } finally {
       hideLoading();
     }
@@ -186,7 +186,7 @@ export default function ModelFormCard({ mode, initialData, documentId, onSuccess
     if (!user || !user.id) return;
 
     setIsSubmitting(true);
-    showLoading(mode === 'create' ? 'Creating model...' : 'Updating model...');
+    showLoading(mode === 'create' ? 'Creando modelo...' : 'Actualizando modelo...');
 
     const validReferences = references
       .filter((ref) => ref.type.trim() && ref.name.trim() && ref.url.trim())
@@ -274,10 +274,10 @@ export default function ModelFormCard({ mode, initialData, documentId, onSuccess
           <label
             htmlFor="image"
             className="model-form-card__image-trigger"
-            title="Upload image"
-          >
-            {isUploading ? (
-              <span className="model-form-card__upload-status">Uploading...</span>
+                title="Subir imagen"
+              >
+                {isUploading ? (
+                  <span className="model-form-card__upload-status">Subiendo...</span>
             ) : (
               <>
                 <span className="model-form-card__upload-icon">＋</span>
@@ -297,28 +297,28 @@ export default function ModelFormCard({ mode, initialData, documentId, onSuccess
         />
       </div>
 
-      <label htmlFor="name" className="model-form-card__label">Model Name</label>
+      <label htmlFor="name" className="model-form-card__label">Nombre del Modelo</label>
       <input
         id="name"
         type="text"
         value={name}
         onChange={(e) => setName(e.target.value)}
         required
-        placeholder="Enter model name"
+        placeholder="Ingresa el nombre del modelo"
         className="model-form-card__input"
       />
 
-      <label htmlFor="description" className="model-form-card__label">Description</label>
+      <label htmlFor="description" className="model-form-card__label">Descripción</label>
       <textarea
         id="description"
         value={description}
         onChange={(e) => setDescription(e.target.value)}
         required
-        placeholder="Describe your model"
+        placeholder="Describe tu modelo"
         className="model-form-card__textarea"
       />
 
-      <label className="model-form-card__label">References</label>
+      <label className="model-form-card__label">Referencias</label>
       <div className="model-form-card__references">
         {references.map((ref, index) => (
           <div key={index} className="model-form-card__ref-item">
@@ -341,7 +341,7 @@ export default function ModelFormCard({ mode, initialData, documentId, onSuccess
                   disabled={isOriginalReference(ref.id)}
                   readOnly={isOriginalReference(ref.id)}
                   onChange={(e) => updateReference(index, 'name', e.target.value)}
-                  placeholder="Display name"
+                  placeholder="Nombre visible"
                   className="model-form-card__ref-input"
                 />
                 <button
@@ -356,7 +356,7 @@ export default function ModelFormCard({ mode, initialData, documentId, onSuccess
                     }
                   }}
                   className="model-form-card__ref-remove"
-                  title={mode === 'create' || isOriginalReference(ref.id) ? 'Remove reference' : 'Save reference'}
+                  title={mode === 'create' || isOriginalReference(ref.id) ? 'Eliminar referencia' : 'Guardar referencia'}
                 >
                   {mode === 'create' || isOriginalReference(ref.id) ? '✕' : '✓'}
                 </button>
@@ -371,13 +371,13 @@ export default function ModelFormCard({ mode, initialData, documentId, onSuccess
                 className="model-form-card__ref-input-url"
               />
             </div>
-        ))}
-        <button
-          type="button"
-          onClick={addReference}
-          className="model-form-card__add-ref"
-        >
-          + Add Reference
+          ))}
+          <button
+            type="button"
+            onClick={addReference}
+            className="model-form-card__add-ref"
+          >
+            + Agregar Referencia
         </button>
       </div>
 
@@ -387,8 +387,8 @@ export default function ModelFormCard({ mode, initialData, documentId, onSuccess
         className="model-form-card__submit"
       >
         {isSubmitting
-          ? (mode === 'create' ? 'Creating...' : 'Saving...')
-          : (mode === 'create' ? 'Create Model' : 'Save Changes')
+          ? (mode === 'create' ? 'Creando...' : 'Guardando...')
+          : (mode === 'create' ? 'Crear Modelo' : 'Guardar Cambios')
         }
       </button>
     </form>

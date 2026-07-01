@@ -31,14 +31,14 @@ export default function UserProfilePage() {
       <button
         onClick={() => router.push('/')}
         className="profile-page__back-btn">
-        Back
+        Volver
       </button>
       <button
         onClick={() => router.push('/user/profile/edit')}
         className="profile-page__edit-btn">
-        Edit
+        Editar
       </button>
-      <h1 className="profile-page__title">Profile</h1>
+      <h1 className="profile-page__title">Perfil</h1>
       <div className="profile-page__card-wrapper">
         <ProfileCard user={user} />
       </div>
@@ -46,7 +46,7 @@ export default function UserProfilePage() {
         <button
           className="profile-page__change-password-btn"
             onClick={() => router.push('/user/change-password')}>
-          Change Password
+          Cambiar Contraseña
         </button>
       </div>
     </main>

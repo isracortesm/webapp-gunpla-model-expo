@@ -12,9 +12,9 @@ export default function CreateModelPage() {
       <button
         onClick={() => router.push('/user/models')}
         className="create-page__back-btn">
-        Back
+        Volver
       </button>
-      <h1 className="create-page__title">New Model</h1>
+      <h1 className="create-page__title">Nuevo modelo</h1>
       <div className="create-page__card-wrapper">
         <ModelFormCard
           mode="create"

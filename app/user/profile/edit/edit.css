@@ -18,12 +18,14 @@
   transform: translateX(-50%);
   color: black;
   
-  @apply
-    px-6
-    py-1.5
+   @apply
     text-2xl
-    md:text-5xl
-    font-semibold;
+    sm:text-2xl
+    md:text-3xl
+    lg:text-4xl
+    font-bold
+    mb-8
+    text-center;
 }
 
 .edit-page__back-btn {
@@ -172,8 +174,15 @@
 
 .edit-page__form-ref-item {
   display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.edit-page__form-ref-row {
+  display: flex;
   gap: 0.5rem;
   align-items: center;
+  width: 100%;
 }
 
 .edit-page__form-ref-select {
@@ -196,6 +205,15 @@
   color: rgba(0, 0, 0, 0.5);
   flex: 1;
   min-width: 0;
+}
+
+.edit-page__form-ref-input-url {
+  @apply
+    w-full p-2
+    border rounded-md
+    focus:outline-none focus:ring-blue-500
+    text-sm;
+  color: rgba(0, 0, 0, 0.5);
 }
 
 .edit-page__form-ref-remove {

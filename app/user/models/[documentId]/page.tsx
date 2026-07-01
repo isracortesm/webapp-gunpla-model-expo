@@ -23,12 +23,12 @@ export default function ModelDetailPage() {
     fetched.current = true;
 
     async function load() {
-      showLoading('Loading model...');
+      showLoading('Cargando modelo...');
       try {
         const data = await getModelByDocumentId(params.documentId);
         setModel(data);
       } catch {
-        showError('Failed to load model', 'Error');
+        showError('Error al cargar el modelo', 'Error');
       } finally {
         hideLoading();
         setIsLoading(false);
@@ -38,9 +38,9 @@ export default function ModelDetailPage() {
   }, [params.documentId, showLoading, hideLoading, showError]);
 
   async function handleDelete() {
-    showConfirmation(
-      'Delete Model',
-      'Are you sure you want to delete this model? This action cannot be undone.',
+      showConfirmation(
+        'Eliminar Modelo',
+        '¿Estás seguro de que deseas eliminar este modelo? Esta acción no se puede deshacer.',
       async () => {
         setIsDeleting(true);
         showLoading('Deleting model...');
@@ -51,10 +51,10 @@ export default function ModelDetailPage() {
             imageId: model?.image?.id,
             token,
           });
-          showSuccess('Model deleted successfully');
+          showSuccess('Modelo eliminado correctamente');
           router.push('/user/models');
         } catch {
-          showError('Failed to delete model', 'Error');
+          showError('Error al eliminar el modelo', 'Error');
         } finally {
           hideLoading();
           setIsDeleting(false);
@@ -71,15 +71,15 @@ export default function ModelDetailPage() {
         onClick={() => router.push('/user/models')}
         className="detail-page__back-btn"
       >
-        Back
+        Volver
       </button>
       <button
         onClick={() => router.push(`/user/models/${params.documentId}/edit`)}
         className="detail-page__edit-btn"
       >
-        Edit
+        Editar
       </button>
-      <h1 className="detail-page__title">Model Detail</h1>
+      <h1 className="detail-page__title">Detalle del Modelo</h1>
       <div className="detail-page__card-wrapper">
         <ModelDetailCard model={model} />
       </div>
@@ -89,7 +89,7 @@ export default function ModelDetailPage() {
           disabled={isDeleting}
           className="delete-button"
         >
-          {isDeleting ? 'Deleting...' : 'Delete Model'}
+          {isDeleting ? 'Eliminando...' : 'Eliminar Modelo'}
         </button>
       </div>
     </main>
