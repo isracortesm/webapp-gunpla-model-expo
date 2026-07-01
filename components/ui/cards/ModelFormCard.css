@@ -124,8 +124,15 @@
 
 .model-form-card__ref-item {
   display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.model-form-card__ref-row {
+  display: flex;
   gap: 0.5rem;
   align-items: center;
+  width: 100%;
 }
 
 .model-form-card__ref-select {
@@ -148,6 +155,15 @@
   color: rgba(0, 0, 0, 0.5);
   flex: 1;
   min-width: 0;
+}
+
+.model-form-card__ref-input-url {
+  @apply
+    w-full p-2
+    border rounded-md
+    focus:outline-none focus:ring-blue-500
+    text-sm;
+  color: rgba(0, 0, 0, 0.5);
 }
 
 .model-form-card__ref-remove {

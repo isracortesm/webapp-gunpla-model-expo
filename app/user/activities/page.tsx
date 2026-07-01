@@ -113,8 +113,8 @@ export default function UserActivitiesListPage() {
 
       <h1 className="user-activities__title">My Activities</h1>
 
-      <div className="max-w-4xl mx-auto w-full" style={{ paddingTop: '5rem' }}>
-        <div className="activities-list__container" onScroll={handleScroll}>
+      <div className="max-w-4xl mx-auto w-full">
+        <div className="user-activities-list__container" onScroll={handleScroll}>
           {activities.map((activity, index) => (
             <article key={`${activity.id}-${index}`} className="activity-card" onClick={() => router.push(`/activities/${activity.documentId}`)} style={{ cursor: 'pointer' }}>
               <div className="activity-card-content">
@@ -164,11 +164,16 @@ export default function UserActivitiesListPage() {
           ))}
 
           {activities.length === 0 && (
-            <div className="activities-page__empty">No registered activities</div>
+            <div className="activities-page__empty">
+              <p>No registered activities</p>
+              <button onClick={() => router.push('/activities')} className="user-activities__browse-btn">
+                Browse activities
+              </button>
+            </div>
           )}
         </div>
 
-        <div className="activities-page__count">
+        <div className="user-activities-page__count">
           Page {page} of {pageCount || 1}
         </div>
       </div>

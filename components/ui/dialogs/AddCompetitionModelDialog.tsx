@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { getModels } from '@/features/models/service/models-service';
 import { registerCompetitionModel } from '@/features/competition/service/competition-service';
 import { useUnifiedDialog } from '@/features/dialogs/context/unified-dialog-provider';
@@ -27,6 +28,7 @@ export default function AddCompetitionModelDialog({
   token,
 }: AddCompetitionModelDialogProps) {
   const { showLoading, hideLoading, showError, showSuccess } = useUnifiedDialog();
+  const router = useRouter();
   const [selectedCategory, setSelectedCategory] = useState<typeof competition.categories[number] | null>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedModelId, setSelectedModelId] = useState<string | null>(null);
@@ -164,7 +166,12 @@ export default function AddCompetitionModelDialog({
           />
           <div className="add-model-dialog__model-list">
             {filteredModels.length === 0 && (
-              <p className="add-model-dialog__empty">No models available</p>
+              <div className="add-model-dialog__empty">
+                <p>No models available</p>
+                <button onClick={() => router.push('/user/models')} className="add-model-dialog__create-model-btn">
+                  Create a model
+                </button>
+              </div>
             )}
             {filteredModels.map((model) => (
               <button

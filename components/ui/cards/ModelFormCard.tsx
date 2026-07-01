@@ -322,45 +322,55 @@ export default function ModelFormCard({ mode, initialData, documentId, onSuccess
       <div className="model-form-card__references">
         {references.map((ref, index) => (
           <div key={index} className="model-form-card__ref-item">
-            <select
-              value={ref.type}
-              disabled={isOriginalReference(ref.id)}
-              onChange={(e) => updateReference(index, 'type', e.target.value)}
-              className="model-form-card__ref-select"
-            >
-              {REFERENCES_TYPES.map((type) => (
-                <option key={type} value={type}>
-                  {type}
-                </option>
-              ))}
-            </select>
-            <input
-              type="text"
-              value={ref.name}
-              disabled={isOriginalReference(ref.id)}
-              readOnly={isOriginalReference(ref.id)}
-              onChange={(e) => updateReference(index, 'name', e.target.value)}
-              placeholder="Display name"
-              className="model-form-card__ref-input"
-            />
-            <input
-              type="text"
-              value={ref.url}
-              disabled={isOriginalReference(ref.id)}
-              readOnly={isOriginalReference(ref.id)}
-              onChange={(e) => updateReference(index, 'url', e.target.value)}
-              placeholder="https://..."
-              className="model-form-card__ref-input"
-            />
-            <button
-              type="button"
-              onClick={() => isOriginalReference(ref.id) && ref.documentId ? handleDeleteReference(ref.documentId) : handleSaveNewReference(index)}
-              className="model-form-card__ref-remove"
-              title={isOriginalReference(ref.id) ? 'Remove reference' : 'Save reference'}
-            >
-              {isOriginalReference(ref.id) ? '✕' : '✓'}
-            </button>
-          </div>
+              <div className="model-form-card__ref-row">
+                <select
+                  value={ref.type}
+                  disabled={isOriginalReference(ref.id)}
+                  onChange={(e) => updateReference(index, 'type', e.target.value)}
+                  className="model-form-card__ref-select"
+                >
+                  {REFERENCES_TYPES.map((type) => (
+                    <option key={type} value={type}>
+                      {type}
+                    </option>
+                  ))}
+                </select>
+                <input
+                  type="text"
+                  value={ref.name}
+                  disabled={isOriginalReference(ref.id)}
+                  readOnly={isOriginalReference(ref.id)}
+                  onChange={(e) => updateReference(index, 'name', e.target.value)}
+                  placeholder="Display name"
+                  className="model-form-card__ref-input"
+                />
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (mode === 'create') {
+                      setReferences(references.filter((_, i) => i !== index));
+                    } else if (isOriginalReference(ref.id) && ref.documentId) {
+                      handleDeleteReference(ref.documentId);
+                    } else {
+                      handleSaveNewReference(index);
+                    }
+                  }}
+                  className="model-form-card__ref-remove"
+                  title={mode === 'create' || isOriginalReference(ref.id) ? 'Remove reference' : 'Save reference'}
+                >
+                  {mode === 'create' || isOriginalReference(ref.id) ? '✕' : '✓'}
+                </button>
+              </div>
+              <input
+                type="text"
+                value={ref.url}
+                disabled={isOriginalReference(ref.id)}
+                readOnly={isOriginalReference(ref.id)}
+                onChange={(e) => updateReference(index, 'url', e.target.value)}
+                placeholder="https://..."
+                className="model-form-card__ref-input-url"
+              />
+            </div>
         ))}
         <button
           type="button"

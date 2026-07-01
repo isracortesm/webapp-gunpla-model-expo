@@ -266,6 +266,26 @@
   padding: 16px 0;
 }
 
+.add-model-dialog__empty p {
+  margin-bottom: 12px;
+}
+
+.add-model-dialog__create-model-btn {
+  padding: 8px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border: none;
+  background-color: #2563eb;
+  color: white;
+}
+
+.add-model-dialog__create-model-btn:hover {
+  background-color: #1d4ed8;
+}
+
 .add-model-dialog__actions {
   display: flex;
   gap: 12px;
