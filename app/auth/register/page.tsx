@@ -4,6 +4,7 @@ import { useState, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { registerUser } from '@/features/auth/service/auth-service';
 import { useUnifiedDialog } from '@/features/dialogs/context/unified-dialog-provider';
+import PasswordField from '@/components/ui/PasswordField';
 import '@/app/auth/register/register.css';
 
 export default function RegisterPage() {
@@ -66,15 +67,14 @@ export default function RegisterPage() {
           className="text-input no-autofill"
         />
 
-        <label htmlFor="password" className="input-label">Contraseña</label>
-        <input
+        <PasswordField
           id="password"
-          type="password"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={setPassword}
           required
           placeholder="Ingresa tu contraseña"
           className="password-input no-autofill"
+          label="Contraseña"
         />
 
         <button

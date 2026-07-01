@@ -4,6 +4,7 @@ import { useState, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { useUnifiedDialog } from '@/features/dialogs/context/unified-dialog-provider';
 import { changePassword } from '@/features/auth/service/auth-service';
+import PasswordField from '@/components/ui/PasswordField';
 import './change-password.css';
 
 export default function ChangePasswordPage() {
@@ -56,32 +57,32 @@ export default function ChangePasswordPage() {
       <h1 className="change-password-page__title">Cambiar Contraseña</h1>
       <div className="change-password-page__card-wrapper">
         <form onSubmit={handleSubmit} className="change-password-form">
-          <label className="input-label">Contraseña Actual</label>
-          <input
-            type="password"
+          <PasswordField
             value={currentPassword}
-            onChange={(e) => setCurrentPassword(e.target.value)}
+            onChange={setCurrentPassword}
             required
             placeholder="Ingresa tu contraseña actual"
-            className="text-input"/>
+            className="text-input"
+            label="Contraseña Actual"
+          />
 
-          <label className="input-label">Nueva Contraseña</label>
-          <input
-            type="password"
+          <PasswordField
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={setPassword}
             required
             placeholder="Ingresa tu nueva contraseña"
-            className="text-input"/>
+            className="text-input"
+            label="Nueva Contraseña"
+          />
 
-          <label className="input-label">Confirmar Nueva Contraseña</label>
-          <input
-            type="password"
+          <PasswordField
             value={passwordConfirmation}
-            onChange={(e) => setPasswordConfirmation(e.target.value)}
+            onChange={setPasswordConfirmation}
             required
             placeholder="Confirma tu nueva contraseña"
-            className="text-input"/>
+            className="text-input"
+            label="Confirmar Nueva Contraseña"
+          />
 
           <button
             type="submit"

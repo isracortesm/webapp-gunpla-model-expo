@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { loginUser, getCurrentUser } from '@/features/auth/service/auth-service';
 import { useAuthWithStorage } from '@/features/auth/context/auth-provider';
 import { useUnifiedDialog } from '@/features/dialogs/context/unified-dialog-provider';
+import PasswordField from '@/components/ui/PasswordField';
 import '@/app/auth/login/login.css';
 
 export default function LoginPage() {
@@ -61,15 +62,14 @@ export default function LoginPage() {
           className="text-input no-autofill"
         />
 
-        <label htmlFor="password" className="input-label">Contraseña</label>
-        <input
+        <PasswordField
           id="password"
-          type="password"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={setPassword}
           required
           placeholder="Ingresa tu contraseña"
           className="password-input no-autofill"
+          label="Contraseña"
         />
 
         <button

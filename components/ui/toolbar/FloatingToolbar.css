@@ -25,6 +25,9 @@
 }
 
 .floating-toolbar__profile-link {
+  width: 28px;
+  height: 28px;
+  overflow: hidden;
   @apply 
     rounded-full 
     ring-1 

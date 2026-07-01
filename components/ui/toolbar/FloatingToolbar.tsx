@@ -23,7 +23,7 @@ export default function FloatingToolbar({ onProfileClick, showNavLinks = false, 
       <button
         onClick={onProfileClick}
         aria-label="Profile"
-        className="floating-toolbar__profile-link object-cover rounded-full ring-1 ring-zinc-600/50 transition-transform hover:scale-110 cursor-pointer bg-transparent border-none p-0"
+        className="floating-toolbar__profile-link"
       >
         <Image
           src={isAuthenticated && user ? user.profileImage?.thumbnailUrl || user.profileImage?.url || '/profile_holder.png' : '/profile_holder.png'}

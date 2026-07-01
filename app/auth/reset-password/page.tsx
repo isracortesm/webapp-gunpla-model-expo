@@ -4,6 +4,7 @@ import { Suspense, useState, FormEvent } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { resetPasswordUser } from '@/features/auth/service/auth-service';
 import { useUnifiedDialog } from '@/features/dialogs/context/unified-dialog-provider';
+import PasswordField from '@/components/ui/PasswordField';
 import '@/app/auth/reset-password/reset-password.css';
 
 function ResetPasswordForm() {
@@ -60,26 +61,24 @@ function ResetPasswordForm() {
           className="text-input no-autofill"
         />
 
-        <label htmlFor="password" className="input-label">Nueva Contraseña</label>
-        <input
+        <PasswordField
           id="password"
-          type="password"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={setPassword}
           required
           placeholder="Ingresa tu nueva contraseña"
           className="password-input no-autofill"
+          label="Nueva Contraseña"
         />
 
-        <label htmlFor="confirmPassword" className="input-label">Confirmar Contraseña</label>
-        <input
+        <PasswordField
           id="confirmPassword"
-          type="password"
           value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
+          onChange={setConfirmPassword}
           required
           placeholder="Confirma tu nueva contraseña"
           className="password-input no-autofill"
+          label="Confirmar Contraseña"
         />
 
         <button
