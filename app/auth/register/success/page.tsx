@@ -6,7 +6,7 @@ import '@/app/css/success-screen.css';
 
 export default function RegisterSuccessPage() {
   const router = useRouter();
-  const [countdown, setCountdown] = useState(10);
+  const [countdown, setCountdown] = useState(15);
 
   useEffect(() => {
     if (countdown <= 0) {
@@ -24,10 +24,10 @@ export default function RegisterSuccessPage() {
   return (
     <div className="success-page">
       <div className="success-container">
-        <h1>Registration Successful!</h1>
-        <p>Your account has been created successfully.</p>
-        <p>You will be redirected to the home page in {countdown} seconds...</p>
-        <button onClick={() => router.push('/')}>Go to Home</button>
+        <h1>Registro exitoso!</h1>
+        <p>Recibiras un correo para confirmar tu cuenta. Por favor revisa tambien tu bandeja de SPAM si no vez el correo.</p>
+        <p>Seras redirigido a la pagina de inicio en {countdown} segundos...</p>
+        <button onClick={() => router.push('/')}>Ir a inicio</button>
       </div>
     </div>
   );
