@@ -1,0 +1,129 @@
+@reference "tailwindcss";
+
+.login-page__title {
+  position: absolute;
+  top: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  color: black;
+  
+  @apply
+    text-2xl
+    sm:text-2xl
+    md:text-3xl
+    lg:text-4xl
+    font-bold
+    mb-8
+    text-center;
+}
+
+.login-page__back-btn {
+  position: absolute;
+  top: 2rem;
+  left: 2rem;
+  @apply
+    rounded-full
+    px-6
+    py-1.5
+    text-sm
+    font-semibold
+    bg-[#383838]
+    hover:bg-[#2a2a2a]
+    transition-colors;
+}
+
+/* Login Page Styles */
+.login-page {
+  @apply 
+  min-h-screen 
+  flex items-center 
+  justify-center;
+  padding: 24px;
+}
+
+.login-form {
+  @apply 
+  w-full 
+  max-w-md p-8 
+  space-y-4 
+  bg-white 
+  rounded-lg 
+  shadow-xl;
+  padding: 24px;
+}
+
+.login-title {
+  @apply 
+  text-2xl 
+  font-bold 
+  mb-6;
+  color: black
+}
+
+.error-alert {
+  @apply 
+  p-3 
+  mb-4 
+  bg-red-500 
+  text-white 
+  rounded-md;
+}
+
+.input-label {
+  @apply 
+  block 
+  font-semibold 
+  mb-2;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.text-input {
+  @apply 
+  w-full p-3 
+  border rounded-md 
+  focus:outline-none focus:ring-blue-500 mb-4;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.password-input {
+  @apply 
+  w-full p-3 
+  border rounded-md 
+  focus:outline-none focus:ring-blue-500 mb-6;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.login-button {
+  @apply 
+  w-full py-3 
+  bg-black 
+  text-white 
+  font-bold 
+  rounded-md 
+  hover:bg-gray-800 transition-colors duration-200;
+}
+
+.register-link-text {
+  @apply 
+  text-center 
+  mt-4 
+  text-sm;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.register-link {
+  @apply 
+  underline 
+  hover:text-blue-600 transition-colors duration-200;
+}
+
+.forgot-password-link {
+  @apply 
+  block 
+  text-center 
+  mt-4 
+  text-sm 
+  underline 
+  hover:text-blue-600 transition-colors duration-200;
+  color: rgba(0, 0, 0, 0.5);
+}

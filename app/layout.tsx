@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import "./css/globals.css";
+import Footer from "@/components/ui/footer/Footer";
+import { AuthProvider } from "@/features/auth/context/auth-provider";
+import { UnifiedDialogProvider } from "@/features/dialogs/context/unified-dialog-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,9 +28,23 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">{children}</body>
+      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
+      <body className="flex flex-col text-white-site">
+        <UnifiedDialogProvider>
+          <AuthProvider>
+            <main className="min-h-screen">{children}</main>
+            <Footer socialNetworks={[{
+                type: "facebook",
+                name: "Facebook",
+                url: "#"
+              },{
+                type: "web",
+                name: "Website",
+                url: "#"
+              }]} />
+          </AuthProvider>
+        </UnifiedDialogProvider>
+      </body>
     </html>
   );
 }

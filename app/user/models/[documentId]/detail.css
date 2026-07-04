@@ -1,0 +1,87 @@
+@reference "tailwindcss";
+
+.detail-page__container {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  background-color: #f9fafb; /* bg-gray-50 */
+  padding: 1rem;
+}
+
+.detail-page__title {
+  position: absolute;
+  top: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  color: black;
+
+   @apply
+    text-2xl
+    sm:text-2xl
+    md:text-3xl
+    lg:text-4xl
+    font-bold
+    mb-8
+    text-center;
+}
+
+.detail-page__edit-btn {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  @apply
+    rounded-full
+    px-6
+    py-1.5
+    text-sm
+    font-semibold
+    bg-[#383838]
+    hover:bg-[#2a2a2a]
+    transition-colors;
+}
+
+.detail-page__back-btn {
+  position: absolute;
+  top: 2rem;
+  left: 2rem;
+  @apply
+    rounded-full
+    px-6
+    py-1.5
+    text-sm
+    font-semibold
+    bg-[#383838]
+    hover:bg-[#2a2a2a]
+    transition-colors;
+}
+
+.detail-page__card-wrapper {
+  width: 100%;
+  max-width: 28rem;
+  margin-top: 5rem;
+}
+
+.detail-page__delete-wrapper {
+  width: 100%;
+  max-width: 28rem;
+  margin-top: 2rem;
+}
+
+.delete-button {
+  @apply
+  w-full py-3
+  bg-red-600
+  text-white
+  font-bold
+  rounded-md
+  hover:bg-red-700
+  transition-colors
+  duration-200;
+}
+
+.delete-button:disabled {
+  @apply bg-gray-400 cursor-not-allowed;
+}

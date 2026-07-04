@@ -1,0 +1,6 @@
+@reference "tailwindcss";
+
+.toolbar-group-container {
+  position: relative;
+  z-index: 100;
+}

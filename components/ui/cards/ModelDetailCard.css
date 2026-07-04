@@ -1,0 +1,68 @@
+@reference "tailwindcss";
+
+.detail-card {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  padding: 32px;
+  width: 100%;
+  border: 1px solid #e5e7eb;
+}
+
+.detail-image-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.detail-image-wrapper {
+  position: relative;
+  width: 140px;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid #e5e7eb;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+}
+
+.detail-image {
+  object-fit: cover;
+}
+
+.detail-image-placeholder {
+  width: 140px;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  background-color: #f3f4f6;
+  border: 2px dashed #d1d5db;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9ca3af;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 16px;
+}
+
+.info-item label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #6b7280;
+}
+
+.info-item span,
+.info-item p {
+  font-size: 1rem;
+  color: #374151;
+}
+
+.info-item p {
+  margin: 0;
+  white-space: pre-wrap;
+}

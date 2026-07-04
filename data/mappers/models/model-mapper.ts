@@ -1,0 +1,56 @@
+import { ModelEntity, ImageEntity, ReferenceEntity, ModelUserEntity } from '../../../domain/entities/models/model-entity';
+import { ModelDto, ImageDto, ReferenceDto, ModelUserDto } from '../../../data/dtos/models/model-dto';
+
+export function mapModelDtoToEntity(dto: ModelDto): ModelEntity {
+  return {
+    id: dto.id,
+    documentId: dto.documentId,
+    name: dto.name,
+    description: dto.description,
+    createdAt: dto.createdAt,
+    updatedAt: dto.updatedAt,
+    publishedAt: dto.publishedAt,
+    image: dto.image ? {
+      id: dto.image.id,
+      documentId: dto.image.documentId,
+      name: dto.image.name,
+      alternativeText: dto.image.alternativeText,
+      caption: dto.image.caption,
+      focalPoint: dto.image.focalPoint,
+      width: dto.image.width,
+      height: dto.image.height,
+      formats: dto.image.formats,
+      hash: dto.image.hash,
+      ext: dto.image.ext,
+      mime: dto.image.mime,
+      size: dto.image.size,
+      url: dto.image.url,
+      previewUrl: dto.image.previewUrl,
+      provider: dto.image.provider,
+      provider_metadata: dto.image.provider_metadata,
+      createdAt: dto.image.createdAt,
+      updatedAt: dto.image.updatedAt,
+      publishedAt: dto.image.publishedAt,
+    } : null,
+    references: dto.references?.map(ref => ({
+      id: ref.id,
+      documentId: ref.documentId,
+      type: ref.type,
+      name: ref.name,
+      url: ref.url,
+    })) || [],
+    user: dto.user ? {
+      id: dto.user.id,
+      documentId: dto.user.documentId,
+      username: dto.user.username,
+      email: dto.user.email,
+      provider: dto.user.provider,
+      confirmed: dto.user.confirmed,
+      blocked: dto.user.blocked,
+      aboutMe: dto.user.aboutMe,
+      createdAt: dto.user.createdAt,
+      updatedAt: dto.user.updatedAt,
+      publishedAt: dto.user.publishedAt,
+    } : null,
+  };
+}

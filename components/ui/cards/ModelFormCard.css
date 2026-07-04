@@ -1,0 +1,211 @@
+@reference "tailwindcss";
+
+.model-form-card {
+  @apply
+  w-full
+  max-w-md p-8
+  space-y-4
+  bg-white
+  rounded-lg
+  shadow-xl;
+  padding: 24px;
+}
+
+.model-form-card__label {
+  @apply
+  block
+  font-semibold
+  mb-2;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.model-form-card__input {
+  @apply
+  w-full p-3
+  border rounded-md
+  focus:outline-none focus:ring-blue-500 mb-4;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.model-form-card__textarea {
+  @apply
+  w-full p-3
+  border rounded-md
+  focus:outline-none focus:ring-blue-500 mb-4 resize-none;
+  color: rgba(0, 0, 0, 0.5);
+  min-height: 120px;
+}
+
+.model-form-card__image-section {
+  @apply flex justify-center mb-8;
+}
+
+.model-form-card__image-trigger {
+  @apply
+    w-32 h-32
+    rounded-full
+    border-2 border-dashed border-gray-300
+    flex flex-col
+    items-center
+    justify-center
+    cursor-pointer
+    hover:bg-gray-50
+    transition-all
+    text-gray-400;
+  background-color: #f9fafb;
+}
+
+.model-form-card__image-trigger:hover {
+  @apply border-gray-400 text-gray-500;
+}
+
+.model-form-card__upload-icon {
+  @apply text-3xl mb-1;
+}
+
+.model-form-card__upload-text {
+  @apply text-xs font-medium;
+}
+
+.model-form-card__upload-status {
+  @apply text-sm font-medium;
+}
+
+.model-form-card__image-preview-container {
+  position: relative;
+  width: 140px;
+  aspect-ratio: 1;
+  margin: 0 auto 1rem;
+}
+
+.model-form-card__image-remove {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  z-index: 10;
+  width: 32px;
+  aspect-ratio: 1 / 1;
+
+  @apply
+    rounded-full
+    text-sm
+    font-semibold
+    bg-[#383838]
+    hover:bg-[#2a2a2a]
+    transition-colors;
+}
+
+.model-form-card__image-remove:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.model-form-card__image-preview-wrapper {
+  position: relative;
+  width: 140px;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  overflow: hidden;
+  margin: 0 auto 1rem auto;
+  border: 3px solid #e5e7eb;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+}
+
+.model-form-card__image-preview-img {
+  object-fit: cover;
+}
+
+.model-form-card__file-input {
+  display: none;
+}
+
+.model-form-card__references {
+  @apply space-y-3 mb-4;
+}
+
+.model-form-card__ref-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.model-form-card__ref-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  width: 100%;
+}
+
+.model-form-card__ref-select {
+  @apply
+    border rounded-md
+    focus:outline-none focus:ring-blue-500
+    text-sm;
+  color: rgba(0, 0, 0, 0.5);
+  padding: 0.5rem;
+  min-width: 120px;
+  flex-shrink: 0;
+}
+
+.model-form-card__ref-input {
+  @apply
+    w-full p-2
+    border rounded-md
+    focus:outline-none focus:ring-blue-500
+    text-sm;
+  color: rgba(0, 0, 0, 0.5);
+  flex: 1;
+  min-width: 0;
+}
+
+.model-form-card__ref-input-url {
+  @apply
+    w-full p-2
+    border rounded-md
+    focus:outline-none focus:ring-blue-500
+    text-sm;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.model-form-card__ref-remove {
+  @apply
+    w-7 h-7
+    rounded-full
+    text-xs
+    font-semibold
+    bg-[#383838]
+    hover:bg-[#2a2a2a]
+    transition-colors
+    flex-shrink-0;
+}
+
+.model-form-card__ref-remove:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.model-form-card__add-ref {
+  @apply
+    w-full py-2
+    border-2 border-dashed border-gray-300
+    rounded-md
+    text-sm
+    font-medium
+    text-gray-400
+    hover:border-gray-400 hover:text-gray-500
+    hover:bg-gray-50
+    transition-all
+    cursor-pointer;
+}
+
+.model-form-card__submit {
+  @apply
+  w-full py-3
+  bg-black
+  text-white
+  font-bold
+  rounded-md
+  hover:bg-gray-800 transition-colors duration-200;
+}
+
+.model-form-card__submit:disabled {
+  @apply bg-gray-400 cursor-not-allowed;
+}
