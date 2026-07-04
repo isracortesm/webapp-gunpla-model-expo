@@ -24,10 +24,10 @@ export default function ResetPasswordSuccessPage() {
   return (
     <div className="success-page">
       <div className="success-container">
-        <h1>Password Reset Successful!</h1>
-        <p>Your password has been changed successfully.</p>
-        <p>You will be redirected to the login page in {countdown} seconds...</p>
-        <button onClick={() => router.push('/auth/login')}>Go to Login</button>
+        <h1>Actualizacion exitosa!</h1>
+        <p>Tu contraseña ha sido actualizada exitosamente.</p>
+        <p>Seras redirigido a la pagina de Login en {countdown} segundos...</p>
+        <button onClick={() => router.push('/auth/login')}>Ir a Login</button>
       </div>
     </div>
   );
