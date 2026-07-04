@@ -24,10 +24,10 @@ export default function ForgotPasswordSuccessPage() {
   return (
     <div className="success-page">
       <div className="success-container">
-        <h1>Code Sent Successfully!</h1>
-        <p>A verification code has been sent to your email address.</p>
-        <p>You will be redirected to the reset password page in {countdown} seconds...</p>
-        <button onClick={() => router.push('/auth/reset-password')}>Go to Reset Password</button>
+        <h1>Código enviado!</h1>
+        <p>Tu código de confirmacion a sido enviado a tu correo registrado.</p>
+        <p>Seras redirigido a la pagina de recuperacion de contraseña en {countdown} segundo...</p>
+        <button onClick={() => router.push('/auth/reset-password')}>Ir a recuperar contraseña</button>
       </div>
     </div>
   );
