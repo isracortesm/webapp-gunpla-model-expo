@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { resetPasswordUser } from '@/features/auth/service/auth-service';
 import { useUnifiedDialog } from '@/features/dialogs/context/unified-dialog-provider';
 import PasswordField from '@/components/ui/PasswordField';
+import PageHeader from '@/components/ui/PageHeader';
 import '@/app/auth/reset-password/reset-password.css';
 
 function ResetPasswordForm() {
@@ -40,15 +41,11 @@ function ResetPasswordForm() {
   }
 
   return (
-    <div className="register-page">
-      <button
-          onClick={() => router.back()}
-          className="reset-page__back-btn">
-          Volver
-      </button>
-      <h1 className="reset-page__title">Restablecer Contraseña</h1>
+    <div className="reset-page">
+      <PageHeader title="Restablecer Contraseña" onBack={() => router.back()} position="static" />
 
-      <form onSubmit={handleSubmit} className="register-form">
+      <form onSubmit={handleSubmit} className="reset-form">
+        <div className="reset-form__card">
 
         <label htmlFor="verificationCode" className="input-label">Código de verificación</label>
         <input
@@ -84,7 +81,7 @@ function ResetPasswordForm() {
         <button
           type="submit"
           disabled={!verificationCode || !password || !confirmPassword}
-          className="register-button">
+          className="reset-button">
           Restablecer Contraseña
         </button>
 
@@ -92,6 +89,7 @@ function ResetPasswordForm() {
           ¿Recordaste tu contraseña?{' '}
           <a href="/auth/login" className="login-link">Iniciar Sesión</a>
         </p>
+        </div>
       </form>
     </div>
   );
@@ -100,8 +98,8 @@ function ResetPasswordForm() {
 export default function ResetPasswordPage() {
   return (
     <Suspense fallback={
-      <div className="register-page">
-        <h1 className="reset-page__title">Restablecer Contraseña</h1>
+      <div className="reset-page">
+        <PageHeader title="Restablecer Contraseña" position="static" />
       </div>
     }>
       <ResetPasswordForm />

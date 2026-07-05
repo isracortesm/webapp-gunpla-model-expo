@@ -9,6 +9,7 @@ import { getCompetitions, getCompetitionModels, deleteCompetitionModel } from '@
 import { getActivityByDocumentId, checkActivityRegistration, deleteActivityParticipant } from '@/features/event-dashboard/service/event-dashboard-service';
 import type { CompetitionEntity, CompetitionModelEntryEntity } from '@/domain/entities/competition/entity';
 import AddCompetitionModelDialog from '@/components/ui/dialogs/AddCompetitionModelDialog';
+import PageHeader from '@/components/ui/PageHeader';
 import '../../../../user/models/models.css';
 import './competition.css';
 
@@ -145,8 +146,7 @@ export default function CompetitionPage() {
   if (!competition) {
     return (
       <main className="competition__container">
-        <button onClick={() => router.back()} className="competition__back-btn">Volver</button>
-        <h1 className="competition__title">Competencia</h1>
+        <PageHeader title="Competencia" onBack={() => router.back()} position="static" />
         <p className="competition__empty">No hay competencias disponibles</p>
       </main>
     );
@@ -154,8 +154,7 @@ export default function CompetitionPage() {
 
   return (
     <main className="competition__container">
-      <button onClick={() => router.back()} className="competition__back-btn">Volver</button>
-      <h1 className="competition__title">Competencia</h1>
+      <PageHeader title="Competencia" onBack={() => router.back()} position="static" />
 
       <div className="competition__card">
         <div className="competition__info">

@@ -7,6 +7,7 @@ import { useAuthWithStorage } from '@/features/auth/context/auth-provider';
 import { getUserActivities } from '@/features/event-dashboard/service/event-dashboard-service';
 import { useUnifiedDialog } from '@/features/dialogs/context/unified-dialog-provider';
 import { ActivityEntity } from '@/domain/entities/event-dashboard/entity';
+import PageHeader from '@/components/ui/PageHeader';
 import '../../../app/(event)/activities/activities.css';
 import './activities.css';
 
@@ -105,13 +106,7 @@ export default function UserActivitiesListPage() {
 
   return (
     <main className="user-activities__container">
-      <button
-        onClick={() => router.back()}
-        className="user-activities__back-btn">
-        Volver
-      </button>
-
-      <h1 className="user-activities__title">Mis Actividades</h1>
+      <PageHeader title="Mis Actividades" onBack={() => router.push("/")} position="static" />
 
       <div className="max-w-4xl mx-auto w-full">
         <div className="user-activities-list__container" onScroll={handleScroll}>
@@ -174,7 +169,7 @@ export default function UserActivitiesListPage() {
         </div>
 
         <div className="user-activities-page__count">
-          Page {page} of {pageCount || 1}
+          Página {page} de {pageCount || 1}
         </div>
       </div>
     </main>

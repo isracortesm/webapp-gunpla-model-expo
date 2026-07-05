@@ -1,52 +1,24 @@
 @reference "tailwindcss";
 
 .competition__container {
-  position: relative;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   background-color: #f9fafb;
-}
-
-.competition__back-btn {
-  position: absolute;
-  top: 2rem;
-  left: 2rem;
-  z-index: 10;
-  @apply
-    rounded-full
-    px-6
-    py-1.5
-    text-sm
-    font-semibold
-    bg-[#383838]
-    hover:bg-[#2a2a2a]
-    transition-colors;
-}
-
-.competition__title {
-  position: absolute;
-  top: 1.5rem;
-  left: 50%;
-  transform: translateX(-50%);
-  color: rgb(49, 38, 38);
-  @apply
-    px-6
-    py-1.5
-    text-2xl
-    md:text-5xl
-    font-semibold;
+  padding-top: 1rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
 }
 
 .competition__card {
   width: 100%;
   max-width: 900px;
-  margin: 5rem auto 0;
 }
 
 .competition__info {
-  padding: 2rem;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
 }
 
 .competition__type {
@@ -196,15 +168,13 @@
 .competition__models-section {
   width: 100%;
   max-width: 900px;
-  margin: 0 auto 0;
-  padding: 0 1rem 1rem;
 }
 
 .competition__models-title {
   font-size: clamp(20px, 5vw, 20px);
   font-weight: 600;
   color: #111827;
-  margin: 0 1rem 1rem 1rem;
+  margin-top: 1rem;
 }
 
 .competition__remove-btn {
@@ -229,7 +199,9 @@
   width: 100%;
   max-width: 900px;
   margin: 0 auto;
-  padding: 0 2rem 2rem;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  padding-bottom: 1rem;
 }
 
 .competition__cancel-participation-btn {

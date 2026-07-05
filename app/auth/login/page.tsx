@@ -6,6 +6,7 @@ import { loginUser, getCurrentUser } from '@/features/auth/service/auth-service'
 import { useAuthWithStorage } from '@/features/auth/context/auth-provider';
 import { useUnifiedDialog } from '@/features/dialogs/context/unified-dialog-provider';
 import PasswordField from '@/components/ui/PasswordField';
+import PageHeader from '@/components/ui/PageHeader';
 import '@/app/auth/login/login.css';
 
 export default function LoginPage() {
@@ -43,14 +44,11 @@ export default function LoginPage() {
 
   return (
     <div className="login-page">
-      <button
-          onClick={() => router.back()}
-          className="login-page__back-btn">
-          Volver
-      </button>
-      <h1 className="login-page__title">Iniciar Sesión</h1>
+      <PageHeader title="Iniciar Sesión" onBack={() => router.back()} position="static" />
 
       <form onSubmit={handleSubmit} className="login-form">
+        <div className="login-form__card">
+
         <label htmlFor="identifier" className="input-label">Usuario o Correo</label>
         <input
           id="identifier"
@@ -87,6 +85,7 @@ export default function LoginPage() {
         <a href="/auth/forgot-password" className="forgot-password-link">
           ¿Olvidaste tu contraseña?
         </a>
+        </div>
       </form>
     </div>
   );

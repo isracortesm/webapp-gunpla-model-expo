@@ -3,6 +3,7 @@
 import React from 'react';
 import { useAuthWithStorage } from '@/features/auth/context/auth-provider';
 import ProfileCard from '@/components/ui/cards/ProfileCard';
+import PageHeader from '@/components/ui/PageHeader';
 import { useRouter } from 'next/navigation';
 import './profile.css';
 
@@ -28,17 +29,16 @@ export default function UserProfilePage() {
 
   return (
     <main className="profile-page__container">
-      <button
-        onClick={() => router.push('/')}
-        className="profile-page__back-btn">
-        Volver
-      </button>
-      <button
-        onClick={() => router.push('/user/profile/edit')}
-        className="profile-page__edit-btn">
-        Editar
-      </button>
-      <h1 className="profile-page__title">Perfil</h1>
+      <PageHeader
+        title="Perfil"
+        onBack={() => router.push('/')}
+        position="static"
+        rightAction={
+          <button onClick={() => router.push('/user/profile/edit')} className="profile-page__edit-btn-sm">
+            Editar
+          </button>
+        }
+      />
       <div className="profile-page__card-wrapper">
         <ProfileCard user={user} />
       </div>

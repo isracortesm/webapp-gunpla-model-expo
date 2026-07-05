@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useUnifiedDialog } from '@/features/dialogs/context/unified-dialog-provider';
 import { changePassword } from '@/features/auth/service/auth-service';
 import PasswordField from '@/components/ui/PasswordField';
+import PageHeader from '@/components/ui/PageHeader';
 import './change-password.css';
 
 export default function ChangePasswordPage() {
@@ -49,12 +50,7 @@ export default function ChangePasswordPage() {
 
   return (
     <main className="change-password-page__container">
-      <button
-        onClick={() => router.back()}
-        className="change-password-page__back-btn">
-        Volver
-      </button>
-      <h1 className="change-password-page__title">Cambiar Contraseña</h1>
+      <PageHeader title="Cambiar Contraseña" onBack={() => router.back()} position="static" />
       <div className="change-password-page__card-wrapper">
         <form onSubmit={handleSubmit} className="change-password-form">
           <PasswordField

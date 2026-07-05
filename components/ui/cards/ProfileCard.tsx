@@ -9,7 +9,7 @@ interface ProfileCardProps {
 }
 
 export default function ProfileCard({ user }: ProfileCardProps) {
-  const avatarSrc = user.profileImage?.thumbnailUrl || user.profileImage?.url || '/profile_holder.png';
+  const avatarSrc = user.profileImage?.thumbnailUrl || user.profileImage?.url || '/profile_thumb.jpg';
 
   return (
     <div className="card-container">

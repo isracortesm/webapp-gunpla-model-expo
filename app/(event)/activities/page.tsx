@@ -143,7 +143,7 @@ export default function ActivitiesListPage() {
                   </span>
                   {activity.capacity != null && (
                     <span className="activity-card-capacity">
-                    Aforo: {activity.capacity}
+                    {activity.capacity === 0 ? 'Aforo abierto' : `Aforo: ${activity.capacity}`}
                     </span>
                   )}
                 </div>
