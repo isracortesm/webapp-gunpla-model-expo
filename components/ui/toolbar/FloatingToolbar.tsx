@@ -26,10 +26,10 @@ export default function FloatingToolbar({ onProfileClick, showNavLinks = false, 
         className="floating-toolbar__profile-link"
       >
         <Image
-          src={isAuthenticated && user ? user.profileImage?.thumbnailUrl || user.profileImage?.url || '/profile_holder.png' : '/profile_holder.png'}
+          src={isAuthenticated && user ? user.profileImage?.thumbnailUrl || user.profileImage?.url || '/profile_thumb.jpg' : '/profile_thumb.jpg'}
           alt={isAuthenticated && user ? `${user.username}'s avatar` : 'Profile avatar'}
-          width={28}
-          height={28}
+          width={32}
+          height={32}
           className={`object-cover rounded-full ${!isAuthenticated ? 'opacity-50' : ''}`}
         />
       </button>

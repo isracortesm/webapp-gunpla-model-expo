@@ -2,47 +2,12 @@
 
 /* Models Page Container */
 .models-page__container {
-  position: relative;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
-  background-color: #f9fafb; /* bg-gray-50 */
-  padding: 1rem;
-}
-
-/* Back Button - Copied from profile.css */
-.models-page__back-btn {
-  position: absolute;
-  top: 2rem;
-  left: 2rem;
-  @apply
-    rounded-full
-    px-6
-    py-1.5
-    text-sm
-    font-semibold
-    bg-[#383838]
-    hover:bg-[#2a2a2a]
-    transition-colors;
-}
-
-.models-page__title {
-  position: absolute;
-  top: 1.5rem;
-  left: 50%;
-  transform: translateX(-50%);
-  color: black;
-  
-   @apply
-    text-2xl
-    sm:text-2xl
-    md:text-3xl
-    lg:text-4xl
-    font-bold
-    mb-8
-    text-center;
+  background-color: #f9fafb;
+  padding: 24px;
 }
 
 .models-page__count {
@@ -67,7 +32,7 @@
 /* Models List Container */
 .models-list__container {
   overflow-y: auto;
-  padding: 5rem 1rem 1rem 1rem;
+  padding: 2rem 1rem 1rem 1rem;
 }
 
 /* Model Card Styles - Inspired by MainEventCard */

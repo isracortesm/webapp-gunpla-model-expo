@@ -13,6 +13,7 @@ import {
   deleteActivityParticipant,
 } from '@/features/event-dashboard/service/event-dashboard-service';
 import type { ActivityEntity } from '@/domain/entities/event-dashboard/entity';
+import PageHeader from '@/components/ui/PageHeader';
 import './detail.css';
 
 export default function ActivityDetailPage() {
@@ -128,12 +129,7 @@ export default function ActivityDetailPage() {
 
   return (
     <main className="activity-detail__container">
-      <button
-        onClick={() => router.push('/activities')}
-        className="activity-detail__back-btn"
-      >
-        Volver
-      </button>
+      <PageHeader title="" onBack={() => router.back()} position="static" />
 
       <div className="activity-detail__card">
         {activity.image?.url && (
@@ -166,7 +162,7 @@ export default function ActivityDetailPage() {
               </span>
               {activity.capacity != null && (
                 <span className="activity-detail__capacity">
-                  Aforo: {activity.capacity}
+                  {activity.capacity === 0 ? 'Aforo abierto' : `Aforo: ${activity.capacity}`}
                 </span>
               )}
             </div>

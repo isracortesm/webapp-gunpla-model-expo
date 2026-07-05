@@ -7,6 +7,7 @@ import ReactMarkdown from 'react-markdown';
 import { useUnifiedDialog } from '@/features/dialogs/context/unified-dialog-provider';
 import { getNewsByDocumentId } from '@/features/event-dashboard/service/event-dashboard-service';
 import type { NewsEntity } from '@/domain/entities/event-dashboard/entity';
+import PageHeader from '@/components/ui/PageHeader';
 import './detail.css';
 
 export default function NewsDetailPage() {
@@ -52,12 +53,7 @@ export default function NewsDetailPage() {
 
   return (
     <main className="news-detail__container">
-      <button
-        onClick={() => router.back()}
-        className="news-detail__back-btn"
-      >
-        Volver
-      </button>
+      <PageHeader title="" onBack={() => router.back()} position="static" />
 
       <div className="news-detail__card">
         {news.thumbnail?.url && (

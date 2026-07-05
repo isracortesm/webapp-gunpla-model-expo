@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { registerUser } from '@/features/auth/service/auth-service';
 import { useUnifiedDialog } from '@/features/dialogs/context/unified-dialog-provider';
 import PasswordField from '@/components/ui/PasswordField';
+import PageHeader from '@/components/ui/PageHeader';
 import '@/app/auth/register/register.css';
 
 export default function RegisterPage() {
@@ -36,14 +37,10 @@ export default function RegisterPage() {
 
   return (
     <div className="register-page">
-      <button
-          onClick={() => router.back()}
-          className="register-page__back-btn">
-          Volver
-      </button>
-      <h1 className="register-page__title">Registrarse</h1>
+      <PageHeader title="Registrarse" onBack={() => router.back()} position="static" />
 
       <form onSubmit={handleSubmit} className="register-form">
+        <div className="register-form__card">
 
         <label htmlFor="username" className="input-label">Nombre de usuario</label>
         <input
@@ -88,6 +85,7 @@ export default function RegisterPage() {
           ¿Ya tienes cuenta?{' '}
           <a href="/auth/login" className="login-link">Iniciar Sesión</a>
         </p>
+        </div>
       </form>
     </div>
   );

@@ -7,6 +7,7 @@ import { getModels } from '@/features/models/service/models-service';
 import { useUnifiedDialog } from '@/features/dialogs/context/unified-dialog-provider';
 import { ModelEntity } from '@/domain/entities/models/model-entity';
 import { useRouter } from 'next/navigation';
+import PageHeader from '@/components/ui/PageHeader';
 import './models.css';
 
 export default function ModelsListPage() {
@@ -56,13 +57,7 @@ export default function ModelsListPage() {
 
   return (
     <main className="models-page__container">
-      <button
-        onClick={() => router.push('/')}
-        className="models-page__back-btn">
-        Volver
-      </button>
-      
-      <h1 className="models-page__title">Mis Modelos</h1>
+      <PageHeader title="Mis Modelos" onBack={() => router.push('/')} position="static" />
 
       <div className="max-w-4xl mx-auto w-full">
         <div
@@ -116,7 +111,7 @@ export default function ModelsListPage() {
         </div>
     
         <div className="models-page__count">
-          Page {page} of {pageCount || 1}
+          Página {page} de {pageCount || 1}
         </div>
       </div>
     </main>

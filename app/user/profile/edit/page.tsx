@@ -8,6 +8,7 @@ import { useUnifiedDialog } from '@/features/dialogs/context/unified-dialog-prov
 import { uploadMedia, deleteMedia } from '@/features/media/service/media-service';
 import { updateCurrentUser, createSocialNetwork, deleteSocialNetwork } from '@/features/auth/service/auth-service';
 import type { SocialNetworkItem } from '@/domain/entities/event-dashboard/entity';
+import PageHeader from '@/components/ui/PageHeader';
 import './edit.css';
 
 const SOCIAL_NETWORK_TYPES = [
@@ -214,13 +215,7 @@ export default function EditProfilePage() {
 
   return (
     <main className="edit-page__container">
-      <button
-        onClick={() => router.push('/user/profile')}
-        className="edit-page__back-btn"
-      >
-        Volver
-      </button>
-      <h1 className="edit-page__title">Editar Perfil</h1>
+      <PageHeader title="Editar Perfil" onBack={() => router.push('/user/profile')} position="static" />
       <div className="edit-page__card-wrapper">
         <form onSubmit={handleSubmit} className="edit-page__form">
           {/* Image Upload */}

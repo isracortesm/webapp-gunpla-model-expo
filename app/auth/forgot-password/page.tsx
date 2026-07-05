@@ -4,6 +4,7 @@ import { useState, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { forgotPasswordUser } from '@/features/auth/service/auth-service';
 import { useUnifiedDialog } from '@/features/dialogs/context/unified-dialog-provider';
+import PageHeader from '@/components/ui/PageHeader';
 import '@/app/auth/forgot-password/forgot-password.css';
 
 export default function ForgotPasswordPage() {
@@ -32,15 +33,11 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <div className="register-page">
-      <button
-          onClick={() => router.back()}
-          className="forgot-page__back-btn">
-          Volver
-      </button>
-      <h1 className="forgot-page__title">Recuperar Contraseña</h1>
+    <div className="forgot-page">
+      <PageHeader title="Recuperar Contraseña" onBack={() => router.back()} position="static" />
 
-      <form onSubmit={handleSubmit} className="register-form">
+      <form onSubmit={handleSubmit} className="forgot-form">
+        <div className="forgot-form__card">
 
           <label htmlFor="email" className="input-label">Correo electrónico</label>
           <input
@@ -56,7 +53,7 @@ export default function ForgotPasswordPage() {
           <button
             type="submit"
             disabled={!email}
-            className="register-button">
+            className="forgot-button">
             Enviar Código
           </button>
 
@@ -64,7 +61,8 @@ export default function ForgotPasswordPage() {
             ¿Recordaste tu contraseña?{' '}
             <a href="/auth/login" className="login-link">Iniciar Sesión</a>
           </p>
-        </form>
+        </div>
+      </form>
     </div>
   );
 }
