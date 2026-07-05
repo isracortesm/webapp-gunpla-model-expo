@@ -129,7 +129,7 @@ export default function ActivityDetailPage() {
 
   return (
     <main className="activity-detail__container">
-      <PageHeader title="" onBack={() => router.back()} position="static" />
+      <PageHeader title="" onBack={() => router.back()} />
 
       <div className="activity-detail__card">
         {activity.image?.url && (
