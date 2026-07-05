@@ -42,7 +42,7 @@ function ResetPasswordForm() {
 
   return (
     <div className="reset-page">
-      <PageHeader title="Restablecer Contraseña" onBack={() => router.back()} position="static" />
+      <PageHeader title="Restablecer Contraseña" onBack={() => router.back()} />
 
       <form onSubmit={handleSubmit} className="reset-form">
         <div className="reset-form__card">

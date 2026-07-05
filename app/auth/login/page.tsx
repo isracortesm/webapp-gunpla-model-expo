@@ -44,7 +44,7 @@ export default function LoginPage() {
 
   return (
     <div className="login-page">
-      <PageHeader title="Iniciar Sesión" onBack={() => router.back()} position="static" />
+      <PageHeader title="Iniciar Sesión" onBack={() => router.back()} />
 
       <form onSubmit={handleSubmit} className="login-form">
         <div className="login-form__card">

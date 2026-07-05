@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 import FloatingToolbar from "./FloatingToolbar";
-import UserProfileDropdown from "./UserProfileDropdown";
 import "./ToolbarGroup.css";
 
 const NAV_VISIBLE_ROUTES = ['/', '/news', '/activities'];
@@ -22,10 +21,8 @@ export default function ToolbarGroup() {
         onProfileClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
         showNavLinks={showNavLinks}
         pathname={pathname}
-      />
-      <UserProfileDropdown
-        isOpen={isProfileMenuOpen}
-        onClose={() => setIsProfileMenuOpen(false)}
+        dropdownOpen={isProfileMenuOpen}
+        onCloseDropdown={() => setIsProfileMenuOpen(false)}
       />
     </div>
   );

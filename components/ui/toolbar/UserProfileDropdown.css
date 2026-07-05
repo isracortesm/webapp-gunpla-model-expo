@@ -1,28 +1,19 @@
 @reference "tailwindcss";
 
-.user-profile-dropdown__overlay {
-  @apply 
-    fixed 
-    inset-x-0 
-    inset-y-0 
-    z-[60];
-}
-
 .user-profile-dropdown__menu {
-  @apply
-    fixed
-    top-21
-    left-6
-    w-[280px]
-    rounded-xl
-    overflow-hidden
-    shadow-lg
-    border
-    bg-black/30
-    backdrop-blur-md
-    border-zinc-700/30;
-
-  max-width: calc(100vw - 2rem);
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  width: 320px;
+  max-width: calc(100vw - 3rem);
+  max-height: 90vh;
+  overflow-y: auto;
+  z-index: 70;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255);
+  background: rgba(30, 30, 30, 0.8);
+  backdrop-filter: blur(8px);
 }
 
 .user-profile-dropdown__header {
@@ -64,7 +55,7 @@
     py-2 
     rounded-lg 
     transition-colors 
-    hover:bg-zinc-900/10;
+    hover:bg-zinc-300/10;
 }
 
 .user-profile-dropdown__logout-btn {

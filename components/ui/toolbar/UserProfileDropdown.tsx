@@ -33,7 +33,6 @@ export default function UserProfileDropdown({ isOpen, onClose }: UserProfileDrop
   const displayName = isAuthenticated && user ? user.username : 'Invitado';
 
   return (
-    <div className="user-profile-dropdown__overlay" onClick={onClose}>
       <div
         className="user-profile-dropdown__menu"
         onClick={(e) => e.stopPropagation()}
@@ -87,6 +86,5 @@ export default function UserProfileDropdown({ isOpen, onClose }: UserProfileDrop
           </>
         )}
       </div>
-    </div>
   );
 }

@@ -1,6 +1,9 @@
 @reference "tailwindcss";
 
 .toolbar-group-container {
-  position: relative;
+  position: fixed;
   z-index: 100;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 1rem);
 }

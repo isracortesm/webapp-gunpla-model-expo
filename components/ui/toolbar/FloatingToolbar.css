@@ -13,15 +13,16 @@
     bg-black/30
     backdrop-blur-md
     border-b
-    border-zinc-700/30;
+    border-zinc-50/30;
 
   left: 50%;
   transform: translateX(-50%);
 
   width: calc(100% - 3rem);
-  max-width: 850px;
+  max-width: 870px;
 
   border-radius: 9999px;
+  position: relative;
 }
 
 .floating-toolbar__profile-link {

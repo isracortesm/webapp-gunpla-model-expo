@@ -37,7 +37,7 @@ export default function RegisterPage() {
 
   return (
     <div className="register-page">
-      <PageHeader title="Registrarse" onBack={() => router.back()} position="static" />
+      <PageHeader title="Registrarse" onBack={() => router.back()} />
 
       <form onSubmit={handleSubmit} className="register-form">
         <div className="register-form__card">
