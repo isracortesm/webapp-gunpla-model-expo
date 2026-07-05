@@ -34,7 +34,7 @@ export default function ForgotPasswordPage() {
 
   return (
     <div className="forgot-page">
-      <PageHeader title="Recuperar Contraseña" onBack={() => router.back()} position="static" />
+      <PageHeader title="Recuperar Contraseña" onBack={() => router.back()} />
 
       <form onSubmit={handleSubmit} className="forgot-form">
         <div className="forgot-form__card">

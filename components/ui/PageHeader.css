@@ -10,10 +10,10 @@
   transform: translateX(-50%);
 
   width: calc(100% - 3rem);
-  max-width: 850px;
   min-height: 48px;
   padding-top: 1rem;
   border-radius: 9999px;
+  max-width: 870px;
 }
 
 .page-header__side {
@@ -56,7 +56,7 @@
   transform: none;
   left: auto;
   width: 100%;
-  max-width: 100%;
+  max-width: 870px;
   box-shadow: none;
   border-radius: 0;
   background: none;

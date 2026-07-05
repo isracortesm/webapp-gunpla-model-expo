@@ -1,12 +1,15 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useAuth } from "@/features/auth/context/auth-context";
+import UserProfileDropdown from "./UserProfileDropdown";
 import "./FloatingToolbar.css";
 
 interface FloatingToolbarProps {
   onProfileClick?: () => void;
   showNavLinks?: boolean;
   pathname?: string | null;
+  dropdownOpen?: boolean;
+  onCloseDropdown?: () => void;
 }
 
 const NAV_ITEMS = [
@@ -15,7 +18,7 @@ const NAV_ITEMS = [
   { href: '/activities', label: 'Actividades' },
 ];
 
-export default function FloatingToolbar({ onProfileClick, showNavLinks = false, pathname }: FloatingToolbarProps) {
+export default function FloatingToolbar({ onProfileClick, showNavLinks = false, pathname, dropdownOpen, onCloseDropdown }: FloatingToolbarProps) {
   const { user, isAuthenticated } = useAuth();
 
   return (
@@ -51,6 +54,13 @@ export default function FloatingToolbar({ onProfileClick, showNavLinks = false, 
             );
           })}
         </div>
+      )}
+
+      {dropdownOpen && onCloseDropdown && (
+        <UserProfileDropdown
+          isOpen={true}
+          onClose={onCloseDropdown}
+        />
       )}
     </div>
   );
