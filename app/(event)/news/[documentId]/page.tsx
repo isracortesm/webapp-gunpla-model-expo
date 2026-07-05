@@ -53,7 +53,7 @@ export default function NewsDetailPage() {
 
   return (
     <main className="news-detail__container">
-      <PageHeader title="" onBack={() => router.back()} />
+      <PageHeader title="" onBack={() => router.push("/news")} />
 
       <div className="news-detail__card">
         {news.thumbnail?.url && (

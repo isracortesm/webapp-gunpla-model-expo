@@ -106,7 +106,7 @@ export default function UserActivitiesListPage() {
 
   return (
     <main className="user-activities__container">
-      <PageHeader title="Mis Actividades" onBack={() => router.back()} position="static" />
+      <PageHeader title="Mis Actividades" onBack={() => router.push("/")} position="static" />
 
       <div className="max-w-4xl mx-auto w-full">
         <div className="user-activities-list__container" onScroll={handleScroll}>
