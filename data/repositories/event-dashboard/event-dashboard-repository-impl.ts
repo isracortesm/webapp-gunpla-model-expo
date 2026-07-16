@@ -89,6 +89,7 @@ export class EventDashboardRepositoryImpl implements EventDashboardRepository {
       'fields[4]': 'startDate',
       'fields[5]': 'endDate',
       'fields[6]': 'capacity',
+      'fields[7]': 'participantsCount',
     };
 
     if (params?.page) {

@@ -143,7 +143,12 @@ export default function ActivitiesListPage() {
                   </span>
                   {activity.capacity != null && (
                     <span className="activity-card-capacity">
-                    {activity.capacity === 0 ? 'Aforo abierto' : `Aforo: ${activity.capacity}`}
+                      {activity.capacity === 0
+                        ? 'Aforo abierto'
+                        : `Aforo: ${activity.capacity}`}
+                      {activity.capacity > 0 && (activity.participantsCount ?? 0) >= activity.capacity && (
+                        <span className="activity-card-full-badge">Lleno</span>
+                      )}
                     </span>
                   )}
                 </div>
