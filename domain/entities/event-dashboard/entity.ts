@@ -52,6 +52,7 @@ export interface ActivityEntity {
   startDate: string;
   endDate: string;
   capacity?: number;
+  participantsCount?: number;
   image?: MediaEntity;
   category?: CategoryEntity;
   collaborators?: CollaboratorEntity[];
