@@ -272,6 +272,22 @@
   background-color: #1d4ed8;
 }
 
+.activity-detail__full-capacity {
+  width: 100%;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  text-align: center;
+  background-color: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fcd34d;
+}
+
+.activity-detail__full-capacity-icon {
+  margin-right: 6px;
+}
+
 .activity-detail__collaborators-list {
   display: flex;
   flex-direction: column;

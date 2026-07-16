@@ -29,6 +29,8 @@ export default function ActivityDetailPage() {
   const [isChecking, setIsChecking] = useState(true);
   const fetched = useRef(false);
 
+  const isAtFullCapacity = activity?.capacity != null && activity.capacity > 0 && (activity.participantsCount ?? 0) >= activity.capacity;
+
   useEffect(() => {
     if (fetched.current) return;
     fetched.current = true;
@@ -162,7 +164,9 @@ export default function ActivityDetailPage() {
               </span>
               {activity.capacity != null && (
                 <span className="activity-detail__capacity">
-                  {activity.capacity === 0 ? 'Aforo abierto' : `Aforo: ${activity.capacity}`}
+                  {activity.capacity === 0
+                    ? 'Aforo abierto'
+                    : `Aforo: ${activity.capacity} participantes`}
                 </span>
               )}
             </div>
@@ -190,9 +194,9 @@ export default function ActivityDetailPage() {
                     <div className="activity-detail__skeleton-btn" />
                   </div>
                 )}
-                {!isChecking && user && (
+                {!isChecking && (
                   <div className="activity-detail__participation">
-                    {isRegistered ? (
+                    {user && isRegistered ? (
                       activity.category?.type === 'competition' ? (
                         <button onClick={() => router.push(`/activities/${params.documentId}/competition`)} className="activity-detail__edit-btn">
                           Editar modelos
@@ -202,18 +206,20 @@ export default function ActivityDetailPage() {
                           Cancelar participación
                         </button>
                       )
-                    ) : (
+                    ) : isAtFullCapacity ? (
+                      <div className="activity-detail__full-capacity">
+                        <span className="activity-detail__full-capacity-icon">⚠</span>
+                        La actividad esta llena, gracias!!
+                      </div>
+                    ) : user ? (
                       <button onClick={handleRegister} className="activity-detail__participate-btn">
                         Participar
                       </button>
+                    ) : (
+                      <button onClick={() => router.push('/auth/register')} className="activity-detail__register-btn">
+                        Registrarse para participar
+                      </button>
                     )}
-                  </div>
-                )}
-                {!isChecking && !user && (
-                  <div className="activity-detail__participation">
-                    <button onClick={() => router.push('/auth/register')} className="activity-detail__register-btn">
-                      Registrarse para participar
-                    </button>
                   </div>
                 )}
               </div>
