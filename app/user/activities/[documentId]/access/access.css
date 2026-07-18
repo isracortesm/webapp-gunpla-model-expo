@@ -1,0 +1,84 @@
+@reference "tailwindcss";
+
+.access__container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #f9fafb;
+}
+
+.access__card {
+  width: 100%;
+  max-width: 380px;
+  margin: 0 auto;
+  margin-top: 80px;
+  padding: 32px 24px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.access__title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 8px;
+}
+
+.access__subtitle {
+  font-size: 14px;
+  color: #6b7280;
+  line-height: 1.4;
+  margin-bottom: 24px;
+}
+
+.access__qr {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.access__chips {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.access__chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.access__chip--registered {
+  background-color: #bbf7d0;
+  color: #166534;
+}
+
+.access__chip--paid {
+  background-color: #bfdbfe;
+  color: #1e40af;
+}
+
+.access__chip--check-in {
+  background-color: #bbf7d0;
+  color: #166534;
+}
+
+.access__chip--no-check-in {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.access__empty {
+  text-align: center;
+  color: #9ca3af;
+  padding: 24px 0;
+}

@@ -75,9 +75,18 @@ export interface SocialNetworkItem {
 }
 
 export interface ActivityParticipantEntity {
-  id: string;
+  id: number;
   documentId: string;
   statusName: string;
   checkIn: boolean;
-  user: string;
+  createdAt?: string;
+  updatedAt?: string;
+  publishedAt?: string;
+  user?: string;
+  activity?: {
+    id: number;
+    documentId: string;
+    name: string;
+    shortDescription: string;
+  };
 }
