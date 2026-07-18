@@ -1,14 +1,13 @@
 'use client';
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useAuthWithStorage } from '@/features/auth/context/auth-provider';
 import { getUserActivities } from '@/features/event-dashboard/service/event-dashboard-service';
 import { useUnifiedDialog } from '@/features/dialogs/context/unified-dialog-provider';
 import { ActivityEntity } from '@/domain/entities/event-dashboard/entity';
 import PageHeader from '@/components/ui/PageHeader';
-import '../../../app/(event)/activities/activities.css';
+import UserActivityCard from '@/components/ui/cards/UserActivityCard';
 import './activities.css';
 
 export default function UserActivitiesListPage() {
@@ -86,20 +85,6 @@ export default function UserActivitiesListPage() {
     [hasMore, page, pageCount, fetchNextPage]
   );
 
-  const formatDate = (dateString: string) => {
-    try {
-      return new Date(dateString).toLocaleDateString(undefined, {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-      });
-    } catch {
-      return dateString;
-    }
-  };
-
   if (!isReady) {
     return null;
   }
@@ -111,55 +96,11 @@ export default function UserActivitiesListPage() {
       <div className="max-w-4xl mx-auto w-full">
         <div className="user-activities-list__container" onScroll={handleScroll}>
           {activities.map((activity, index) => (
-            <article key={`${activity.id}-${index}`} className="activity-card" onClick={() => router.push(`/activities/${activity.documentId}`)} style={{ cursor: 'pointer' }}>
-              <div className="activity-card-content">
-                <h2 className="activity-card-title">{activity.name}</h2>
-                <p className="activity-card-subtitle">{activity.shortDescription}</p>
-                <div className="activity-card-meta">
-                  <span
-                    className={
-                      activity.costType === 'free'
-                        ? 'activity-card-cost-chip--free'
-                        : 'activity-card-cost-chip--paid'
-                    }
-                  >
-                    {activity.costType === 'free' ? 'Free' : `Paid $${Math.round(activity.cost ?? 0)}`}
-                  </span>
-                  {activity.capacity != null && (
-                    <span className="activity-card-capacity">
-                      Capacity: {activity.capacity}
-                    </span>
-                  )}
-                </div>
-                <time className="activity-card-date" dateTime={activity.startDate}>
-                  {formatDate(activity.startDate)}
-                </time>
-              </div>
-              <div className="activity-card-image-container">
-                {activity.image?.url ? (
-                  <>
-                    <Image
-                      src={activity.image.url}
-                      alt={activity.name}
-                      fill
-                      className="object-cover"
-                    />
-                    <div className="activity-card-gradient-overlay" />
-                  </>
-                ) : (
-                  <Image
-                    src="/globe.svg"
-                    alt="Placeholder"
-                    fill
-                    className="object-cover opacity-50"
-                  />
-                )}
-              </div>
-            </article>
+            <UserActivityCard key={`${activity.id}-${index}`} activity={activity} />
           ))}
 
           {activities.length === 0 && (
-            <div className="activities-page__empty">
+            <div className="user-activities__empty">
               <p>No hay actividades registradas</p>
               <button onClick={() => router.push('/activities')} className="user-activities__browse-btn">
                 Explorar actividades

@@ -1,0 +1,102 @@
+@reference "tailwindcss";
+
+.user-activity-card {
+  display: flex;
+  overflow: hidden;
+  border-radius: 16px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  margin-bottom: 12px;
+}
+
+.user-activity-card:last-child {
+  margin-bottom: 0;
+}
+
+.user-activity-card__image-container {
+  position: relative;
+  width: 100px;
+  min-height: 100px;
+  flex-shrink: 0;
+  overflow: hidden;
+  background-color: #f3f4f6;
+}
+
+.user-activity-card__gradient-overlay {
+  @apply
+    absolute
+    inset-0
+    bg-gradient-to-r
+    from-black/10
+    to-transparent;
+}
+
+.user-activity-card__body {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  min-width: 0;
+}
+
+.user-activity-card__info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  flex: 1;
+}
+
+.user-activity-card__title {
+  @apply
+    text-base
+    font-semibold
+    truncate;
+  color: #111827;
+}
+
+.user-activity-card__subtitle {
+  @apply
+    text-sm
+    line-clamp-2;
+  color: #374151;
+}
+
+.user-activity-card__date {
+  @apply
+    text-xs;
+  color: #6b7280;
+}
+
+.user-activity-card__access-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  width: 70px;
+  height: 70px;
+  padding: 4px 2px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: box-shadow 0.2s;
+  border: none;
+  background: linear-gradient(180deg, #383838 0%, #000000 100%);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+  flex-shrink: 0;
+}
+
+.user-activity-card__access-btn:hover {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+}
+
+.user-activity-card__access-label {
+  font-size: 9px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 1px;
+  line-height: 1;
+}
