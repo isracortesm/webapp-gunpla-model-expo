@@ -38,6 +38,9 @@
 .access__qr {
   display: flex;
   justify-content: center;
+  padding: 20px;
+  background-color: #f3f4f6;
+  border-radius: 12px;
   margin-bottom: 24px;
 }
 
@@ -75,6 +78,24 @@
 .access__chip--no-check-in {
   background-color: #fef3c7;
   color: #92400e;
+}
+
+.access__view-btn {
+  width: 100%;
+  margin-top: 32px;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border: none;
+  background-color: #111827;
+  color: white;
+}
+
+.access__view-btn:hover {
+  background-color: #1f2937;
 }
 
 .access__empty {

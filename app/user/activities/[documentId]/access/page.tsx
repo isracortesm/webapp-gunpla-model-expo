@@ -62,7 +62,7 @@ export default function AccessPage() {
         <p className="access__subtitle">{participant.activity?.shortDescription}</p>
 
         <div className="access__qr">
-          <QRCode value={params.documentId} qrStyle="dots" eyeRadius={10} size={200} />
+          <QRCode value={participant.documentId} qrStyle="dots" eyeRadius={10} size={200} />
         </div>
 
         <div className="access__chips">
@@ -70,9 +70,16 @@ export default function AccessPage() {
             {participant.statusName === 'paid' ? 'Pagado' : 'Registrado'}
           </span>
           <span className={`access__chip access__chip--${participant.checkIn ? 'check-in' : 'no-check-in'}`}>
-            {participant.checkIn ? '✓ Check-in realizado' : '✗ Sin check-in'}
+            {participant.checkIn ? '✓ Check-in realizado' : '✗ Check-in pendiente'}
           </span>
         </div>
+
+        <button
+          className="access__view-btn"
+          onClick={() => router.push(`/activities/${participant.activity?.documentId}`)}
+        >
+          Ver actividad
+        </button>
       </div>
     </main>
   );

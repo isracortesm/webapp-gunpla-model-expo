@@ -62,7 +62,7 @@ export default function UserActivityCard({ activity }: UserActivityCardProps) {
 
         <button
           className="user-activity-card__access-btn"
-          onClick={() => router.push(`/activities/${activity.documentId}/access`)}
+          onClick={() => router.push(`/user/activities/${activity.documentId}/access`)}
           aria-label="Código de acceso"
         >
           <Image src="/qrcode_scan.svg" alt="" width={28} height={28} />
