@@ -31,6 +31,12 @@
   padding: 2rem 1rem 1rem 1rem;
 }
 
+.user-activities__empty {
+  text-align: center;
+  padding: 48px 16px;
+  color: #9ca3af;
+}
+
 .user-activities-page__count {
     position: absolute;
     bottom: 1.5rem;

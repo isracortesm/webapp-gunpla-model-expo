@@ -31,6 +31,10 @@ export default function ActivityDetailPage() {
 
   const isAtFullCapacity = activity?.capacity != null && activity.capacity > 0 && (activity.participantsCount ?? 0) >= activity.capacity;
 
+  const isCollaborator = activity?.collaborators?.some(
+    (c) => (c.user as { documentId?: string })?.documentId === user?.documentId
+  );
+
   useEffect(() => {
     if (fetched.current) return;
     fetched.current = true;
@@ -221,6 +225,11 @@ export default function ActivityDetailPage() {
                       </button>
                     )}
                   </div>
+                )}
+                {user && isCollaborator && (
+                  <button onClick={() => router.push(`/activities/${params.documentId}/manage`)} className="activity-detail__manage-btn">
+                    Gestionar actividad
+                  </button>
                 )}
               </div>
             </section>
