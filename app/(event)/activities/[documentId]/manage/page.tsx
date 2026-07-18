@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import { Html5QrcodeScanner } from 'html5-qrcode';
 import { useAuth } from '@/features/auth/context/auth-context';
 import { useUnifiedDialog } from '@/features/dialogs/context/unified-dialog-provider';
 import { getActivityParticipants } from '@/features/event-dashboard/service/event-dashboard-service';
@@ -20,6 +21,8 @@ export default function ActivityManagePage() {
   const [token, setToken] = useState('');
   const [selectedParticipant, setSelectedParticipant] = useState<ActivityParticipantEntity | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isScanning, setIsScanning] = useState(false);
+  const scannerRef = useRef<Html5QrcodeScanner | null>(null);
 
   useEffect(() => {
     const rawToken = localStorage.getItem('auth_token');
@@ -54,6 +57,44 @@ export default function ActivityManagePage() {
       // silently fail, dialog already shows success
     }
   }, [params.documentId, token]);
+
+  const handleQrScan = useCallback((decodedText: string) => {
+    if (scannerRef.current) {
+      scannerRef.current.clear().catch(() => {});
+      scannerRef.current = null;
+    }
+    setIsScanning(false);
+
+    const match = participants.find((p) => p.documentId === decodedText);
+    if (match) {
+      setSelectedParticipant(match);
+      setIsDialogOpen(true);
+    } else {
+      showError('Participante no encontrado', 'Error');
+    }
+  }, [participants, showError]);
+
+  useEffect(() => {
+    if (!isScanning) return;
+
+    const scanner = new Html5QrcodeScanner(
+      'qr-scanner',
+      { fps: 10, qrbox: { width: 250, height: 250 } },
+      false
+    );
+    scannerRef.current = scanner;
+
+    scanner.render(
+      (decodedText) => {
+        handleQrScan(decodedText);
+      },
+      () => {}
+    );
+
+    return () => {
+      scanner.clear().catch(() => {});
+    };
+  }, [isScanning, handleQrScan]);
 
   if (!isReady) return null;
 
@@ -104,6 +145,28 @@ export default function ActivityManagePage() {
         participant={selectedParticipant}
         token={token}
       />
+
+      <button className="manage__fab" onClick={() => setIsScanning(true)}>
+        <svg className="manage__fab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="3" y="3" width="18" height="18" rx="2" />
+          <rect x="7" y="7" width="4" height="4" />
+          <rect x="13" y="7" width="4" height="4" />
+          <rect x="7" y="13" width="4" height="4" />
+          <rect x="13" y="13" width="4" height="4" />
+        </svg>
+      </button>
+
+      {isScanning && (
+        <div className="manage__scanner-overlay" onClick={() => { setIsScanning(false); }}>
+          <div className="manage__scanner-modal" onClick={(e) => e.stopPropagation()}>
+            <h3 className="manage__scanner-title">Escanear código QR</h3>
+            <div id="qr-scanner" />
+            <button className="manage__scanner-cancel" onClick={() => setIsScanning(false)}>
+              Cancelar
+            </button>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
