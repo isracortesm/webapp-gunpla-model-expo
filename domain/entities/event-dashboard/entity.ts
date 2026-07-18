@@ -74,6 +74,12 @@ export interface SocialNetworkItem {
   url: string;
 }
 
+export type PopulatedUser = {
+  id: number;
+  username: string;
+  email: string;
+};
+
 export interface ActivityParticipantEntity {
   id: number;
   documentId: string;
@@ -82,7 +88,7 @@ export interface ActivityParticipantEntity {
   createdAt?: string;
   updatedAt?: string;
   publishedAt?: string;
-  user?: string;
+  user?: string | PopulatedUser;
   activity?: {
     id: number;
     documentId: string;

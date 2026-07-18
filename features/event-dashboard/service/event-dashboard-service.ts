@@ -7,6 +7,8 @@ import { RegisterActivityParticipantUseCase } from "@/domain/usecases/event-dash
 import { DeleteActivityParticipantUseCase } from "@/domain/usecases/event-dashboard/delete-activity-participant-usecase";
 import { CheckActivityRegistrationUseCase } from "@/domain/usecases/event-dashboard/check-activity-registration-usecase";
 import { GetParticipantDetailUseCase } from "@/domain/usecases/event-dashboard/get-participant-detail-usecase";
+import { GetActivityParticipantsUseCase } from "@/domain/usecases/event-dashboard/get-activity-participants-usecase";
+import { UpdateActivityParticipantUseCase } from "@/domain/usecases/event-dashboard/update-activity-participant-usecase";
 import { GetUserActivitiesUseCase } from "@/domain/usecases/event-dashboard/get-user-activities-usecase";
 import { EventDashboardRepositoryImpl } from "@/data/repositories/event-dashboard/event-dashboard-repository-impl";
 import { HttpService } from "@/data/services/http-client";
@@ -22,6 +24,8 @@ const registerActivityParticipantUseCase = new RegisterActivityParticipantUseCas
 const deleteActivityParticipantUseCase = new DeleteActivityParticipantUseCase(repository);
 const checkActivityRegistrationUseCase = new CheckActivityRegistrationUseCase(repository);
 const getParticipantDetailUseCase = new GetParticipantDetailUseCase(repository);
+const getActivityParticipantsUseCase = new GetActivityParticipantsUseCase(repository);
+const updateActivityParticipantUseCase = new UpdateActivityParticipantUseCase(repository);
 const getUserActivitiesUseCase = new GetUserActivitiesUseCase(repository);
 
 export async function getEvent(eventCode: string) {
@@ -66,6 +70,18 @@ export async function checkActivityRegistration(activityId: number, userId: numb
 
 export async function getParticipantDetail(activityDocumentId: string, userId: number, token?: string) {
   return getParticipantDetailUseCase.execute(activityDocumentId, userId, token);
+}
+
+export async function getActivityParticipants(activityDocumentId: string, token: string) {
+  return getActivityParticipantsUseCase.execute(activityDocumentId, token);
+}
+
+export async function updateActivityParticipant(
+  documentId: string,
+  data: { statusName?: string; checkIn?: boolean },
+  token: string
+) {
+  return updateActivityParticipantUseCase.execute(documentId, data, token);
 }
 
 export async function getUserActivities(

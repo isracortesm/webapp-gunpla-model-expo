@@ -200,6 +200,47 @@ export class EventDashboardRepositoryImpl implements EventDashboardRepository {
     };
   }
 
+  async getActivityParticipants(
+    activityDocumentId: string,
+    token: string
+  ): Promise<PaginatedResult<ActivityParticipantEntity>> {
+    const http = new HttpService(process.env.NEXT_PUBLIC_HOST_URI || '', token);
+
+    const response = await http.get<{
+      data: ActivityParticipantEntity[];
+      meta: { pagination: { page: number; pageSize: number; pageCount: number; total: number } };
+    }>('/api/activity-participants', {
+      'populate[user][fields][0]': 'username',
+      'populate[user][fields][1]': 'email',
+      'filters[activity][documentId][$eq]': activityDocumentId,
+    });
+
+    return {
+      data: response.data,
+      meta: {
+        pagination: {
+          page: response.meta.pagination.page,
+          pageSize: response.meta.pagination.pageSize,
+          pageCount: response.meta.pagination.pageCount,
+          total: response.meta.pagination.total,
+        },
+      },
+    };
+  }
+
+  async updateActivityParticipant(
+    documentId: string,
+    data: { statusName?: string; checkIn?: boolean },
+    token: string
+  ): Promise<ActivityParticipantEntity> {
+    const http = new HttpService(process.env.NEXT_PUBLIC_HOST_URI || '', token);
+    const response = await http.put<{ data: ActivityParticipantEntity }>(
+      `/api/activity-participants/${documentId}`,
+      { data }
+    );
+    return response.data;
+  }
+
   async getUserActivities(
     userId: number,
     params?: { page?: number; pageSize?: number },

@@ -272,6 +272,24 @@
   background-color: #1d4ed8;
 }
 
+.activity-detail__manage-btn {
+  width: 100%;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border: none;
+  background-color: #f59e0b;
+  color: white;
+  margin-top: 8px;
+}
+
+.activity-detail__manage-btn:hover {
+  background-color: #d97706;
+}
+
 .activity-detail__full-capacity {
   width: 100%;
   padding: 12px 20px;
