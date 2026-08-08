@@ -38,3 +38,23 @@ export interface CompetitionModelEntryEntity {
   model: ModelEntity;
   user?: PopulatedUser;
 }
+
+export interface CompetitionResultEntity {
+  id: number;
+  documentId: string;
+  order: number;
+  totalPoints: number;
+  competition?: { id: number; documentId: string };
+  model?: { id: number; documentId: string };
+  batch?: { id: number; documentId?: string } | null;
+}
+
+export interface CompetitionEvaluationEntity {
+  id: number;
+  documentId: string;
+  criteria: string;
+  comments?: string;
+  points: number;
+  reviewer?: { id: number; documentId?: string };
+  result?: { id: number; documentId: string };
+}

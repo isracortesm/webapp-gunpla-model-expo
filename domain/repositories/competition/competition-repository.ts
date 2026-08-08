@@ -1,4 +1,4 @@
-import { CompetitionEntity, CompetitionModelEntity, CompetitionModelEntryEntity } from '../../../domain/entities/competition/entity';
+import { CompetitionEntity, CompetitionModelEntity, CompetitionModelEntryEntity, CompetitionResultEntity, CompetitionEvaluationEntity } from '../../../domain/entities/competition/entity';
 
 export interface CompetitionRepository {
   getCompetitions(token?: string): Promise<CompetitionEntity[]>;
@@ -16,4 +16,22 @@ export interface CompetitionRepository {
     activityDocumentId: string,
     token?: string
   ): Promise<CompetitionModelEntryEntity[]>;
+  getCompetitionByActivity(
+    activityDocumentId: string,
+    token?: string
+  ): Promise<CompetitionEntity>;
+  getCompetitionResult(
+    competitionDocumentId: string,
+    modelDocumentId: string,
+    token?: string
+  ): Promise<CompetitionResultEntity | null>;
+  createCompetitionResult(
+    data: { competition: string; model: string; order?: number; totalPoints?: number },
+    token?: string
+  ): Promise<CompetitionResultEntity>;
+  getCompetitionEvaluationsByResultAndReviewer(
+    resultDocumentId: string,
+    reviewerDocumentId: string,
+    token?: string
+  ): Promise<CompetitionEvaluationEntity[]>;
 }

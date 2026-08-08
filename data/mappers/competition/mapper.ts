@@ -3,6 +3,8 @@ import {
   CompetitionCategoryEntity,
   CriteriaEntity,
   CompetitionModelEntryEntity,
+  CompetitionResultEntity,
+  CompetitionEvaluationEntity,
 } from '../../../domain/entities/competition/entity';
 
 interface StrapiCriteriaResponse {
@@ -163,6 +165,64 @@ export function mapCompetitionModelEntryDtoToEntity(
           username: dto.user.username,
           email: dto.user.email,
         }
+      : undefined,
+  };
+}
+
+export interface StrapiCompetitionResultResponse {
+  id: number;
+  documentId: string;
+  order: number;
+  totalPoints: number;
+  competition?: { id: number; documentId: string };
+  model?: { id: number; documentId: string };
+  batch?: { id: number; documentId?: string } | null;
+}
+
+export function mapCompetitionResultDtoToEntity(
+  dto: StrapiCompetitionResultResponse
+): CompetitionResultEntity {
+  return {
+    id: dto.id,
+    documentId: dto.documentId,
+    order: dto.order ?? 0,
+    totalPoints: dto.totalPoints ?? 0,
+    competition: dto.competition
+      ? { id: dto.competition.id, documentId: dto.competition.documentId }
+      : undefined,
+    model: dto.model
+      ? { id: dto.model.id, documentId: dto.model.documentId }
+      : undefined,
+    batch: dto.batch
+      ? { id: dto.batch.id, documentId: dto.batch.documentId }
+      : null,
+  };
+}
+
+export interface StrapiCompetitionEvaluationResponse {
+  id: number;
+  documentId: string;
+  criteria: string;
+  comments?: string;
+  points: number;
+  reviewer?: { id: number; documentId?: string };
+  result?: { id: number; documentId: string };
+}
+
+export function mapCompetitionEvaluationDtoToEntity(
+  dto: StrapiCompetitionEvaluationResponse
+): CompetitionEvaluationEntity {
+  return {
+    id: dto.id,
+    documentId: dto.documentId,
+    criteria: dto.criteria,
+    comments: dto.comments ?? undefined,
+    points: dto.points ?? 0,
+    reviewer: dto.reviewer
+      ? { id: dto.reviewer.id, documentId: dto.reviewer.documentId }
+      : undefined,
+    result: dto.result
+      ? { id: dto.result.id, documentId: dto.result.documentId }
       : undefined,
   };
 }

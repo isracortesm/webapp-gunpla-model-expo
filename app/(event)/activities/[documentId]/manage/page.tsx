@@ -273,7 +273,15 @@ export default function ActivityManagePage() {
                           modelsByParticipantId[populatedUser.id].map((entry) => {
                             const status = statusByModelId.get(entry.model.id);
                             return (
-                              <div key={entry.documentId} className="manage__model-card">
+                              <div
+                                key={entry.documentId}
+                                className="manage__model-card"
+                                onClick={() =>
+                                  router.push(
+                                    `/activities/${params.documentId}/manage/${entry.model.documentId}/evaluations`,
+                                  )
+                                }
+                              >
                                 <div className="manage__model-image-container">
                                   {entry.model.image?.url ? (
                                     <Image
@@ -300,6 +308,7 @@ export default function ActivityManagePage() {
                                       {status === 'COMPLETED' ? 'Finalizado' : 'En progreso'}
                                     </span>
                                   )}
+                                  <span className="manage__model-evaluate">Evaluar →</span>
                                 </div>
                               </div>
                             );
