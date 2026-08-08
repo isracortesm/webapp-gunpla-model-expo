@@ -1,4 +1,4 @@
-import { MediaEntity, CategoryEntity, EventEntity, NewsEntity, ActivityEntity, CollaboratorEntity } from '../../../domain/entities/event-dashboard/entity';
+import { MediaEntity, CategoryEntity, EventEntity, NewsEntity, ActivityEntity, CollaboratorEntity, CollaboratorEvaluationMetadata } from '../../../domain/entities/event-dashboard/entity';
 
 // Strapi v4 response types (flat structure without attributes wrapper)
 interface StrapiMediaResponse {
@@ -73,6 +73,7 @@ interface StrapiCollaboratorResponse {
   role: string;
   description?: string;
   user?: unknown;
+  metadata?: CollaboratorEvaluationMetadata;
 }
 
 interface StrapiSocialNetworkResponse {
@@ -169,6 +170,7 @@ export function mapActivityDtoToEntity(dto: StrapiActivityResponse): ActivityEnt
       role: c.role,
       description: c.description,
       user: c.user,
+      metadata: c.metadata,
     })),
   };
 }

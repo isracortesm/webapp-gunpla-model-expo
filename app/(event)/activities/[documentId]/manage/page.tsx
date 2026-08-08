@@ -6,10 +6,10 @@ import Image from 'next/image';
 import { Html5QrcodeScanner } from 'html5-qrcode';
 import { useAuth } from '@/features/auth/context/auth-context';
 import { useUnifiedDialog } from '@/features/dialogs/context/unified-dialog-provider';
-import { getActivityParticipants, getActivityByDocumentId } from '@/features/event-dashboard/service/event-dashboard-service';
+import { getActivityParticipants, getActivityByDocumentId, updateActivityCollaboratorMetadata } from '@/features/event-dashboard/service/event-dashboard-service';
 import { getCompetitionModelsByActivity } from '@/features/competition/service/competition-service';
 import { storeActivityCollaboratorRole } from '@/shared/utils/activity-collaborator-storage';
-import type { ActivityParticipantEntity, PopulatedUser } from '@/domain/entities/event-dashboard/entity';
+import type { ActivityParticipantEntity, PopulatedUser, CollaboratorEvaluationMetadata } from '@/domain/entities/event-dashboard/entity';
 import type { CompetitionModelEntryEntity } from '@/domain/entities/competition/entity';
 import PageHeader from '@/components/ui/PageHeader';
 import EditParticipantDialog from '@/components/ui/dialogs/EditParticipantDialog';
@@ -28,6 +28,7 @@ export default function ActivityManagePage() {
   const [isScanning, setIsScanning] = useState(false);
   const [isCompetitionActivity, setIsCompetitionActivity] = useState(false);
   const [competitionModels, setCompetitionModels] = useState<CompetitionModelEntryEntity[]>([]);
+  const [collaboratorMetadata, setCollaboratorMetadata] = useState<CollaboratorEvaluationMetadata | null>(null);
   const [expandedParticipantId, setExpandedParticipantId] = useState<number | null>(null);
   const scannerRef = useRef<Html5QrcodeScanner | null>(null);
 
@@ -61,13 +62,59 @@ export default function ActivityManagePage() {
           storeActivityCollaboratorRole(activity.documentId, collaborator.role);
         }
 
+        let models: CompetitionModelEntryEntity[] = [];
         if (activity.category?.type === 'competition') {
           setIsCompetitionActivity(true);
           try {
-            const models = await getCompetitionModelsByActivity(params.documentId, t);
+            models = await getCompetitionModelsByActivity(params.documentId, t);
             setCompetitionModels(models);
           } catch {
             // models are supplementary; the participants view remains available
+          }
+        }
+
+        if (activity.category?.type === 'competition' && collaborator) {
+          if (!collaborator.metadata) {
+            if (collaborator.documentId) {
+              const defaultMetadata: CollaboratorEvaluationMetadata = {
+                summary: { totalAssigned: models.length, totalCompleted: 0 },
+                items: [],
+              };
+              setCollaboratorMetadata(defaultMetadata);
+              try {
+                await updateActivityCollaboratorMetadata(collaborator.documentId, defaultMetadata, t);
+              } catch {
+                // metadata persistence is best-effort; progress still renders locally
+              }
+            }
+          } else {
+            const currentModelIds = new Set(models.map((entry) => entry.model.id));
+            const originalItems = collaborator.metadata.items ?? [];
+            const syncedItems = originalItems.filter((item) => currentModelIds.has(item.modelId));
+            const totalAssigned = models.length;
+            const totalCompleted = syncedItems.filter((item) => item.status === 'COMPLETED').length;
+            const summary = collaborator.metadata.summary ?? { totalAssigned: 0, totalCompleted: 0 };
+
+            const syncedMetadata: CollaboratorEvaluationMetadata = {
+              ...collaborator.metadata,
+              summary: { totalAssigned, totalCompleted },
+              items: syncedItems,
+            };
+
+            setCollaboratorMetadata(syncedMetadata);
+
+            const changed =
+              summary.totalAssigned !== totalAssigned ||
+              summary.totalCompleted !== totalCompleted ||
+              JSON.stringify(originalItems) !== JSON.stringify(syncedItems);
+
+            if (changed && collaborator.documentId) {
+              try {
+                await updateActivityCollaboratorMetadata(collaborator.documentId, syncedMetadata, t);
+              } catch {
+                // best-effort; retried on next open
+              }
+            }
           }
         }
 
@@ -102,6 +149,16 @@ export default function ActivityManagePage() {
     }
     return map;
   }, [competitionModels]);
+
+  const progressPercent =
+    collaboratorMetadata && collaboratorMetadata.summary.totalAssigned > 0
+      ? Math.min(
+          100,
+          Math.round(
+            (collaboratorMetadata.summary.totalCompleted / collaboratorMetadata.summary.totalAssigned) * 100,
+          ),
+        )
+      : 0;
 
   const handleQrScan = useCallback((decodedText: string) => {
     if (scannerRef.current) {
@@ -146,6 +203,20 @@ export default function ActivityManagePage() {
   return (
     <main className="manage__container">
       <PageHeader title="Gestión" onBack={() => router.push(`/activities/${params.documentId}`)} />
+
+      {isCompetitionActivity && collaboratorMetadata && (
+        <div className="manage__progress">
+          <div className="manage__progress-header">
+            <p className="manage__progress-label">
+              {collaboratorMetadata.summary.totalCompleted} de {collaboratorMetadata.summary.totalAssigned} evaluaciones completadas
+            </p>
+            <p className="manage__progress-percent">{progressPercent}%</p>
+          </div>
+          <div className="manage__progress-track">
+            <div className="manage__progress-bar" style={{ width: `${progressPercent}%` }} />
+          </div>
+        </div>
+      )}
 
       {participants.length === 0 ? (
         <p className="manage__empty">No hay participantes registrados</p>
