@@ -6,6 +6,7 @@
   flex-direction: column;
   align-items: center;
   background-color: #f9fafb;
+  --manage-top-offset: 5em;
 }
 
 .manage__list {
@@ -18,10 +19,14 @@
   gap: 12px;
 }
 
+.manage__list--no-progress {
+  margin-top: var(--manage-top-offset);
+}
+
 .manage__progress {
   width: calc(100% - 2em); /* Ocupa el 100% disponible menos 2em a cada lado */
   max-width: 600px;
-  margin-top: 5em;
+  margin-top: var(--manage-top-offset);
   margin-bottom: 0;
   padding: 16px;
   background: #ffffff;

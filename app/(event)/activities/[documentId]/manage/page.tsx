@@ -221,7 +221,7 @@ export default function ActivityManagePage() {
       {participants.length === 0 ? (
         <p className="manage__empty">No hay participantes registrados</p>
       ) : (
-        <div className="manage__list">
+        <div className={`manage__list${isCompetitionActivity ? '' : ' manage__list--no-progress'}`}>
           {participants.map((p) => {
             const populatedUser = p.user as PopulatedUser | undefined;
             return (
