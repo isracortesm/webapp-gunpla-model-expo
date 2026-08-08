@@ -1,12 +1,16 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { Html5QrcodeScanner } from 'html5-qrcode';
 import { useAuth } from '@/features/auth/context/auth-context';
 import { useUnifiedDialog } from '@/features/dialogs/context/unified-dialog-provider';
-import { getActivityParticipants } from '@/features/event-dashboard/service/event-dashboard-service';
+import { getActivityParticipants, getActivityByDocumentId } from '@/features/event-dashboard/service/event-dashboard-service';
+import { getCompetitionModelsByActivity } from '@/features/competition/service/competition-service';
+import { storeActivityCollaboratorRole } from '@/shared/utils/activity-collaborator-storage';
 import type { ActivityParticipantEntity, PopulatedUser } from '@/domain/entities/event-dashboard/entity';
+import type { CompetitionModelEntryEntity } from '@/domain/entities/competition/entity';
 import PageHeader from '@/components/ui/PageHeader';
 import EditParticipantDialog from '@/components/ui/dialogs/EditParticipantDialog';
 import './manage.css';
@@ -14,7 +18,7 @@ import './manage.css';
 export default function ActivityManagePage() {
   const params = useParams<{ documentId: string }>();
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, isAuthReady } = useAuth();
   const { showLoading, hideLoading, showError } = useUnifiedDialog();
   const [participants, setParticipants] = useState<ActivityParticipantEntity[]>([]);
   const [isReady, setIsReady] = useState(false);
@@ -22,9 +26,14 @@ export default function ActivityManagePage() {
   const [selectedParticipant, setSelectedParticipant] = useState<ActivityParticipantEntity | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
+  const [isCompetitionActivity, setIsCompetitionActivity] = useState(false);
+  const [competitionModels, setCompetitionModels] = useState<CompetitionModelEntryEntity[]>([]);
+  const [expandedParticipantId, setExpandedParticipantId] = useState<number | null>(null);
   const scannerRef = useRef<Html5QrcodeScanner | null>(null);
 
   useEffect(() => {
+    if (!isAuthReady) return;
+
     const rawToken = localStorage.getItem('auth_token');
     if (!rawToken) {
       router.push('/auth/login');
@@ -34,8 +43,34 @@ export default function ActivityManagePage() {
     setToken(t);
 
     async function load() {
-      showLoading('Cargando participantes...');
+      showLoading('Cargando actividad...');
       try {
+        const activity = await getActivityByDocumentId(params.documentId);
+
+        const collaborator = activity.collaborators?.find(
+          (c) => (c.user as { documentId?: string })?.documentId === user?.documentId,
+        );
+
+        if (!collaborator) {
+          showError('No tienes permisos para gestionar esta actividad', 'Acceso denegado');
+          router.push(`/activities/${params.documentId}`);
+          return;
+        }
+
+        if (user) {
+          storeActivityCollaboratorRole(activity.documentId, collaborator.role);
+        }
+
+        if (activity.category?.type === 'competition') {
+          setIsCompetitionActivity(true);
+          try {
+            const models = await getCompetitionModelsByActivity(params.documentId, t);
+            setCompetitionModels(models);
+          } catch {
+            // models are supplementary; the participants view remains available
+          }
+        }
+
         const result = await getActivityParticipants(params.documentId, t);
         setParticipants(result.data);
       } catch {
@@ -47,7 +82,7 @@ export default function ActivityManagePage() {
     }
 
     load();
-  }, [params.documentId, router, showLoading, hideLoading, showError]);
+  }, [params.documentId, router, showLoading, hideLoading, showError, user, isAuthReady]);
 
   const refreshParticipants = useCallback(async () => {
     try {
@@ -57,6 +92,16 @@ export default function ActivityManagePage() {
       // silently fail, dialog already shows success
     }
   }, [params.documentId, token]);
+
+  const modelsByParticipantId = useMemo(() => {
+    const map: Record<number, CompetitionModelEntryEntity[]> = {};
+    for (const entry of competitionModels) {
+      const userId = entry.user?.id;
+      if (userId == null) continue;
+      (map[userId] ??= []).push(entry);
+    }
+    return map;
+  }, [competitionModels]);
 
   const handleQrScan = useCallback((decodedText: string) => {
     if (scannerRef.current) {
@@ -129,6 +174,49 @@ export default function ActivityManagePage() {
                     {p.checkIn ? '✓ Check-in realizado' : '✗ Check-in pendiente'}
                   </span>
                 </div>
+                {isCompetitionActivity && (
+                  <div className="manage__models" onClick={(e) => e.stopPropagation()}>
+                    <button
+                      className="manage__models-toggle"
+                      onClick={() =>
+                        setExpandedParticipantId((prev) => (prev === p.id ? null : p.id))
+                      }
+                    >
+                      {expandedParticipantId === p.id ? 'Ocultar modelos' : 'Ver modelos'}
+                    </button>
+                    {expandedParticipantId === p.id && (
+                      <div className="manage__models-list">
+                        {populatedUser?.id != null &&
+                        modelsByParticipantId[populatedUser.id]?.length ? (
+                          modelsByParticipantId[populatedUser.id].map((entry) => (
+                            <div key={entry.documentId} className="manage__model-card">
+                              <div className="manage__model-image-container">
+                                {entry.model.image?.url ? (
+                                  <Image
+                                    src={entry.model.image.url}
+                                    alt={entry.model.name}
+                                    fill
+                                    className="object-cover"
+                                  />
+                                ) : (
+                                  <Image
+                                    src="/globe.svg"
+                                    alt="Placeholder"
+                                    fill
+                                    className="object-cover"
+                                  />
+                                )}
+                              </div>
+                              <p className="manage__model-name">{entry.model.name}</p>
+                            </div>
+                          ))
+                        ) : (
+                          <p className="manage__models-empty">Sin modelos registrados</p>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             );
           })}

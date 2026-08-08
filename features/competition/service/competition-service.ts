@@ -2,6 +2,7 @@ import { GetCompetitionsUseCase } from "@/domain/usecases/competition/get-compet
 import { RegisterCompetitionModelUseCase } from "@/domain/usecases/competition/register-competition-model-usecase";
 import { DeleteCompetitionModelUseCase } from "@/domain/usecases/competition/delete-competition-model-usecase";
 import { GetCompetitionModelsUseCase } from "@/domain/usecases/competition/get-competition-models-usecase";
+import { GetCompetitionModelsByActivityUseCase } from "@/domain/usecases/competition/get-competition-models-by-activity-usecase";
 import { CompetitionRepositoryImpl } from "@/data/repositories/competition/competition-repository-impl";
 import { HttpService } from "@/data/services/http-client";
 
@@ -11,6 +12,7 @@ const getCompetitionsUseCase = new GetCompetitionsUseCase(repository);
 const registerCompetitionModelUseCase = new RegisterCompetitionModelUseCase(repository);
 const deleteCompetitionModelUseCase = new DeleteCompetitionModelUseCase(repository);
 const getCompetitionModelsUseCase = new GetCompetitionModelsUseCase(repository);
+const getCompetitionModelsByActivityUseCase = new GetCompetitionModelsByActivityUseCase(repository);
 
 export async function getCompetitions(token?: string) {
   return getCompetitionsUseCase.execute(token);
@@ -33,4 +35,11 @@ export async function getCompetitionModels(
   token?: string
 ) {
   return getCompetitionModelsUseCase.execute(competitionId, userId, token);
+}
+
+export async function getCompetitionModelsByActivity(
+  activityDocumentId: string,
+  token?: string
+) {
+  return getCompetitionModelsByActivityUseCase.execute(activityDocumentId, token);
 }

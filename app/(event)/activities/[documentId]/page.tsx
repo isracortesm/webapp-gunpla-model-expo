@@ -13,6 +13,7 @@ import {
   deleteActivityParticipant,
 } from '@/features/event-dashboard/service/event-dashboard-service';
 import type { ActivityEntity } from '@/domain/entities/event-dashboard/entity';
+import { storeActivityCollaboratorRole, clearActivityCollaboratorRole } from '@/shared/utils/activity-collaborator-storage';
 import PageHeader from '@/components/ui/PageHeader';
 import './detail.css';
 
@@ -73,6 +74,20 @@ export default function ActivityDetailPage() {
       setIsChecking(false);
     }
   }, [activity, user, checkRegistration]);
+
+  useEffect(() => {
+    if (!activity || !user) return;
+
+    const collaborator = activity.collaborators?.find(
+      (c) => (c.user as { documentId?: string })?.documentId === user.documentId,
+    );
+
+    if (collaborator) {
+      storeActivityCollaboratorRole(activity.documentId, collaborator.role);
+    } else {
+      clearActivityCollaboratorRole(activity.documentId);
+    }
+  }, [activity, user]);
 
   const handleRegister = async () => {
     if (!activity || !user) return;

@@ -72,4 +72,22 @@ export class CompetitionRepositoryImpl implements CompetitionRepository {
 
     return response.data.map(mapCompetitionModelEntryDtoToEntity);
   }
+
+  async getCompetitionModelsByActivity(
+    activityDocumentId: string,
+    token?: string
+  ): Promise<CompetitionModelEntryEntity[]> {
+    const http = token
+      ? new HttpService(process.env.NEXT_PUBLIC_HOST_URI || '', token)
+      : this.httpService;
+
+    const response = await http.get<{ data: StrapiCompetitionModelEntryResponse[] }>('/api/competition-models', {
+      'populate[model][populate][image]': 'true',
+      'populate[user][fields][0]': 'username',
+      'populate[user][fields][1]': 'email',
+      'filters[competition][activity][documentId][$eq]': activityDocumentId,
+    });
+
+    return response.data.map(mapCompetitionModelEntryDtoToEntity);
+  }
 }

@@ -12,4 +12,8 @@ export interface CompetitionRepository {
     userId: number,
     token?: string
   ): Promise<CompetitionModelEntryEntity[]>;
+  getCompetitionModelsByActivity(
+    activityDocumentId: string,
+    token?: string
+  ): Promise<CompetitionModelEntryEntity[]>;
 }

@@ -30,9 +30,11 @@ export interface CompetitionModelEntity {
 }
 
 import { ModelEntity } from '../models/model-entity';
+import { PopulatedUser } from '../event-dashboard/entity';
 
 export interface CompetitionModelEntryEntity {
   id: number;
   documentId: string;
   model: ModelEntity;
+  user?: PopulatedUser;
 }

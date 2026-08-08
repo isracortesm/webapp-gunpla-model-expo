@@ -1,11 +1,11 @@
 {
     "schema_version": 2,
-    "commit": "ea291e54f1293d6deb3e2a38e4684cd3015d6e29",
-    "indexed_at": "2026-07-18T20:37:54Z",
-    "project": "home-icortes-Proyectos-hobby-city-webapp-gunpla-model-expo",
-    "nodes": 1416,
-    "edges": 2665,
-    "original_size": 5636096,
-    "compressed_size": 618930,
+    "commit": "164248b5ff769f83d3359a65b9dc6f85e7f99a8a",
+    "indexed_at": "2026-08-08T00:25:26Z",
+    "project": "D-Workspace-HobbyCity-webapp-gunpla-model-expo",
+    "nodes": 1410,
+    "edges": 2561,
+    "original_size": 5111808,
+    "compressed_size": 607438,
     "compression_level": 3
 }
