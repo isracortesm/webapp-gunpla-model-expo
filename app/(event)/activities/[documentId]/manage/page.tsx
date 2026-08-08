@@ -150,6 +150,17 @@ export default function ActivityManagePage() {
     return map;
   }, [competitionModels]);
 
+  const statusByModelId = useMemo(() => {
+    const map = new Map<number, 'IN_PROGRESS' | 'COMPLETED'>();
+    for (const item of collaboratorMetadata?.items ?? []) {
+      const existing = map.get(item.modelId);
+      if (!existing || (existing === 'IN_PROGRESS' && item.status === 'COMPLETED')) {
+        map.set(item.modelId, item.status);
+      }
+    }
+    return map;
+  }, [collaboratorMetadata]);
+
   const progressPercent =
     collaboratorMetadata && collaboratorMetadata.summary.totalAssigned > 0
       ? Math.min(
@@ -259,28 +270,40 @@ export default function ActivityManagePage() {
                       <div className="manage__models-list">
                         {populatedUser?.id != null &&
                         modelsByParticipantId[populatedUser.id]?.length ? (
-                          modelsByParticipantId[populatedUser.id].map((entry) => (
-                            <div key={entry.documentId} className="manage__model-card">
-                              <div className="manage__model-image-container">
-                                {entry.model.image?.url ? (
-                                  <Image
-                                    src={entry.model.image.url}
-                                    alt={entry.model.name}
-                                    fill
-                                    className="object-cover"
-                                  />
-                                ) : (
-                                  <Image
-                                    src="/globe.svg"
-                                    alt="Placeholder"
-                                    fill
-                                    className="object-cover"
-                                  />
-                                )}
+                          modelsByParticipantId[populatedUser.id].map((entry) => {
+                            const status = statusByModelId.get(entry.model.id);
+                            return (
+                              <div key={entry.documentId} className="manage__model-card">
+                                <div className="manage__model-image-container">
+                                  {entry.model.image?.url ? (
+                                    <Image
+                                      src={entry.model.image.url}
+                                      alt={entry.model.name}
+                                      fill
+                                      className="object-cover"
+                                    />
+                                  ) : (
+                                    <Image
+                                      src="/globe.svg"
+                                      alt="Placeholder"
+                                      fill
+                                      className="object-cover"
+                                    />
+                                  )}
+                                </div>
+                                <div className="manage__model-info">
+                                  <p className="manage__model-name">{entry.model.name}</p>
+                                  {status && (
+                                    <span
+                                      className={`manage__model-status manage__model-status--${status === 'COMPLETED' ? 'completed' : 'in-progress'}`}
+                                    >
+                                      {status === 'COMPLETED' ? 'Finalizado' : 'En progreso'}
+                                    </span>
+                                  )}
+                                </div>
                               </div>
-                              <p className="manage__model-name">{entry.model.name}</p>
-                            </div>
-                          ))
+                            );
+                          })
                         ) : (
                           <p className="manage__models-empty">Sin modelos registrados</p>
                         )}
