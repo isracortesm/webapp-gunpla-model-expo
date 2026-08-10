@@ -12,7 +12,7 @@ import {
   createCompetitionResult,
   getCompetitionEvaluationsByResultAndReviewer,
 } from '@/features/competition/service/competition-service';
-import { getActivityByDocumentId, updateActivityCollaboratorMetadata } from '@/features/event-dashboard/service/event-dashboard-service';
+import { getActivityByDocumentId, getActivityParticipants, updateActivityCollaboratorMetadata } from '@/features/event-dashboard/service/event-dashboard-service';
 import { getModelByDocumentId } from '@/features/models/service/models-service';
 import SocialNetworkIcons from '@/shared/components/ui/social-networks/SocialNetworkIcons';
 import PageHeader from '@/components/ui/PageHeader';
@@ -25,7 +25,7 @@ import type {
 } from '@/domain/entities/competition/entity';
 import type { ModelEntity } from '@/domain/entities/models/model-entity';
 import type { SocialNetworkItem } from '@/domain/entities/event-dashboard/entity';
-import type { CollaboratorEvaluationMetadata } from '@/domain/entities/event-dashboard/entity';
+import type { CollaboratorEvaluationMetadata, PopulatedUser } from '@/domain/entities/event-dashboard/entity';
 import './evaluations.css';
 
 export default function ActivityModelEvaluationsPage() {
@@ -85,6 +85,27 @@ export default function ActivityModelEvaluationsPage() {
         }
         setEntry(modelEntry);
 
+        const participantsResult = await getActivityParticipants(params.documentId, t);
+        const paidUserIds = new Set(
+          participantsResult.data
+            .filter((p) => p.statusName === 'paid')
+            .map((p) => (p.user as PopulatedUser | undefined)?.id)
+            .filter((id): id is number => id != null),
+        );
+
+        const ownerParticipant = participantsResult.data.find(
+          (p) => (p.user as PopulatedUser | undefined)?.id === modelEntry.user?.id,
+        );
+
+        if (!ownerParticipant || ownerParticipant.statusName !== 'paid') {
+          showError(
+            'El modelo no está disponible para evaluación (participación no pagada)',
+            'Acceso denegado',
+          );
+          router.push(`/activities/${params.documentId}/manage`);
+          return;
+        }
+
         let modelData: ModelEntity = modelEntry.model;
         try {
           modelData = await getModelByDocumentId(params.modelId);
@@ -99,8 +120,9 @@ export default function ActivityModelEvaluationsPage() {
         setCategory(modelCategory);
         setReviewerDocumentId(collaborator.documentId);
 
+        const eligibleModelsCount = models.filter((m) => paidUserIds.has(m.user?.id ?? -1)).length;
         const baseMetadata: CollaboratorEvaluationMetadata = collaborator.metadata ?? {
-          summary: { totalAssigned: models.length, totalCompleted: 0 },
+          summary: { totalAssigned: eligibleModelsCount, totalCompleted: 0 },
           items: [],
         };
         setCollaboratorMetadata(baseMetadata);
@@ -230,10 +252,10 @@ export default function ActivityModelEvaluationsPage() {
       {result && (
         <div className="evaluations__result">
           <div className="evaluations__result-info">
-            <span className="evaluations__result-label">Total de puntos</span>
+            <span className="evaluations__result-label">Promedio total</span>
             <p className="evaluations__result-note">Promedio de todos los evaluadores</p>
           </div>
-          <span className="evaluations__result-value">{result.totalPoints}</span>
+          <span className="evaluations__result-value">{result.totalPoints} pts</span>
         </div>
       )}
 
@@ -273,7 +295,7 @@ export default function ActivityModelEvaluationsPage() {
         {evaluations.length > 0 && (
           <div className="evaluations__judge-average">
             <span className="evaluations__judge-average-label">Mi promedio</span>
-            <span className="evaluations__judge-average-value">{judgeAverage}</span>
+            <span className="evaluations__judge-average-value">{judgeAverage} pts</span>
           </div>
         )}
       </section>

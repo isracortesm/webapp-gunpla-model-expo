@@ -22,18 +22,84 @@ export default function ActivityManagePage() {
   const { showLoading, hideLoading, showError } = useUnifiedDialog();
   const [participants, setParticipants] = useState<ActivityParticipantEntity[]>([]);
   const [isReady, setIsReady] = useState(false);
-  const [token, setToken] = useState('');
+  const token = typeof window !== 'undefined' ? localStorage.getItem('auth_token') || '' : '';
   const [selectedParticipant, setSelectedParticipant] = useState<ActivityParticipantEntity | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
   const [isCompetitionActivity, setIsCompetitionActivity] = useState(false);
   const [competitionModels, setCompetitionModels] = useState<CompetitionModelEntryEntity[]>([]);
   const [collaboratorMetadata, setCollaboratorMetadata] = useState<CollaboratorEvaluationMetadata | null>(null);
+  const [collaboratorDocumentId, setCollaboratorDocumentId] = useState<string | null>(null);
   const [expandedParticipantId, setExpandedParticipantId] = useState<number | null>(null);
   const scannerRef = useRef<Html5QrcodeScanner | null>(null);
+  const loaded = useRef(false);
+
+  const syncEvaluationMetadata = useCallback(async (
+    models: CompetitionModelEntryEntity[],
+    participants: ActivityParticipantEntity[],
+    currentMetadata: CollaboratorEvaluationMetadata | null,
+    collaboratorDocId: string | null | undefined,
+    authToken: string,
+  ) => {
+    if (!collaboratorDocId) return;
+
+    const paidUserIds = new Set(
+      participants
+        .filter((p) => p.statusName === 'paid')
+        .map((p) => (p.user as PopulatedUser | undefined)?.id)
+        .filter((id): id is number => id != null),
+    );
+    const eligibleModels = models.filter((m) => paidUserIds.has(m.user?.id ?? -1));
+
+    if (!currentMetadata) {
+      const defaultMetadata: CollaboratorEvaluationMetadata = {
+        summary: { totalAssigned: eligibleModels.length, totalCompleted: 0 },
+        items: [],
+      };
+      setCollaboratorMetadata(defaultMetadata);
+      try {
+        await updateActivityCollaboratorMetadata(collaboratorDocId, defaultMetadata, authToken);
+      } catch {
+        // metadata persistence is best-effort; progress still renders locally
+      }
+      return;
+    }
+
+    const currentModelIds = new Set(eligibleModels.map((entry) => entry.model.id));
+    const originalItems = currentMetadata.items ?? [];
+    const syncedItems = [...originalItems];
+    const totalAssigned = eligibleModels.length;
+    const totalCompleted = originalItems.filter(
+      (item) => item.status === 'COMPLETED' && currentModelIds.has(item.modelId),
+    ).length;
+    const summary = currentMetadata.summary ?? { totalAssigned: 0, totalCompleted: 0 };
+
+    const syncedMetadata: CollaboratorEvaluationMetadata = {
+      ...currentMetadata,
+      summary: { totalAssigned, totalCompleted },
+      items: syncedItems,
+    };
+
+    setCollaboratorMetadata(syncedMetadata);
+
+    const changed =
+      summary.totalAssigned !== totalAssigned ||
+      summary.totalCompleted !== totalCompleted ||
+      JSON.stringify(originalItems) !== JSON.stringify(syncedItems);
+
+    if (changed) {
+      try {
+        await updateActivityCollaboratorMetadata(collaboratorDocId, syncedMetadata, authToken);
+      } catch {
+        // best-effort; retried on next open
+      }
+    }
+  }, []);
 
   useEffect(() => {
     if (!isAuthReady) return;
+    if (loaded.current) return;
+    loaded.current = true;
 
     const rawToken = localStorage.getItem('auth_token');
     if (!rawToken) {
@@ -41,7 +107,6 @@ export default function ActivityManagePage() {
       return;
     }
     const t: string = rawToken;
-    setToken(t);
 
     async function load() {
       showLoading('Cargando actividad...');
@@ -58,6 +123,8 @@ export default function ActivityManagePage() {
           return;
         }
 
+        setCollaboratorDocumentId(collaborator.documentId ?? null);
+
         if (user) {
           storeActivityCollaboratorRole(activity.documentId, collaborator.role);
         }
@@ -73,53 +140,18 @@ export default function ActivityManagePage() {
           }
         }
 
+        const participantsResult = await getActivityParticipants(params.documentId, t);
+        setParticipants(participantsResult.data);
+
         if (activity.category?.type === 'competition' && collaborator) {
-          if (!collaborator.metadata) {
-            if (collaborator.documentId) {
-              const defaultMetadata: CollaboratorEvaluationMetadata = {
-                summary: { totalAssigned: models.length, totalCompleted: 0 },
-                items: [],
-              };
-              setCollaboratorMetadata(defaultMetadata);
-              try {
-                await updateActivityCollaboratorMetadata(collaborator.documentId, defaultMetadata, t);
-              } catch {
-                // metadata persistence is best-effort; progress still renders locally
-              }
-            }
-          } else {
-            const currentModelIds = new Set(models.map((entry) => entry.model.id));
-            const originalItems = collaborator.metadata.items ?? [];
-            const syncedItems = originalItems.filter((item) => currentModelIds.has(item.modelId));
-            const totalAssigned = models.length;
-            const totalCompleted = syncedItems.filter((item) => item.status === 'COMPLETED').length;
-            const summary = collaborator.metadata.summary ?? { totalAssigned: 0, totalCompleted: 0 };
-
-            const syncedMetadata: CollaboratorEvaluationMetadata = {
-              ...collaborator.metadata,
-              summary: { totalAssigned, totalCompleted },
-              items: syncedItems,
-            };
-
-            setCollaboratorMetadata(syncedMetadata);
-
-            const changed =
-              summary.totalAssigned !== totalAssigned ||
-              summary.totalCompleted !== totalCompleted ||
-              JSON.stringify(originalItems) !== JSON.stringify(syncedItems);
-
-            if (changed && collaborator.documentId) {
-              try {
-                await updateActivityCollaboratorMetadata(collaborator.documentId, syncedMetadata, t);
-              } catch {
-                // best-effort; retried on next open
-              }
-            }
-          }
+          await syncEvaluationMetadata(
+            models,
+            participantsResult.data,
+            collaborator.metadata ?? null,
+            collaborator.documentId,
+            t,
+          );
         }
-
-        const result = await getActivityParticipants(params.documentId, t);
-        setParticipants(result.data);
       } catch {
         showError('No se pudieron cargar los participantes', 'Error');
       } finally {
@@ -129,16 +161,19 @@ export default function ActivityManagePage() {
     }
 
     load();
-  }, [params.documentId, router, showLoading, hideLoading, showError, user, isAuthReady]);
+  }, [params.documentId, router, showLoading, hideLoading, showError, user, isAuthReady, syncEvaluationMetadata]);
 
   const refreshParticipants = useCallback(async () => {
     try {
       const result = await getActivityParticipants(params.documentId, token);
       setParticipants(result.data);
+      if (isCompetitionActivity && collaboratorDocumentId) {
+        await syncEvaluationMetadata(competitionModels, result.data, collaboratorMetadata, collaboratorDocumentId, token);
+      }
     } catch {
       // silently fail, dialog already shows success
     }
-  }, [params.documentId, token]);
+  }, [params.documentId, token, isCompetitionActivity, collaboratorDocumentId, collaboratorMetadata, competitionModels, syncEvaluationMetadata]);
 
   const modelsByParticipantId = useMemo(() => {
     const map: Record<number, CompetitionModelEntryEntity[]> = {};
@@ -258,65 +293,73 @@ export default function ActivityManagePage() {
                 </div>
                 {isCompetitionActivity && (
                   <div className="manage__models" onClick={(e) => e.stopPropagation()}>
-                    <button
-                      className="manage__models-toggle"
-                      onClick={() =>
-                        setExpandedParticipantId((prev) => (prev === p.id ? null : p.id))
-                      }
-                    >
-                      {expandedParticipantId === p.id ? 'Ocultar modelos' : 'Ver modelos'}
-                    </button>
-                    {expandedParticipantId === p.id && (
-                      <div className="manage__models-list">
-                        {populatedUser?.id != null &&
-                        modelsByParticipantId[populatedUser.id]?.length ? (
-                          modelsByParticipantId[populatedUser.id].map((entry) => {
-                            const status = statusByModelId.get(entry.model.id);
-                            return (
-                              <div
-                                key={entry.documentId}
-                                className="manage__model-card"
-                                onClick={() =>
-                                  router.push(
-                                    `/activities/${params.documentId}/manage/${entry.model.documentId}/evaluations`,
-                                  )
-                                }
-                              >
-                                <div className="manage__model-image-container">
-                                  {entry.model.image?.url ? (
-                                    <Image
-                                      src={entry.model.image.url}
-                                      alt={entry.model.name}
-                                      fill
-                                      className="object-cover"
-                                    />
-                                  ) : (
-                                    <Image
-                                      src="/globe.svg"
-                                      alt="Placeholder"
-                                      fill
-                                      className="object-cover"
-                                    />
-                                  )}
-                                </div>
-                                <div className="manage__model-info">
-                                  <p className="manage__model-name">{entry.model.name}</p>
-                                  <span className="manage__model-evaluate">Evaluar →</span>
-                                </div>
-                                {status && (
-                                  <span
-                                    className={`manage__model-status manage__model-status--${status === 'COMPLETED' ? 'completed' : 'in-progress'}`}
+                    {p.statusName === 'paid' ? (
+                      <>
+                        <button
+                          className="manage__models-toggle"
+                          onClick={() =>
+                            setExpandedParticipantId((prev) => (prev === p.id ? null : p.id))
+                          }
+                        >
+                          {expandedParticipantId === p.id ? 'Ocultar modelos' : 'Ver modelos'}
+                        </button>
+                        {expandedParticipantId === p.id && (
+                          <div className="manage__models-list">
+                            {populatedUser?.id != null &&
+                            modelsByParticipantId[populatedUser.id]?.length ? (
+                              modelsByParticipantId[populatedUser.id].map((entry) => {
+                                const status = statusByModelId.get(entry.model.id);
+                                return (
+                                  <div
+                                    key={entry.documentId}
+                                    className="manage__model-card"
+                                    onClick={() =>
+                                      router.push(
+                                        `/activities/${params.documentId}/manage/${entry.model.documentId}/evaluations`,
+                                      )
+                                    }
                                   >
-                                    {status === 'COMPLETED' ? 'Finalizado' : 'En progreso'}
-                                  </span>
-                                )}
-                              </div>
-                            );
-                          })
-                        ) : (
-                          <p className="manage__models-empty">Sin modelos registrados</p>
+                                    <div className="manage__model-image-container">
+                                      {entry.model.image?.url ? (
+                                        <Image
+                                          src={entry.model.image.url}
+                                          alt={entry.model.name}
+                                          fill
+                                          className="object-cover"
+                                        />
+                                      ) : (
+                                        <Image
+                                          src="/globe.svg"
+                                          alt="Placeholder"
+                                          fill
+                                          className="object-cover"
+                                        />
+                                      )}
+                                    </div>
+                                    <div className="manage__model-info">
+                                      <p className="manage__model-name">{entry.model.name}</p>
+                                      <span className="manage__model-evaluate">Evaluar →</span>
+                                    </div>
+                                    {status && (
+                                      <span
+                                        className={`manage__model-status manage__model-status--${status === 'COMPLETED' ? 'completed' : 'in-progress'}`}
+                                      >
+                                        {status === 'COMPLETED' ? 'Finalizado' : 'En progreso'}
+                                      </span>
+                                    )}
+                                  </div>
+                                );
+                              })
+                            ) : (
+                              <p className="manage__models-empty">Sin modelos registrados</p>
+                            )}
+                          </div>
                         )}
-                      </div>
+                      </>
+                    ) : (
+                      <p className="manage__models-empty">
+                        Participación no pagada — modelos no disponibles
+                      </p>
                     )}
                   </div>
                 )}
