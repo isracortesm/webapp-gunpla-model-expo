@@ -121,56 +121,32 @@
   text-align: center;
 }
 
-.evaluation-dialog__tooltip {
-  position: relative;
+.evaluation-dialog__info-btn {
   display: inline-flex;
   align-items: center;
-  cursor: help;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  border-radius: 9999px;
+  background: transparent;
+  cursor: pointer;
+  transition: background-color 0.15s;
 }
 
-.evaluation-dialog__tooltip-icon {
-  font-size: 13px;
-  line-height: 1;
-  color: #6b7280;
+.evaluation-dialog__info-btn:hover,
+.evaluation-dialog__info-btn:focus-visible {
+  background-color: #f3f4f6;
+  outline: none;
 }
 
-.evaluation-dialog__tooltip-text {
-  position: absolute;
-  bottom: calc(100% + 8px);
-  left: 50%;
-  transform: translateX(-50%);
-  width: 240px;
-  padding: 8px 10px;
-  background: #111827;
-  color: #ffffff;
+.evaluation-dialog__helper-text {
   font-size: 12px;
-  font-weight: 400;
-  line-height: 16px;
-  border-radius: 8px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.15s, visibility 0.15s;
-  z-index: 80;
-  pointer-events: none;
+  line-height: 1.5;
+  color: #6b7280;
+  margin: 2px 0 10px;
   white-space: normal;
-  text-align: left;
-}
-
-.evaluation-dialog__tooltip-text::after {
-  content: "";
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  border: 6px solid transparent;
-  border-top-color: #111827;
-}
-
-.evaluation-dialog__tooltip:hover .evaluation-dialog__tooltip-text,
-.evaluation-dialog__tooltip:focus .evaluation-dialog__tooltip-text {
-  opacity: 1;
-  visibility: visible;
 }
 
 .evaluation-dialog__actions {

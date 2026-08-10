@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import {
   createCompetitionEvaluation,
   updateCompetitionEvaluation,
@@ -52,6 +53,11 @@ export default function EvaluationFormDialog({
     return nextRows;
   });
   const [submitting, setSubmitting] = useState(false);
+  const [expandedHelpers, setExpandedHelpers] = useState<Record<string, boolean>>({});
+
+  const toggleHelper = (key: string) => {
+    setExpandedHelpers((prev) => ({ ...prev, [key]: !prev[key] }));
+  };
 
   const updateRow = (criteriaId: number, patch: Partial<CriteriaRow>) => {
     setRows((prev) => ({
@@ -157,12 +163,21 @@ export default function EvaluationFormDialog({
           <div className="evaluation-dialog__category-header">
             <span className="evaluation-dialog__category-name">{category.name}</span>
             {category.description && (
-              <span className="evaluation-dialog__tooltip" tabIndex={0}>
-                <span className="evaluation-dialog__tooltip-icon">ⓘ</span>
-                <span className="evaluation-dialog__tooltip-text">{category.description}</span>
-              </span>
+              <button
+                type="button"
+                aria-label="Mostrar descripción de la categoría"
+                aria-expanded={!!expandedHelpers['category']}
+                className="evaluation-dialog__info-btn"
+                onClick={() => toggleHelper('category')}
+              >
+                <Image src="/info_30dp.svg" alt="" width={18} height={18} />
+              </button>
             )}
           </div>
+
+          {category.description && expandedHelpers['category'] && (
+            <p className="evaluation-dialog__helper-text">{category.description}</p>
+          )}
 
           <div className="evaluation-dialog__criterias">
             {category.criterias.map((criteria) => {
@@ -172,13 +187,22 @@ export default function EvaluationFormDialog({
                   <div className="evaluation-dialog__criteria-header">
                     <span className="evaluation-dialog__criteria-name">{criteria.name}</span>
                     {criteria.description && (
-                      <span className="evaluation-dialog__tooltip" tabIndex={0}>
-                        <span className="evaluation-dialog__tooltip-icon">ⓘ</span>
-                        <span className="evaluation-dialog__tooltip-text">{criteria.description}</span>
-                      </span>
+                      <button
+                        type="button"
+                        aria-label="Mostrar descripción del criterio"
+                        aria-expanded={!!expandedHelpers[String(criteria.id)]}
+                        className="evaluation-dialog__info-btn"
+                        onClick={() => toggleHelper(String(criteria.id))}
+                      >
+                        <Image src="/info_30dp.svg" alt="" width={18} height={18} />
+                      </button>
                     )}
                     <span className="evaluation-dialog__criteria-max">Max {criteria.maxPoints} pts</span>
                   </div>
+
+                  {criteria.description && expandedHelpers[String(criteria.id)] && (
+                    <p className="evaluation-dialog__helper-text">{criteria.description}</p>
+                  )}
 
                   <div className="evaluation-dialog__criteria-fields">
                     <div className="evaluation-dialog__field">

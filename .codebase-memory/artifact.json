@@ -1,11 +1,11 @@
 {
     "schema_version": 2,
-    "commit": "953997921eab65a9ccf407db46ad8c841ad6cfb1",
-    "indexed_at": "2026-08-10T17:53:50Z",
+    "commit": "fc463a3ec3fe582e89db0c859396632b02c7f8d8",
+    "indexed_at": "2026-08-10T18:10:53Z",
     "project": "D-Workspace-HobbyCity-webapp-gunpla-model-expo",
-    "nodes": 1482,
-    "edges": 2821,
+    "nodes": 1483,
+    "edges": 2806,
     "original_size": 5505024,
-    "compressed_size": 649486,
+    "compressed_size": 651055,
     "compression_level": 3
 }
