@@ -13,6 +13,8 @@ import {
   deleteActivityParticipant,
 } from '@/features/event-dashboard/service/event-dashboard-service';
 import type { ActivityEntity } from '@/domain/entities/event-dashboard/entity';
+import { getCompetitionByActivity } from '@/features/competition/service/competition-service';
+import type { CompetitionEntity } from '@/domain/entities/competition/entity';
 import { storeActivityCollaboratorRole, clearActivityCollaboratorRole } from '@/shared/utils/activity-collaborator-storage';
 import PageHeader from '@/components/ui/PageHeader';
 import './detail.css';
@@ -24,6 +26,7 @@ export default function ActivityDetailPage() {
   const token = typeof window !== 'undefined' ? localStorage.getItem('auth_token') || undefined : undefined;
   const { showLoading, hideLoading, showError, showConfirmation, showSuccess } = useUnifiedDialog();
   const [activity, setActivity] = useState<ActivityEntity | null>(null);
+  const [competition, setCompetition] = useState<CompetitionEntity | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isRegistered, setIsRegistered] = useState(false);
   const [participantDocId, setParticipantDocId] = useState<string | null>(null);
@@ -45,6 +48,15 @@ export default function ActivityDetailPage() {
       try {
         const data = await getActivityByDocumentId(params.documentId);
         setActivity(data);
+
+        if (data.category?.type === 'competition') {
+          try {
+            const competitionData = await getCompetitionByActivity(params.documentId);
+            setCompetition(competitionData);
+          } catch {
+            // competencia no disponible; el botón de resultados se oculta
+          }
+        }
       } catch {
         showError('Error al cargar la actividad', 'Error');
       } finally {
@@ -244,6 +256,11 @@ export default function ActivityDetailPage() {
                 {user && isCollaborator && (
                   <button onClick={() => router.push(`/activities/${params.documentId}/manage`)} className="activity-detail__manage-btn">
                     Gestionar actividad
+                  </button>
+                )}
+                {competition?.hasPublicResults === true && (
+                  <button onClick={() => router.push(`/activities/${params.documentId}/results`)} className="activity-detail__results-btn">
+                    Ver resultados
                   </button>
                 )}
               </div>

@@ -126,12 +126,58 @@ export class CompetitionRepositoryImpl implements CompetitionRepository {
       : this.httpService;
 
     const response = await http.get<{ data: StrapiCompetitionResultResponse[] }>('/api/competition-results', {
+      ...this.resultPopulateParams(),
       'filters[competition][documentId][$eq]': competitionDocumentId,
       'filters[model][documentId][$eq]': modelDocumentId,
     });
 
     const result = response.data[0];
     return result ? mapCompetitionResultDtoToEntity(result) : null;
+  }
+
+  async getCompetitionResultByModel(
+    competitionDocumentId: string,
+    modelDocumentId: string,
+    token?: string
+  ): Promise<CompetitionResultEntity | null> {
+    const http = token
+      ? new HttpService(process.env.NEXT_PUBLIC_HOST_URI || '', token)
+      : this.httpService;
+
+    const response = await http.get<{ data: StrapiCompetitionResultResponse[] }>('/api/competition-results', {
+      ...this.resultPopulateParams(),
+      'filters[competition][documentId][$eq]': competitionDocumentId,
+      'filters[model][model][documentId][$eq]': modelDocumentId,
+    });
+
+    const result = response.data[0];
+    return result ? mapCompetitionResultDtoToEntity(result) : null;
+  }
+
+  async getCompetitionResultsByCompetition(
+    competitionDocumentId: string,
+    token?: string
+  ): Promise<CompetitionResultEntity[]> {
+    const http = token
+      ? new HttpService(process.env.NEXT_PUBLIC_HOST_URI || '', token)
+      : this.httpService;
+
+    const response = await http.get<{ data: StrapiCompetitionResultResponse[] }>('/api/competition-results', {
+      ...this.resultPopulateParams(),
+      'filters[competition][documentId][$eq]': competitionDocumentId,
+    });
+
+    return response.data.map(mapCompetitionResultDtoToEntity);
+  }
+
+  private resultPopulateParams() {
+    return {
+      'populate[model][populate][model][populate][image]': 'true',
+      'populate[model][populate][user][fields][0]': 'username',
+      'populate[model][populate][user][fields][1]': 'email',
+      'populate[model][populate][category][populate][criterias]': 'true',
+      'populate[batch][populate][batchImage]': 'true',
+    };
   }
 
   async createCompetitionResult(
@@ -166,6 +212,23 @@ export class CompetitionRepositoryImpl implements CompetitionRepository {
     const response = await http.get<{ data: StrapiCompetitionEvaluationResponse[] }>('/api/competition-evaluations', {
       'filters[result][documentId][$eq]': resultDocumentId,
       'filters[reviewer][documentId][$eq]': reviewerDocumentId,
+    });
+
+    return response.data.map(mapCompetitionEvaluationDtoToEntity);
+  }
+
+  async getCompetitionEvaluationsByResult(
+    resultDocumentId: string,
+    token?: string
+  ): Promise<CompetitionEvaluationEntity[]> {
+    const http = token
+      ? new HttpService(process.env.NEXT_PUBLIC_HOST_URI || '', token)
+      : this.httpService;
+
+    const response = await http.get<{ data: StrapiCompetitionEvaluationResponse[] }>('/api/competition-evaluations', {
+      'filters[result][documentId][$eq]': resultDocumentId,
+      'populate[reviewer][populate][user][fields][0]': 'username',
+      'populate[reviewer][populate][user][fields][1]': 'email',
     });
 
     return response.data.map(mapCompetitionEvaluationDtoToEntity);

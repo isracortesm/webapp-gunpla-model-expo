@@ -29,7 +29,7 @@ export interface CompetitionModelEntity {
   documentId: string;
 }
 
-import { ModelEntity } from '../models/model-entity';
+import { ImageEntity, ModelEntity } from '../models/model-entity';
 import { PopulatedUser } from '../event-dashboard/entity';
 
 export interface CompetitionModelEntryEntity {
@@ -40,14 +40,24 @@ export interface CompetitionModelEntryEntity {
   category?: CompetitionCategoryEntity;
 }
 
+export interface CompetitionBatchEntity {
+  id: number;
+  documentId: string;
+  batch: string;
+  codeName: string;
+  batchName: string;
+  batchImage?: ImageEntity | null;
+  requiredValue?: number;
+}
+
 export interface CompetitionResultEntity {
   id: number;
   documentId: string;
   order: number;
   totalPoints: number;
   competition?: { id: number; documentId: string };
-  model?: { id: number; documentId: string };
-  batch?: { id: number; documentId?: string } | null;
+  model?: CompetitionModelEntryEntity | { id: number; documentId: string };
+  batch?: CompetitionBatchEntity | null;
 }
 
 export interface CompetitionEvaluationEntity {
@@ -56,6 +66,6 @@ export interface CompetitionEvaluationEntity {
   criteria: string;
   comments?: string;
   points: number;
-  reviewer?: { id: number; documentId?: string };
+  reviewer?: { id: number; documentId?: string; username?: string };
   result?: { id: number; documentId: string };
 }

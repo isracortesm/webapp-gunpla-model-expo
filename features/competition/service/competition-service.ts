@@ -5,8 +5,11 @@ import { GetCompetitionModelsUseCase } from "@/domain/usecases/competition/get-c
 import { GetCompetitionModelsByActivityUseCase } from "@/domain/usecases/competition/get-competition-models-by-activity-usecase";
 import { GetCompetitionByActivityUseCase } from "@/domain/usecases/competition/get-competition-by-activity-usecase";
 import { GetCompetitionResultUseCase } from "@/domain/usecases/competition/get-competition-result-usecase";
+import { GetCompetitionResultByModelUseCase } from "@/domain/usecases/competition/get-competition-result-by-model-usecase";
+import { GetCompetitionResultsByCompetitionUseCase } from "@/domain/usecases/competition/get-competition-results-by-competition-usecase";
 import { CreateCompetitionResultUseCase } from "@/domain/usecases/competition/create-competition-result-usecase";
 import { GetCompetitionEvaluationsByResultAndReviewerUseCase } from "@/domain/usecases/competition/get-competition-evaluations-by-result-and-reviewer-usecase";
+import { GetCompetitionEvaluationsByResultUseCase } from "@/domain/usecases/competition/get-competition-evaluations-by-result-usecase";
 import { CreateCompetitionEvaluationUseCase } from "@/domain/usecases/competition/create-competition-evaluation-usecase";
 import { UpdateCompetitionEvaluationUseCase } from "@/domain/usecases/competition/update-competition-evaluation-usecase";
 import { CompetitionRepositoryImpl } from "@/data/repositories/competition/competition-repository-impl";
@@ -21,8 +24,11 @@ const getCompetitionModelsUseCase = new GetCompetitionModelsUseCase(repository);
 const getCompetitionModelsByActivityUseCase = new GetCompetitionModelsByActivityUseCase(repository);
 const getCompetitionByActivityUseCase = new GetCompetitionByActivityUseCase(repository);
 const getCompetitionResultUseCase = new GetCompetitionResultUseCase(repository);
+const getCompetitionResultByModelUseCase = new GetCompetitionResultByModelUseCase(repository);
+const getCompetitionResultsByCompetitionUseCase = new GetCompetitionResultsByCompetitionUseCase(repository);
 const createCompetitionResultUseCase = new CreateCompetitionResultUseCase(repository);
 const getCompetitionEvaluationsByResultAndReviewerUseCase = new GetCompetitionEvaluationsByResultAndReviewerUseCase(repository);
+const getCompetitionEvaluationsByResultUseCase = new GetCompetitionEvaluationsByResultUseCase(repository);
 const createCompetitionEvaluationUseCase = new CreateCompetitionEvaluationUseCase(repository);
 const updateCompetitionEvaluationUseCase = new UpdateCompetitionEvaluationUseCase(repository);
 
@@ -71,6 +77,21 @@ export async function getCompetitionResult(
   return getCompetitionResultUseCase.execute(competitionDocumentId, modelDocumentId, token);
 }
 
+export async function getCompetitionResultByModel(
+  competitionDocumentId: string,
+  modelDocumentId: string,
+  token?: string
+) {
+  return getCompetitionResultByModelUseCase.execute(competitionDocumentId, modelDocumentId, token);
+}
+
+export async function getCompetitionResultsByCompetition(
+  competitionDocumentId: string,
+  token?: string
+) {
+  return getCompetitionResultsByCompetitionUseCase.execute(competitionDocumentId, token);
+}
+
 export async function createCompetitionResult(
   data: { competition: string; model: string; order?: number; totalPoints?: number },
   token?: string
@@ -84,6 +105,13 @@ export async function getCompetitionEvaluationsByResultAndReviewer(
   token?: string
 ) {
   return getCompetitionEvaluationsByResultAndReviewerUseCase.execute(resultDocumentId, reviewerDocumentId, token);
+}
+
+export async function getCompetitionEvaluationsByResult(
+  resultDocumentId: string,
+  token?: string
+) {
+  return getCompetitionEvaluationsByResultUseCase.execute(resultDocumentId, token);
 }
 
 export async function createCompetitionEvaluation(

@@ -25,6 +25,15 @@ export interface CompetitionRepository {
     modelDocumentId: string,
     token?: string
   ): Promise<CompetitionResultEntity | null>;
+  getCompetitionResultByModel(
+    competitionDocumentId: string,
+    modelDocumentId: string,
+    token?: string
+  ): Promise<CompetitionResultEntity | null>;
+  getCompetitionResultsByCompetition(
+    competitionDocumentId: string,
+    token?: string
+  ): Promise<CompetitionResultEntity[]>;
   createCompetitionResult(
     data: { competition: string; model: string; order?: number; totalPoints?: number },
     token?: string
@@ -32,6 +41,10 @@ export interface CompetitionRepository {
   getCompetitionEvaluationsByResultAndReviewer(
     resultDocumentId: string,
     reviewerDocumentId: string,
+    token?: string
+  ): Promise<CompetitionEvaluationEntity[]>;
+  getCompetitionEvaluationsByResult(
+    resultDocumentId: string,
     token?: string
   ): Promise<CompetitionEvaluationEntity[]>;
   createCompetitionEvaluation(
