@@ -81,6 +81,7 @@ export interface StrapiCompetitionModelEntryResponse {
     username: string;
     email: string;
   };
+  category?: StrapiCompetitionCategoryResponse;
   model: {
     id: number;
     documentId: string;
@@ -165,6 +166,9 @@ export function mapCompetitionModelEntryDtoToEntity(
           username: dto.user.username,
           email: dto.user.email,
         }
+      : undefined,
+    category: dto.category
+      ? mapCompetitionCategoryDtoToEntity(dto.category)
       : undefined,
   };
 }

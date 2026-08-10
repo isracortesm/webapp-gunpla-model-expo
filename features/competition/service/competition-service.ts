@@ -7,6 +7,8 @@ import { GetCompetitionByActivityUseCase } from "@/domain/usecases/competition/g
 import { GetCompetitionResultUseCase } from "@/domain/usecases/competition/get-competition-result-usecase";
 import { CreateCompetitionResultUseCase } from "@/domain/usecases/competition/create-competition-result-usecase";
 import { GetCompetitionEvaluationsByResultAndReviewerUseCase } from "@/domain/usecases/competition/get-competition-evaluations-by-result-and-reviewer-usecase";
+import { CreateCompetitionEvaluationUseCase } from "@/domain/usecases/competition/create-competition-evaluation-usecase";
+import { UpdateCompetitionEvaluationUseCase } from "@/domain/usecases/competition/update-competition-evaluation-usecase";
 import { CompetitionRepositoryImpl } from "@/data/repositories/competition/competition-repository-impl";
 import { HttpService } from "@/data/services/http-client";
 
@@ -21,6 +23,8 @@ const getCompetitionByActivityUseCase = new GetCompetitionByActivityUseCase(repo
 const getCompetitionResultUseCase = new GetCompetitionResultUseCase(repository);
 const createCompetitionResultUseCase = new CreateCompetitionResultUseCase(repository);
 const getCompetitionEvaluationsByResultAndReviewerUseCase = new GetCompetitionEvaluationsByResultAndReviewerUseCase(repository);
+const createCompetitionEvaluationUseCase = new CreateCompetitionEvaluationUseCase(repository);
+const updateCompetitionEvaluationUseCase = new UpdateCompetitionEvaluationUseCase(repository);
 
 export async function getCompetitions(token?: string) {
   return getCompetitionsUseCase.execute(token);
@@ -80,4 +84,19 @@ export async function getCompetitionEvaluationsByResultAndReviewer(
   token?: string
 ) {
   return getCompetitionEvaluationsByResultAndReviewerUseCase.execute(resultDocumentId, reviewerDocumentId, token);
+}
+
+export async function createCompetitionEvaluation(
+  data: { criteria: string; points: number; comments?: string; result: string; reviewer: string },
+  token?: string
+) {
+  return createCompetitionEvaluationUseCase.execute(data, token);
+}
+
+export async function updateCompetitionEvaluation(
+  documentId: string,
+  data: { points: number; comments?: string },
+  token?: string
+) {
+  return updateCompetitionEvaluationUseCase.execute(documentId, data, token);
 }

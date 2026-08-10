@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { useAuth } from '@/features/auth/context/auth-context';
@@ -16,8 +16,11 @@ import { getActivityByDocumentId } from '@/features/event-dashboard/service/even
 import { getModelByDocumentId } from '@/features/models/service/models-service';
 import SocialNetworkIcons from '@/shared/components/ui/social-networks/SocialNetworkIcons';
 import PageHeader from '@/components/ui/PageHeader';
+import EvaluationFormDialog from '@/components/ui/dialogs/EvaluationFormDialog';
 import type {
+  CompetitionCategoryEntity,
   CompetitionEvaluationEntity,
+  CompetitionModelEntryEntity,
   CompetitionResultEntity,
 } from '@/domain/entities/competition/entity';
 import type { ModelEntity } from '@/domain/entities/models/model-entity';
@@ -28,12 +31,19 @@ export default function ActivityModelEvaluationsPage() {
   const params = useParams<{ documentId: string; modelId: string }>();
   const router = useRouter();
   const { user, isAuthReady } = useAuth();
-  const { showLoading, hideLoading, showError, showMessage } = useUnifiedDialog();
+  const { showLoading, hideLoading, showError } = useUnifiedDialog();
+
+  const token = typeof window !== 'undefined' ? localStorage.getItem('auth_token') || '' : '';
 
   const [isReady, setIsReady] = useState(false);
   const [model, setModel] = useState<ModelEntity | null>(null);
   const [result, setResult] = useState<CompetitionResultEntity | null>(null);
   const [evaluations, setEvaluations] = useState<CompetitionEvaluationEntity[]>([]);
+  const [category, setCategory] = useState<CompetitionCategoryEntity | null>(null);
+  const [entry, setEntry] = useState<CompetitionModelEntryEntity | null>(null);
+  const [reviewerDocumentId, setReviewerDocumentId] = useState<string | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [dialogOpenCount, setDialogOpenCount] = useState(0);
   const loaded = useRef(false);
 
   useEffect(() => {
@@ -46,7 +56,7 @@ export default function ActivityModelEvaluationsPage() {
       router.push('/auth/login');
       return;
     }
-    const token: string = rawToken;
+    const t: string = rawToken;
 
     async function load() {
       showLoading('Cargando evaluaciones...');
@@ -63,16 +73,17 @@ export default function ActivityModelEvaluationsPage() {
           return;
         }
 
-        const models = await getCompetitionModelsByActivity(params.documentId, token);
-        const entry = models.find((item) => item.model.documentId === params.modelId);
+        const models = await getCompetitionModelsByActivity(params.documentId, t);
+        const modelEntry = models.find((item) => item.model.documentId === params.modelId);
 
-        if (!entry) {
+        if (!modelEntry) {
           showError('El modelo no pertenece a esta competencia', 'Error');
           router.push(`/activities/${params.documentId}/manage`);
           return;
         }
+        setEntry(modelEntry);
 
-        let modelData: ModelEntity = entry.model;
+        let modelData: ModelEntity = modelEntry.model;
         try {
           modelData = await getModelByDocumentId(params.modelId);
         } catch {
@@ -80,22 +91,26 @@ export default function ActivityModelEvaluationsPage() {
         }
         setModel(modelData);
 
-        const competition = await getCompetitionByActivity(params.documentId, token);
+        const competition = await getCompetitionByActivity(params.documentId, t);
+
+        const modelCategory = modelEntry.category ?? competition.categories[0] ?? null;
+        setCategory(modelCategory);
+        setReviewerDocumentId(collaborator.documentId);
 
         let resultData = await getCompetitionResult(
           competition.documentId,
-          entry.documentId,
-          token,
+          modelEntry.documentId,
+          t,
         );
         if (!resultData) {
           resultData = await createCompetitionResult(
             {
               competition: competition.documentId,
-              model: entry.documentId,
+              model: modelEntry.documentId,
               order: 0,
               totalPoints: 0,
             },
-            token,
+            t,
           );
         }
         setResult(resultData);
@@ -103,7 +118,7 @@ export default function ActivityModelEvaluationsPage() {
         const evaluationsData = await getCompetitionEvaluationsByResultAndReviewer(
           resultData.documentId,
           collaborator.documentId,
-          token,
+          t,
         );
         setEvaluations(evaluationsData);
       } catch {
@@ -117,11 +132,31 @@ export default function ActivityModelEvaluationsPage() {
     load();
   }, [params.documentId, params.modelId, router, showLoading, hideLoading, showError, user, isAuthReady]);
 
-  if (!isReady) return null;
+  const handleDialogSaved = useCallback(async () => {
+    if (!entry || !reviewerDocumentId) return;
 
-  const handleCaptureEvaluations = () => {
-    showMessage('info', 'La captura de evaluaciones estará disponible próximamente.', 'Próximamente');
+    try {
+      const competition = await getCompetitionByActivity(params.documentId, token);
+      const resultData = await getCompetitionResult(competition.documentId, entry.documentId, token);
+      if (!resultData) return;
+      setResult(resultData);
+      const evaluationsData = await getCompetitionEvaluationsByResultAndReviewer(
+        resultData.documentId,
+        reviewerDocumentId,
+        token,
+      );
+      setEvaluations(evaluationsData);
+    } catch {
+      // silent; next open reloads fresh data
+    }
+  }, [entry, reviewerDocumentId, params.documentId, token]);
+
+  const handleOpenDialog = () => {
+    setDialogOpenCount((prev) => prev + 1);
+    setIsDialogOpen(true);
   };
+
+  if (!isReady) return null;
 
   const judgeAverage =
     evaluations.length > 0
@@ -170,7 +205,14 @@ export default function ActivityModelEvaluationsPage() {
       )}
 
       <section className="evaluations__section">
-        <h3 className="evaluations__section-title">Mis evaluaciones</h3>
+        <div className="evaluations__section-header">
+          <h3 className="evaluations__section-title">Mis evaluaciones</h3>
+          {evaluations.length > 0 && (
+            <button className="evaluations__edit-btn" onClick={handleOpenDialog}>
+              Editar evaluaciones
+            </button>
+          )}
+        </div>
         {evaluations.length > 0 && (
           <div className="evaluations__judge-average">
             <div className="evaluations__judge-average-info">
@@ -199,12 +241,26 @@ export default function ActivityModelEvaluationsPage() {
             <p className="evaluations__empty-text">
               Aún no has capturado evaluaciones para este modelo.
             </p>
-            <button className="evaluations__capture-btn" onClick={handleCaptureEvaluations}>
+            <button className="evaluations__capture-btn" onClick={handleOpenDialog}>
               Capturar evaluaciones
             </button>
           </div>
         )}
       </section>
+
+      {category && result && reviewerDocumentId && (
+        <EvaluationFormDialog
+          key={dialogOpenCount}
+          isOpen={isDialogOpen}
+          onClose={() => setIsDialogOpen(false)}
+          onSaved={handleDialogSaved}
+          category={category}
+          result={result}
+          reviewerDocumentId={reviewerDocumentId}
+          evaluations={evaluations}
+          token={token}
+        />
+      )}
     </main>
   );
 }

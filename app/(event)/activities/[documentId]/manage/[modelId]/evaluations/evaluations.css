@@ -62,11 +62,38 @@
   margin-top: 24px;
 }
 
+.evaluations__section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
 .evaluations__section-title {
   font-size: 15px;
   font-weight: 700;
   color: #111827;
-  margin-bottom: 12px;
+  margin-bottom: 0;
+}
+
+.evaluations__edit-btn {
+  padding: 6px 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 9999px;
+  background: #ffffff;
+  color: #374151;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s;
+  white-space: nowrap;
+}
+
+.evaluations__edit-btn:hover {
+  background-color: #f9fafb;
+  border-color: #2563eb;
+  color: #2563eb;
 }
 
 .evaluations__list {

@@ -37,6 +37,7 @@ export interface CompetitionModelEntryEntity {
   documentId: string;
   model: ModelEntity;
   user?: PopulatedUser;
+  category?: CompetitionCategoryEntity;
 }
 
 export interface CompetitionResultEntity {

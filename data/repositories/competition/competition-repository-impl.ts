@@ -89,6 +89,7 @@ export class CompetitionRepositoryImpl implements CompetitionRepository {
       'populate[model][populate][image]': 'true',
       'populate[user][fields][0]': 'username',
       'populate[user][fields][1]': 'email',
+      'populate[category][populate][criterias]': 'true',
       'filters[competition][activity][documentId][$eq]': activityDocumentId,
     });
 
@@ -168,5 +169,48 @@ export class CompetitionRepositoryImpl implements CompetitionRepository {
     });
 
     return response.data.map(mapCompetitionEvaluationDtoToEntity);
+  }
+
+  async createCompetitionEvaluation(
+    data: { criteria: string; points: number; comments?: string; result: string; reviewer: string },
+    token?: string
+  ): Promise<CompetitionEvaluationEntity> {
+    const http = token
+      ? new HttpService(process.env.NEXT_PUBLIC_HOST_URI || '', token)
+      : this.httpService;
+
+    const response = await http.post<{ data: StrapiCompetitionEvaluationResponse }>('/api/competition-evaluations', {
+      data: {
+        criteria: data.criteria,
+        points: data.points,
+        comments: data.comments ?? '',
+        result: data.result,
+        reviewer: data.reviewer,
+      },
+    });
+
+    return mapCompetitionEvaluationDtoToEntity(response.data);
+  }
+
+  async updateCompetitionEvaluation(
+    documentId: string,
+    data: { points: number; comments?: string },
+    token?: string
+  ): Promise<CompetitionEvaluationEntity> {
+    const http = token
+      ? new HttpService(process.env.NEXT_PUBLIC_HOST_URI || '', token)
+      : this.httpService;
+
+    const response = await http.put<{ data: StrapiCompetitionEvaluationResponse }>(
+      `/api/competition-evaluations/${documentId}`,
+      {
+        data: {
+          points: data.points,
+          comments: data.comments ?? '',
+        },
+      }
+    );
+
+    return mapCompetitionEvaluationDtoToEntity(response.data);
   }
 }
