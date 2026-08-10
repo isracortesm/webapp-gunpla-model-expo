@@ -301,15 +301,15 @@ export default function ActivityManagePage() {
                                 </div>
                                 <div className="manage__model-info">
                                   <p className="manage__model-name">{entry.model.name}</p>
-                                  {status && (
-                                    <span
-                                      className={`manage__model-status manage__model-status--${status === 'COMPLETED' ? 'completed' : 'in-progress'}`}
-                                    >
-                                      {status === 'COMPLETED' ? 'Finalizado' : 'En progreso'}
-                                    </span>
-                                  )}
                                   <span className="manage__model-evaluate">Evaluar →</span>
                                 </div>
+                                {status && (
+                                  <span
+                                    className={`manage__model-status manage__model-status--${status === 'COMPLETED' ? 'completed' : 'in-progress'}`}
+                                  >
+                                    {status === 'COMPLETED' ? 'Finalizado' : 'En progreso'}
+                                  </span>
+                                )}
                               </div>
                             );
                           })

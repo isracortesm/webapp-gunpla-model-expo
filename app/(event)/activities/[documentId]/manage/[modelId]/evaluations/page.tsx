@@ -12,7 +12,7 @@ import {
   createCompetitionResult,
   getCompetitionEvaluationsByResultAndReviewer,
 } from '@/features/competition/service/competition-service';
-import { getActivityByDocumentId } from '@/features/event-dashboard/service/event-dashboard-service';
+import { getActivityByDocumentId, updateActivityCollaboratorMetadata } from '@/features/event-dashboard/service/event-dashboard-service';
 import { getModelByDocumentId } from '@/features/models/service/models-service';
 import SocialNetworkIcons from '@/shared/components/ui/social-networks/SocialNetworkIcons';
 import PageHeader from '@/components/ui/PageHeader';
@@ -25,6 +25,7 @@ import type {
 } from '@/domain/entities/competition/entity';
 import type { ModelEntity } from '@/domain/entities/models/model-entity';
 import type { SocialNetworkItem } from '@/domain/entities/event-dashboard/entity';
+import type { CollaboratorEvaluationMetadata } from '@/domain/entities/event-dashboard/entity';
 import './evaluations.css';
 
 export default function ActivityModelEvaluationsPage() {
@@ -42,6 +43,7 @@ export default function ActivityModelEvaluationsPage() {
   const [category, setCategory] = useState<CompetitionCategoryEntity | null>(null);
   const [entry, setEntry] = useState<CompetitionModelEntryEntity | null>(null);
   const [reviewerDocumentId, setReviewerDocumentId] = useState<string | null>(null);
+  const [collaboratorMetadata, setCollaboratorMetadata] = useState<CollaboratorEvaluationMetadata | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [dialogOpenCount, setDialogOpenCount] = useState(0);
   const loaded = useRef(false);
@@ -97,6 +99,12 @@ export default function ActivityModelEvaluationsPage() {
         setCategory(modelCategory);
         setReviewerDocumentId(collaborator.documentId);
 
+        const baseMetadata: CollaboratorEvaluationMetadata = collaborator.metadata ?? {
+          summary: { totalAssigned: models.length, totalCompleted: 0 },
+          items: [],
+        };
+        setCollaboratorMetadata(baseMetadata);
+
         let resultData = await getCompetitionResult(
           competition.documentId,
           modelEntry.documentId,
@@ -132,6 +140,30 @@ export default function ActivityModelEvaluationsPage() {
     load();
   }, [params.documentId, params.modelId, router, showLoading, hideLoading, showError, user, isAuthReady]);
 
+  const syncEvaluated = useCallback(async (evaluationsData: CompetitionEvaluationEntity[]) => {
+    if (!entry || !reviewerDocumentId || !category || !collaboratorMetadata) return;
+    if (evaluationsData.length === 0) return;
+
+    const modelId = entry.model.id;
+    const evaluationId = evaluationsData.reduce((max, evaluation) => Math.max(max, evaluation.id), 0);
+    const status: 'COMPLETED' | 'IN_PROGRESS' =
+      evaluationsData.length >= category.criterias.length ? 'COMPLETED' : 'IN_PROGRESS';
+
+    const otherItems = (collaboratorMetadata.items ?? []).filter((item) => item.modelId !== modelId);
+    const items = [...otherItems, { modelId, evaluationId, status }];
+
+    const metadata: CollaboratorEvaluationMetadata = {
+      summary: {
+        totalAssigned: collaboratorMetadata.summary.totalAssigned,
+        totalCompleted: items.filter((item) => item.status === 'COMPLETED').length,
+      },
+      items,
+    };
+
+    await updateActivityCollaboratorMetadata(reviewerDocumentId, metadata, token);
+    setCollaboratorMetadata(metadata);
+  }, [entry, reviewerDocumentId, category, collaboratorMetadata, token]);
+
   const handleDialogSaved = useCallback(async () => {
     if (!entry || !reviewerDocumentId) return;
 
@@ -146,10 +178,11 @@ export default function ActivityModelEvaluationsPage() {
         token,
       );
       setEvaluations(evaluationsData);
+      await syncEvaluated(evaluationsData);
     } catch {
       // silent; next open reloads fresh data
     }
-  }, [entry, reviewerDocumentId, params.documentId, token]);
+  }, [entry, reviewerDocumentId, params.documentId, token, syncEvaluated]);
 
   const handleOpenDialog = () => {
     setDialogOpenCount((prev) => prev + 1);
