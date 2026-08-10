@@ -213,15 +213,6 @@ export default function ActivityModelEvaluationsPage() {
             </button>
           )}
         </div>
-        {evaluations.length > 0 && (
-          <div className="evaluations__judge-average">
-            <div className="evaluations__judge-average-info">
-              <span className="evaluations__judge-average-label">Mi promedio</span>
-              <p className="evaluations__judge-average-note">Promedio de las evaluaciones del juez</p>
-            </div>
-            <span className="evaluations__judge-average-value">{judgeAverage}</span>
-          </div>
-        )}
         {evaluations.length > 0 ? (
           <div className="evaluations__list">
             {evaluations.map((evaluation) => (
@@ -244,6 +235,12 @@ export default function ActivityModelEvaluationsPage() {
             <button className="evaluations__capture-btn" onClick={handleOpenDialog}>
               Capturar evaluaciones
             </button>
+          </div>
+        )}
+        {evaluations.length > 0 && (
+          <div className="evaluations__judge-average">
+            <span className="evaluations__judge-average-label">Mi promedio</span>
+            <span className="evaluations__judge-average-value">{judgeAverage}</span>
           </div>
         )}
       </section>

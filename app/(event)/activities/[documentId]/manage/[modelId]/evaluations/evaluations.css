@@ -210,33 +210,20 @@
 }
 
 .evaluations__judge-average {
-  width: 100%;
-  margin-bottom: 12px;
+  margin-top: 16px;
+  margin-left: 1em;
+  margin-right: 1em;
+  padding-top: 12px;
+  border-top: 1px solid #e5e7eb;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 10px;
-  padding: 14px 16px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-}
-
-.evaluations__judge-average-info {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
 }
 
 .evaluations__judge-average-label {
   font-size: 13px;
   font-weight: 600;
   color: #111827;
-}
-
-.evaluations__judge-average-note {
-  font-size: 12px;
-  color: #6b7280;
 }
 
 .evaluations__judge-average-value {
