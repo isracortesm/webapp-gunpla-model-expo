@@ -1,0 +1,131 @@
+@reference "tailwindcss";
+
+.results__container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #f9fafb;
+  padding-bottom: 2em;
+}
+
+.results__filters {
+  width: calc(100% - 2em);
+  max-width: 600px;
+  margin-top: 5em;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.results__filter-chip {
+  padding: 6px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 9999px;
+  background: #ffffff;
+  color: #374151;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.results__filter-chip--active {
+  background-color: #111827;
+  border-color: #111827;
+  color: #ffffff;
+}
+
+.results__list {
+  width: calc(100% - 2em);
+  max-width: 600px;
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.results__list--first {
+  margin-top: 5em;
+}
+
+.results__card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.results__card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.results__model-image-container {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  border-radius: 10px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: #f3f4f6;
+}
+
+.results__model-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  flex: 1;
+}
+
+.results__model-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111827;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.results__model-category {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.results__batch-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.results__batch-image-container {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #f3f4f6;
+}
+
+.results__batch-name {
+  font-size: 12px;
+  font-weight: 700;
+  color: #2563eb;
+}
+
+.results__empty {
+  margin-top: 5em;
+  font-size: 14px;
+  color: #6b7280;
+  text-align: center;
+  padding: 0 2em;
+}

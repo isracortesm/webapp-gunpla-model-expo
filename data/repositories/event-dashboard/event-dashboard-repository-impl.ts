@@ -1,4 +1,4 @@
-import { EventEntity, NewsEntity, ActivityEntity, ActivityParticipantEntity } from '../../../domain/entities/event-dashboard/entity';
+import { EventEntity, NewsEntity, ActivityEntity, ActivityParticipantEntity, CollaboratorEntity, CollaboratorEvaluationMetadata } from '../../../domain/entities/event-dashboard/entity';
 import { PaginatedResult } from '../../../domain/entities/common/paginated-result';
 import { EventDashboardRepository } from '../../../domain/repositories/event-dashboard/event-dashboard-repository';
 import { HttpService } from '../../services/http-client';
@@ -237,6 +237,19 @@ export class EventDashboardRepositoryImpl implements EventDashboardRepository {
     const response = await http.put<{ data: ActivityParticipantEntity }>(
       `/api/activity-participants/${documentId}`,
       { data }
+    );
+    return response.data;
+  }
+
+  async updateActivityCollaboratorMetadata(
+    documentId: string,
+    metadata: CollaboratorEvaluationMetadata,
+    token: string
+  ): Promise<CollaboratorEntity> {
+    const http = new HttpService(process.env.NEXT_PUBLIC_HOST_URI || '', token);
+    const response = await http.put<{ data: CollaboratorEntity }>(
+      `/api/activity-collaborators/${documentId}`,
+      { data: { metadata } }
     );
     return response.data;
   }

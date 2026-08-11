@@ -3,7 +3,11 @@ import {
   CompetitionCategoryEntity,
   CriteriaEntity,
   CompetitionModelEntryEntity,
+  CompetitionResultEntity,
+  CompetitionEvaluationEntity,
+  CompetitionBatchEntity,
 } from '../../../domain/entities/competition/entity';
+import { ImageEntity } from '../../../domain/entities/models/model-entity';
 
 interface StrapiCriteriaResponse {
   id: number;
@@ -73,6 +77,13 @@ export interface StrapiCompetitionModelEntryResponse {
   createdAt: string;
   updatedAt: string;
   publishedAt: string;
+  user?: {
+    id: number;
+    documentId?: string;
+    username: string;
+    email: string;
+  };
+  category?: StrapiCompetitionCategoryResponse;
   model: {
     id: number;
     documentId: string;
@@ -81,63 +92,62 @@ export interface StrapiCompetitionModelEntryResponse {
     createdAt: string;
     updatedAt: string;
     publishedAt: string;
-    image?: {
-      id: number;
-      documentId: string;
-      name: string;
-      alternativeText?: string | null;
-      caption?: string | null;
-      width: number;
-      height: number;
-      formats?: {
-        thumbnail?: {
-          url: string;
-        };
-      };
-      hash: string;
-      ext: string;
-      mime: string;
-      size: number;
-      url: string;
-      previewUrl?: string | null;
-      provider: string;
-      provider_metadata?: unknown;
-      createdAt: string;
-      updatedAt: string;
-      publishedAt: string;
-    };
+    image?: StrapiMediaResponse;
+  };
+}
+
+export interface StrapiMediaResponse {
+  id: number;
+  documentId: string;
+  name: string;
+  alternativeText?: string | null;
+  caption?: string | null;
+  width: number;
+  height: number;
+  formats?: Record<string, { url: string }>;
+  hash: string;
+  ext: string;
+  mime: string;
+  size: number;
+  url: string;
+  previewUrl?: string | null;
+  provider: string;
+  provider_metadata?: unknown;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+}
+
+function mapMediaDtoToEntity(rawImage: StrapiMediaResponse | null | undefined): ImageEntity | undefined {
+  if (!rawImage) return undefined;
+
+  return {
+    id: rawImage.id,
+    documentId: rawImage.documentId,
+    name: rawImage.name,
+    alternativeText: rawImage.alternativeText ?? null,
+    caption: rawImage.caption ?? null,
+    focalPoint: null,
+    width: rawImage.width,
+    height: rawImage.height,
+    formats: rawImage.formats as Record<string, { ext: string; url: string; etag: string; hash: string; mime: string; name: string; path: string | null; size: number; width: number; height: number; sizeInBytes: number }>,
+    hash: rawImage.hash,
+    ext: rawImage.ext,
+    mime: rawImage.mime,
+    size: rawImage.size,
+    url: rawImage.url,
+    previewUrl: rawImage.previewUrl ?? null,
+    provider: rawImage.provider,
+    provider_metadata: rawImage.provider_metadata ?? null,
+    createdAt: rawImage.createdAt,
+    updatedAt: rawImage.updatedAt,
+    publishedAt: rawImage.publishedAt,
   };
 }
 
 export function mapCompetitionModelEntryDtoToEntity(
   dto: StrapiCompetitionModelEntryResponse
 ): CompetitionModelEntryEntity {
-  const rawImage = dto.model.image;
-  const modelImage = rawImage
-    ? {
-        id: rawImage.id,
-        documentId: rawImage.documentId,
-        name: rawImage.name,
-        alternativeText: rawImage.alternativeText ?? null,
-        caption: rawImage.caption ?? null,
-        focalPoint: null,
-        width: rawImage.width,
-        height: rawImage.height,
-        formats: rawImage.formats as Record<string, { ext: string; url: string; etag: string; hash: string; mime: string; name: string; path: string | null; size: number; width: number; height: number; sizeInBytes: number }>,
-        hash: rawImage.hash,
-        ext: rawImage.ext,
-        mime: rawImage.mime,
-        size: rawImage.size,
-        url: rawImage.url,
-        previewUrl: rawImage.previewUrl ?? null,
-        provider: rawImage.provider,
-        provider_metadata: rawImage.provider_metadata ?? null,
-        createdAt: rawImage.createdAt,
-        updatedAt: rawImage.updatedAt,
-        publishedAt: rawImage.publishedAt,
-      }
-    : undefined;
-
   return {
     id: dto.id,
     documentId: dto.documentId,
@@ -149,7 +159,111 @@ export function mapCompetitionModelEntryDtoToEntity(
       createdAt: dto.model.createdAt,
       updatedAt: dto.model.updatedAt,
       publishedAt: dto.model.publishedAt,
-      image: modelImage,
+      image: mapMediaDtoToEntity(dto.model.image),
     },
+    user: dto.user
+      ? {
+          id: dto.user.id,
+          username: dto.user.username,
+          email: dto.user.email,
+        }
+      : undefined,
+    category: dto.category
+      ? mapCompetitionCategoryDtoToEntity(dto.category)
+      : undefined,
+  };
+}
+
+export interface StrapiCompetitionBatchResponse {
+  id: number;
+  documentId: string;
+  batch: string;
+  codeName: string;
+  batchName: string;
+  batchImage?: StrapiMediaResponse | null;
+  requiredValue?: number;
+}
+
+export function mapCompetitionBatchDtoToEntity(
+  dto: StrapiCompetitionBatchResponse | { id: number; documentId?: string }
+): CompetitionBatchEntity {
+  const full = dto as StrapiCompetitionBatchResponse;
+  const isFull = typeof full.batchName === 'string';
+
+  return {
+    id: dto.id,
+    documentId: dto.documentId ?? '',
+    batch: isFull ? full.batch : 'none',
+    codeName: isFull ? full.codeName : '',
+    batchName: isFull ? full.batchName : '',
+    batchImage: isFull ? mapMediaDtoToEntity(full.batchImage) : undefined,
+    requiredValue: isFull ? full.requiredValue : undefined,
+  };
+}
+
+export interface StrapiCompetitionResultResponse {
+  id: number;
+  documentId: string;
+  order: number;
+  totalPoints: number;
+  competition?: { id: number; documentId: string };
+  model?: StrapiCompetitionModelEntryResponse | { id: number; documentId: string };
+  batch?: StrapiCompetitionBatchResponse | { id: number; documentId?: string } | null;
+}
+
+export function mapCompetitionResultDtoToEntity(
+  dto: StrapiCompetitionResultResponse
+): CompetitionResultEntity {
+  return {
+    id: dto.id,
+    documentId: dto.documentId,
+    order: dto.order ?? 0,
+    totalPoints: dto.totalPoints ?? 0,
+    competition: dto.competition
+      ? { id: dto.competition.id, documentId: dto.competition.documentId }
+      : undefined,
+    model: dto.model
+      ? 'model' in dto.model
+        ? mapCompetitionModelEntryDtoToEntity(dto.model)
+        : { id: dto.model.id, documentId: dto.model.documentId }
+      : undefined,
+    batch: dto.batch ? mapCompetitionBatchDtoToEntity(dto.batch) : null,
+  };
+}
+
+export interface StrapiCompetitionEvaluationResponse {
+  id: number;
+  documentId: string;
+  criteria: string;
+  comments?: string;
+  points: number;
+  reviewer?: {
+    id: number;
+    documentId?: string;
+    username?: string;
+    user?: { id: number; username?: string };
+  };
+  result?: { id: number; documentId: string };
+}
+
+export function mapCompetitionEvaluationDtoToEntity(
+  dto: StrapiCompetitionEvaluationResponse
+): CompetitionEvaluationEntity {
+  return {
+    id: dto.id,
+    documentId: dto.documentId,
+    criteria: dto.criteria,
+    comments: dto.comments ?? undefined,
+    points: dto.points ?? 0,
+    reviewer: dto.reviewer
+      ? {
+          id: dto.reviewer.id,
+          documentId: dto.reviewer.documentId,
+          username: dto.reviewer.user?.username ?? dto.reviewer.username,
+        }
+      : undefined,
+    result: dto.result
+      ? { id: dto.result.id, documentId: dto.result.documentId }
+      : undefined,
   };
 }

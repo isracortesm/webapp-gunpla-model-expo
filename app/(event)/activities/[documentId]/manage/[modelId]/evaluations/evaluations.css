@@ -1,0 +1,233 @@
+@reference "tailwindcss";
+
+.evaluations__container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #f9fafb;
+  padding-bottom: 2em;
+}
+
+.evaluations__model-card {
+  width: calc(100% - 2em);
+  max-width: 600px;
+  margin-top: 5em;
+  display: flex;
+  gap: 16px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.evaluations__model-image-container {
+  position: relative;
+  width: 112px;
+  height: 112px;
+  border-radius: 10px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: #f3f4f6;
+}
+
+.evaluations__model-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.evaluations__model-name {
+  font-size: 17px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.evaluations__model-description {
+  font-size: 13px;
+  color: #6b7280;
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+.evaluations__model-references {
+  margin-top: 4px;
+}
+
+.evaluations__section {
+  width: calc(100% - 2em);
+  max-width: 600px;
+  margin-top: 24px;
+}
+
+.evaluations__section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.evaluations__section-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 0;
+}
+
+.evaluations__edit-btn {
+  padding: 6px 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 9999px;
+  background: #ffffff;
+  color: #374151;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s;
+  white-space: nowrap;
+}
+
+.evaluations__edit-btn:hover {
+  background-color: #f9fafb;
+  border-color: #2563eb;
+  color: #2563eb;
+}
+
+.evaluations__list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.evaluations__item {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 14px 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.evaluations__item-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.evaluations__item-criteria {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.evaluations__item-points {
+  font-size: 13px;
+  font-weight: 700;
+  color: #2563eb;
+  white-space: nowrap;
+}
+
+.evaluations__item-comments {
+  margin-top: 8px;
+  font-size: 13px;
+  color: #6b7280;
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+.evaluations__empty {
+  background: #ffffff;
+  border: 1px dashed #d1d5db;
+  border-radius: 10px;
+  padding: 28px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+}
+
+.evaluations__empty-text {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.evaluations__capture-btn {
+  padding: 10px 24px;
+  border: none;
+  border-radius: 9999px;
+  background: #111827;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.evaluations__capture-btn:hover {
+  background-color: #1f2937;
+  transform: scale(1.02);
+}
+
+.evaluations__result {
+  width: calc(100% - 2em);
+  max-width: 600px;
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 14px 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.evaluations__result-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.evaluations__result-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.evaluations__result-note {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.evaluations__result-value {
+  font-size: 15px;
+  font-weight: 700;
+  color: #2563eb;
+}
+
+.evaluations__judge-average {
+  margin-top: 16px;
+  margin-left: 1em;
+  margin-right: 1em;
+  padding-top: 12px;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.evaluations__judge-average-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.evaluations__judge-average-value {
+  font-size: 15px;
+  font-weight: 700;
+  color: #2563eb;
+}

@@ -290,6 +290,24 @@
   background-color: #d97706;
 }
 
+.activity-detail__results-btn {
+  width: 100%;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border: none;
+  background-color: #2563eb;
+  color: white;
+  margin-top: 8px;
+}
+
+.activity-detail__results-btn:hover {
+  background-color: #1d4ed8;
+}
+
 .activity-detail__full-capacity {
   width: 100%;
   padding: 12px 20px;
