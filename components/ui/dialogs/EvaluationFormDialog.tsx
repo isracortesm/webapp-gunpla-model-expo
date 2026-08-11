@@ -17,7 +17,7 @@ import './EvaluationFormDialog.css';
 interface EvaluationFormDialogProps {
   isOpen: boolean;
   onClose: () => void;
-  onSaved: () => void;
+  onSaved: () => Promise<void> | void;
   category: CompetitionCategoryEntity;
   result: CompetitionResultEntity;
   reviewerDocumentId: string;
@@ -140,7 +140,7 @@ export default function EvaluationFormDialog({
         }
       }
       showSuccess('Evaluaciones guardadas correctamente');
-      onSaved();
+      await onSaved();
       onClose();
     } catch {
       showError('Error al guardar las evaluaciones', 'Error');
