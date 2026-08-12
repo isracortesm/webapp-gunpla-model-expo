@@ -9,7 +9,7 @@ export class CreateCompetitionEvaluationUseCase {
   }
 
   async execute(
-    data: { criteria: string; points: number; comments?: string; result: string; reviewer: string },
+    data: { name: string; criteria: string; points: number; comments?: string; result: string; reviewer: string },
     token?: string
   ): Promise<CompetitionEvaluationEntity> {
     return this.repository.createCompetitionEvaluation(data, token);

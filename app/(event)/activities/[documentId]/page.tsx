@@ -272,16 +272,11 @@ export default function ActivityDetailPage() {
               <h3 className="activity-detail__section-title">Colaboradores</h3>
               <div className="activity-detail__collaborators-list">
                 {activity.collaborators.map((collab) => {
-                  const username = (collab.user as { username?: string })?.username;
-
                   return (
                     <div key={collab.id} className="activity-detail__collaborator-card">
                       <div className="activity-detail__collaborator-info">
                         {collab.description && (
                           <p className="activity-detail__collaborator-description">{collab.description}</p>
-                        )}
-                        {username && (
-                          <p className="activity-detail__collaborator-username">{username}</p>
                         )}
                       </div>
                     </div>

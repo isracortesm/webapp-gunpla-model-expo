@@ -350,12 +350,6 @@
   line-height: 18px;
 }
 
-.activity-detail__collaborator-username {
-  font-size: 14px;
-  font-weight: 600;
-  color: #111827;
-}
-
 .activity-detail__markdown-container {
   border-radius: 16px;
   padding: 24px;

@@ -115,7 +115,7 @@ export async function getCompetitionEvaluationsByResult(
 }
 
 export async function createCompetitionEvaluation(
-  data: { criteria: string; points: number; comments?: string; result: string; reviewer: string },
+  data: { name: string; criteria: string; points: number; comments?: string; result: string; reviewer: string },
   token?: string
 ) {
   return createCompetitionEvaluationUseCase.execute(data, token);

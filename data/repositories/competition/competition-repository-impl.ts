@@ -106,6 +106,7 @@ export class CompetitionRepositoryImpl implements CompetitionRepository {
 
     const response = await http.get<{ data: StrapiCompetitionResponse[] }>('/api/competitions', {
       'populate[categories][populate][criterias]': 'true',
+      'populate[batchLimits][populate][batch]': 'true',
       'filters[activity][documentId][$eq]': activityDocumentId,
     });
 
@@ -212,6 +213,7 @@ export class CompetitionRepositoryImpl implements CompetitionRepository {
     const response = await http.get<{ data: StrapiCompetitionEvaluationResponse[] }>('/api/competition-evaluations', {
       'filters[result][documentId][$eq]': resultDocumentId,
       'filters[reviewer][documentId][$eq]': reviewerDocumentId,
+      'populate[criteria]': 'true',
     });
 
     return response.data.map(mapCompetitionEvaluationDtoToEntity);
@@ -227,6 +229,7 @@ export class CompetitionRepositoryImpl implements CompetitionRepository {
 
     const response = await http.get<{ data: StrapiCompetitionEvaluationResponse[] }>('/api/competition-evaluations', {
       'filters[result][documentId][$eq]': resultDocumentId,
+      'populate[criteria]': 'true',
       'populate[reviewer][populate][user][fields][0]': 'username',
       'populate[reviewer][populate][user][fields][1]': 'email',
     });
@@ -235,7 +238,7 @@ export class CompetitionRepositoryImpl implements CompetitionRepository {
   }
 
   async createCompetitionEvaluation(
-    data: { criteria: string; points: number; comments?: string; result: string; reviewer: string },
+    data: { name: string; criteria: string; points: number; comments?: string; result: string; reviewer: string },
     token?: string
   ): Promise<CompetitionEvaluationEntity> {
     const http = token
@@ -244,6 +247,7 @@ export class CompetitionRepositoryImpl implements CompetitionRepository {
 
     const response = await http.post<{ data: StrapiCompetitionEvaluationResponse }>('/api/competition-evaluations', {
       data: {
+        name: data.name,
         criteria: data.criteria,
         points: data.points,
         comments: data.comments ?? '',

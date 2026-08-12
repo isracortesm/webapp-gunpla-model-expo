@@ -7,13 +7,21 @@ import { Html5QrcodeScanner } from 'html5-qrcode';
 import { useAuth } from '@/features/auth/context/auth-context';
 import { useUnifiedDialog } from '@/features/dialogs/context/unified-dialog-provider';
 import { getActivityParticipants, getActivityByDocumentId, updateActivityCollaboratorMetadata } from '@/features/event-dashboard/service/event-dashboard-service';
-import { getCompetitionModelsByActivity } from '@/features/competition/service/competition-service';
+import { getCompetitionByActivity, getCompetitionModelsByActivity } from '@/features/competition/service/competition-service';
 import { storeActivityCollaboratorRole } from '@/shared/utils/activity-collaborator-storage';
 import type { ActivityParticipantEntity, PopulatedUser, CollaboratorEvaluationMetadata } from '@/domain/entities/event-dashboard/entity';
-import type { CompetitionModelEntryEntity } from '@/domain/entities/competition/entity';
+import type { CompetitionEntity, CompetitionModelEntryEntity, CompetitionBatchEntity } from '@/domain/entities/competition/entity';
 import PageHeader from '@/components/ui/PageHeader';
 import EditParticipantDialog from '@/components/ui/dialogs/EditParticipantDialog';
 import './manage.css';
+
+function batchColorClass(batch: CompetitionBatchEntity | { id: number; documentId: string } | null | undefined) {
+  const value = batch && 'batch' in batch ? batch.batch : '';
+  if (value === 'gold') return 'gold';
+  if (value === 'silver') return 'silver';
+  if (value === 'bronze' || value === 'bronce') return 'bronze';
+  return 'default';
+}
 
 export default function ActivityManagePage() {
   const params = useParams<{ documentId: string }>();
@@ -27,6 +35,7 @@ export default function ActivityManagePage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
   const [isCompetitionActivity, setIsCompetitionActivity] = useState(false);
+  const [competition, setCompetition] = useState<CompetitionEntity | null>(null);
   const [competitionModels, setCompetitionModels] = useState<CompetitionModelEntryEntity[]>([]);
   const [collaboratorMetadata, setCollaboratorMetadata] = useState<CollaboratorEvaluationMetadata | null>(null);
   const [collaboratorDocumentId, setCollaboratorDocumentId] = useState<string | null>(null);
@@ -132,6 +141,12 @@ export default function ActivityManagePage() {
         let models: CompetitionModelEntryEntity[] = [];
         if (activity.category?.type === 'competition') {
           setIsCompetitionActivity(true);
+          try {
+            const competitionData = await getCompetitionByActivity(params.documentId, t);
+            setCompetition(competitionData);
+          } catch {
+            // competition is supplementary; the participants view remains available
+          }
           try {
             models = await getCompetitionModelsByActivity(params.documentId, t);
             setCompetitionModels(models);
@@ -261,6 +276,40 @@ export default function ActivityManagePage() {
           <div className="manage__progress-track">
             <div className="manage__progress-bar" style={{ width: `${progressPercent}%` }} />
           </div>
+        </div>
+      )}
+
+      {isCompetitionActivity && competition?.batchLimits && competition.batchLimits.length > 0 && (
+        <div className="manage__batchlimits">
+          {competition.batchLimits.map((batchLimit, index) => {
+            const pct =
+              batchLimit.limit > 0
+                ? Math.min(100, Math.round((batchLimit.assigned / batchLimit.limit) * 100))
+                : 0;
+            const color = batchColorClass(batchLimit.batch);
+            return (
+              <div key={batchLimit.id ?? index} className="manage__batchlimit">
+                <div className="manage__batchlimit-header">
+                  <div className="manage__batchlimit-title">
+                    <span className="manage__batchlimit-name">
+                      {batchLimit.batch && 'batchName' in batchLimit.batch
+                        ? batchLimit.batch.batchName
+                        : `Lote ${index + 1}`}
+                    </span>
+                  </div>
+                  <span className="manage__batchlimit-count">
+                    {batchLimit.assigned} / {batchLimit.limit}
+                  </span>
+                </div>
+                <div className="manage__batchlimit-track">
+                  <div
+                    className={`manage__batchlimit-bar manage__batchlimit-bar--${color}`}
+                    style={{ width: `${pct}%` }}
+                  />
+                </div>
+              </div>
+            );
+          })}
         </div>
       )}
 

@@ -6,6 +6,7 @@ import {
   CompetitionResultEntity,
   CompetitionEvaluationEntity,
   CompetitionBatchEntity,
+  CompetitionBatchLimitEntity,
 } from '../../../domain/entities/competition/entity';
 import { ImageEntity } from '../../../domain/entities/models/model-entity';
 
@@ -33,6 +34,14 @@ export interface StrapiCompetitionResponse {
   hasPublicResults: boolean;
   modelsLimit: number;
   categories: StrapiCompetitionCategoryResponse[];
+  batchLimits?: StrapiCompetitionBatchLimitResponse[];
+}
+
+export interface StrapiCompetitionBatchLimitResponse {
+  id: number;
+  limit: number;
+  assigned: number;
+  batch?: StrapiCompetitionBatchResponse | { id: number; documentId: string } | null;
 }
 
 function mapCriteriaDtoToEntity(dto: StrapiCriteriaResponse): CriteriaEntity {
@@ -68,6 +77,18 @@ export function mapCompetitionDtoToEntity(
     hasPublicResults: dto.hasPublicResults,
     modelsLimit: dto.modelsLimit,
     categories: dto.categories.map(mapCompetitionCategoryDtoToEntity),
+    batchLimits: (dto.batchLimits ?? []).map(mapCompetitionBatchLimitDtoToEntity),
+  };
+}
+
+function mapCompetitionBatchLimitDtoToEntity(
+  dto: StrapiCompetitionBatchLimitResponse
+): CompetitionBatchLimitEntity {
+  return {
+    id: dto.id,
+    limit: dto.limit ?? 0,
+    assigned: dto.assigned ?? 0,
+    batch: dto.batch ? mapCompetitionBatchDtoToEntity(dto.batch) : null,
   };
 }
 
@@ -178,7 +199,6 @@ export interface StrapiCompetitionBatchResponse {
   id: number;
   documentId: string;
   batch: string;
-  codeName: string;
   batchName: string;
   batchImage?: StrapiMediaResponse | null;
   requiredValue?: number;
@@ -194,7 +214,6 @@ export function mapCompetitionBatchDtoToEntity(
     id: dto.id,
     documentId: dto.documentId ?? '',
     batch: isFull ? full.batch : 'none',
-    codeName: isFull ? full.codeName : '',
     batchName: isFull ? full.batchName : '',
     batchImage: isFull ? mapMediaDtoToEntity(full.batchImage) : undefined,
     requiredValue: isFull ? full.requiredValue : undefined,
@@ -234,7 +253,8 @@ export function mapCompetitionResultDtoToEntity(
 export interface StrapiCompetitionEvaluationResponse {
   id: number;
   documentId: string;
-  criteria: string;
+  name: string;
+  criteria?: StrapiCriteriaResponse | { id: number; documentId: string } | null;
   comments?: string;
   points: number;
   reviewer?: {
@@ -246,13 +266,23 @@ export interface StrapiCompetitionEvaluationResponse {
   result?: { id: number; documentId: string };
 }
 
+function mapCriteriaRelationToEntity(
+  dto: StrapiCompetitionEvaluationResponse['criteria']
+): CriteriaEntity | { id: number; documentId: string } | undefined {
+  if (!dto) return undefined;
+  const full = dto as StrapiCriteriaResponse;
+  const isFull = typeof full.name === 'string';
+  return isFull ? mapCriteriaDtoToEntity(full) : { id: full.id, documentId: full.documentId };
+}
+
 export function mapCompetitionEvaluationDtoToEntity(
   dto: StrapiCompetitionEvaluationResponse
 ): CompetitionEvaluationEntity {
   return {
     id: dto.id,
     documentId: dto.documentId,
-    criteria: dto.criteria,
+    name: dto.name,
+    criteria: mapCriteriaRelationToEntity(dto.criteria),
     comments: dto.comments ?? undefined,
     points: dto.points ?? 0,
     reviewer: dto.reviewer
