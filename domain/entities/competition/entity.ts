@@ -22,6 +22,14 @@ export interface CompetitionEntity {
   hasPublicResults: boolean;
   modelsLimit: number;
   categories: CompetitionCategoryEntity[];
+  batchLimits?: CompetitionBatchLimitEntity[];
+}
+
+export interface CompetitionBatchLimitEntity {
+  id: number;
+  limit: number;
+  assigned: number;
+  batch?: CompetitionBatchEntity | { id: number; documentId: string } | null;
 }
 
 export interface CompetitionModelEntity {
@@ -44,7 +52,6 @@ export interface CompetitionBatchEntity {
   id: number;
   documentId: string;
   batch: string;
-  codeName: string;
   batchName: string;
   batchImage?: ImageEntity | null;
   requiredValue?: number;
@@ -63,7 +70,8 @@ export interface CompetitionResultEntity {
 export interface CompetitionEvaluationEntity {
   id: number;
   documentId: string;
-  criteria: string;
+  name: string;
+  criteria?: CriteriaEntity | { id: number; documentId: string } | null;
   comments?: string;
   points: number;
   reviewer?: { id: number; documentId?: string; username?: string };

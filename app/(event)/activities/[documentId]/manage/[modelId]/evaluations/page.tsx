@@ -273,7 +273,7 @@ export default function ActivityModelEvaluationsPage() {
             {evaluations.map((evaluation) => (
               <div key={evaluation.documentId} className="evaluations__item">
                 <div className="evaluations__item-header">
-                  <p className="evaluations__item-criteria">{evaluation.criteria}</p>
+                  <p className="evaluations__item-criteria">{evaluation.name}</p>
                   <span className="evaluations__item-points">{evaluation.points} pts</span>
                 </div>
                 {evaluation.comments && (

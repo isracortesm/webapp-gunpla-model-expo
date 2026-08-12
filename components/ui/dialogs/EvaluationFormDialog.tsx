@@ -44,7 +44,7 @@ export default function EvaluationFormDialog({
   const [rows, setRows] = useState<Record<string, CriteriaRow>>(() => {
     const nextRows: Record<string, CriteriaRow> = {};
     for (const criteria of category.criterias) {
-      const existing = evaluations.find((e) => e.criteria === criteria.name);
+      const existing = evaluations.find((e) => e.name === criteria.name);
       nextRows[String(criteria.id)] = {
         points: existing ? String(existing.points) : '',
         comments: existing?.comments ?? '',
@@ -77,19 +77,20 @@ export default function EvaluationFormDialog({
   const handleSubmit = async () => {
     if (submitting) return;
 
-    const operations: { documentId?: string; criteria: string; points: number; comments: string }[] = [];
+    const operations: { documentId?: string; name: string; criteriaDocumentId: string; points: number; comments: string }[] = [];
 
     for (const criteria of category.criterias) {
       const row = rows[String(criteria.id)];
       const rawPoints = row?.points ?? '';
       const comments = row?.comments ?? '';
-      const existing = evaluations.find((e) => e.criteria === criteria.name);
+      const existing = evaluations.find((e) => e.name === criteria.name);
 
       if (rawPoints.trim() === '') {
         if (existing) {
           operations.push({
             documentId: existing.documentId,
-            criteria: criteria.name,
+            name: criteria.name,
+            criteriaDocumentId: criteria.documentId,
             points: 0,
             comments,
           });
@@ -105,7 +106,8 @@ export default function EvaluationFormDialog({
 
       operations.push({
         documentId: existing?.documentId,
-        criteria: criteria.name,
+        name: criteria.name,
+        criteriaDocumentId: criteria.documentId,
         points,
         comments,
       });
@@ -129,7 +131,8 @@ export default function EvaluationFormDialog({
         } else {
           await createCompetitionEvaluation(
             {
-              criteria: op.criteria,
+              name: op.name,
+              criteria: op.criteriaDocumentId,
               points: op.points,
               comments: op.comments,
               result: result.documentId,

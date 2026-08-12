@@ -48,7 +48,7 @@ export interface CompetitionRepository {
     token?: string
   ): Promise<CompetitionEvaluationEntity[]>;
   createCompetitionEvaluation(
-    data: { criteria: string; points: number; comments?: string; result: string; reviewer: string },
+    data: { name: string; criteria: string; points: number; comments?: string; result: string; reviewer: string },
     token?: string
   ): Promise<CompetitionEvaluationEntity>;
   updateCompetitionEvaluation(

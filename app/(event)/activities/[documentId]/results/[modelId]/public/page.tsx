@@ -177,7 +177,7 @@ export default function ActivityModelPublicResultPage() {
               </div>
               <div className="public__evaluations">
                 {groupedEvaluations.map((group, index) => {
-                  const judgeName = group.reviewer?.username ?? `Juez ${index + 1}`;
+                  const judgeName = `Juez ${index + 1}`;
                   return (
                     <div key={group.reviewer?.id ?? index} className="public__judge-group">
                       <p className="public__judge-name">{judgeName}</p>
@@ -185,7 +185,7 @@ export default function ActivityModelPublicResultPage() {
                         {group.items.map((evaluation) => (
                           <div key={evaluation.documentId} className="public__evaluation-item">
                             <div className="public__evaluation-header">
-                              <p className="public__evaluation-criteria">{evaluation.criteria}</p>
+                              <p className="public__evaluation-criteria">{evaluation.name}</p>
                               <span className="public__evaluation-points">{evaluation.points} pts</span>
                             </div>
                             {evaluation.comments && (
