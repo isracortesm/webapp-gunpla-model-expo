@@ -83,6 +83,10 @@ export default function ModelDetailPage() {
       <div className="detail-page__card-wrapper">
         <ModelDetailCard model={model} />
       </div>
+      <div className="detail-page__model-number">
+        <span className="detail-page__model-number__label">Modelo N°</span>
+        <span className="detail-page__model-number__value">{model.id}</span>
+      </div>
       <div className="detail-page__delete-wrapper">
         <button
           onClick={handleDelete}

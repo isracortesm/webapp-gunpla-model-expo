@@ -13,6 +13,9 @@ import {
   deleteActivityParticipant,
 } from '@/features/event-dashboard/service/event-dashboard-service';
 import type { ActivityEntity } from '@/domain/entities/event-dashboard/entity';
+import { getCompetitionByActivity } from '@/features/competition/service/competition-service';
+import type { CompetitionEntity } from '@/domain/entities/competition/entity';
+import { storeActivityCollaboratorRole, clearActivityCollaboratorRole } from '@/shared/utils/activity-collaborator-storage';
 import PageHeader from '@/components/ui/PageHeader';
 import './detail.css';
 
@@ -23,6 +26,7 @@ export default function ActivityDetailPage() {
   const token = typeof window !== 'undefined' ? localStorage.getItem('auth_token') || undefined : undefined;
   const { showLoading, hideLoading, showError, showConfirmation, showSuccess } = useUnifiedDialog();
   const [activity, setActivity] = useState<ActivityEntity | null>(null);
+  const [competition, setCompetition] = useState<CompetitionEntity | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isRegistered, setIsRegistered] = useState(false);
   const [participantDocId, setParticipantDocId] = useState<string | null>(null);
@@ -44,6 +48,15 @@ export default function ActivityDetailPage() {
       try {
         const data = await getActivityByDocumentId(params.documentId);
         setActivity(data);
+
+        if (data.category?.type === 'competition') {
+          try {
+            const competitionData = await getCompetitionByActivity(params.documentId);
+            setCompetition(competitionData);
+          } catch {
+            // competencia no disponible; el botón de resultados se oculta
+          }
+        }
       } catch {
         showError('Error al cargar la actividad', 'Error');
       } finally {
@@ -73,6 +86,20 @@ export default function ActivityDetailPage() {
       setIsChecking(false);
     }
   }, [activity, user, checkRegistration]);
+
+  useEffect(() => {
+    if (!activity || !user) return;
+
+    const collaborator = activity.collaborators?.find(
+      (c) => (c.user as { documentId?: string })?.documentId === user.documentId,
+    );
+
+    if (collaborator) {
+      storeActivityCollaboratorRole(activity.documentId, collaborator.role);
+    } else {
+      clearActivityCollaboratorRole(activity.documentId);
+    }
+  }, [activity, user]);
 
   const handleRegister = async () => {
     if (!activity || !user) return;
@@ -231,6 +258,11 @@ export default function ActivityDetailPage() {
                     Gestionar actividad
                   </button>
                 )}
+                {competition?.hasPublicResults === true && (
+                  <button onClick={() => router.push(`/activities/${params.documentId}/results`)} className="activity-detail__results-btn">
+                    Ver resultados
+                  </button>
+                )}
               </div>
             </section>
           )}
@@ -240,16 +272,11 @@ export default function ActivityDetailPage() {
               <h3 className="activity-detail__section-title">Colaboradores</h3>
               <div className="activity-detail__collaborators-list">
                 {activity.collaborators.map((collab) => {
-                  const username = (collab.user as { username?: string })?.username;
-
                   return (
                     <div key={collab.id} className="activity-detail__collaborator-card">
                       <div className="activity-detail__collaborator-info">
                         {collab.description && (
                           <p className="activity-detail__collaborator-description">{collab.description}</p>
-                        )}
-                        {username && (
-                          <p className="activity-detail__collaborator-username">{username}</p>
                         )}
                       </div>
                     </div>

@@ -64,6 +64,21 @@ export interface CollaboratorEntity {
   role: string;
   description?: string;
   user?: unknown;
+  metadata?: CollaboratorEvaluationMetadata;
+}
+
+export interface CollaboratorEvaluationItem {
+  modelId: number;
+  evaluationId: number;
+  status: 'IN_PROGRESS' | 'COMPLETED';
+}
+
+export interface CollaboratorEvaluationMetadata {
+  summary: {
+    totalAssigned: number;
+    totalCompleted: number;
+  };
+  items: CollaboratorEvaluationItem[];
 }
 
 export interface SocialNetworkItem {

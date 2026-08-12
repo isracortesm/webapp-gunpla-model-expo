@@ -9,9 +9,11 @@ import { CheckActivityRegistrationUseCase } from "@/domain/usecases/event-dashbo
 import { GetParticipantDetailUseCase } from "@/domain/usecases/event-dashboard/get-participant-detail-usecase";
 import { GetActivityParticipantsUseCase } from "@/domain/usecases/event-dashboard/get-activity-participants-usecase";
 import { UpdateActivityParticipantUseCase } from "@/domain/usecases/event-dashboard/update-activity-participant-usecase";
+import { UpdateActivityCollaboratorMetadataUseCase } from "@/domain/usecases/event-dashboard/update-activity-collaborator-metadata-usecase";
 import { GetUserActivitiesUseCase } from "@/domain/usecases/event-dashboard/get-user-activities-usecase";
 import { EventDashboardRepositoryImpl } from "@/data/repositories/event-dashboard/event-dashboard-repository-impl";
 import { HttpService } from "@/data/services/http-client";
+import type { CollaboratorEvaluationMetadata } from "@/domain/entities/event-dashboard/entity";
 
 const httpService = new HttpService();
 const repository = new EventDashboardRepositoryImpl(httpService);
@@ -26,6 +28,7 @@ const checkActivityRegistrationUseCase = new CheckActivityRegistrationUseCase(re
 const getParticipantDetailUseCase = new GetParticipantDetailUseCase(repository);
 const getActivityParticipantsUseCase = new GetActivityParticipantsUseCase(repository);
 const updateActivityParticipantUseCase = new UpdateActivityParticipantUseCase(repository);
+const updateActivityCollaboratorMetadataUseCase = new UpdateActivityCollaboratorMetadataUseCase(repository);
 const getUserActivitiesUseCase = new GetUserActivitiesUseCase(repository);
 
 export async function getEvent(eventCode: string) {
@@ -82,6 +85,14 @@ export async function updateActivityParticipant(
   token: string
 ) {
   return updateActivityParticipantUseCase.execute(documentId, data, token);
+}
+
+export async function updateActivityCollaboratorMetadata(
+  documentId: string,
+  metadata: CollaboratorEvaluationMetadata,
+  token: string
+) {
+  return updateActivityCollaboratorMetadataUseCase.execute(documentId, metadata, token);
 }
 
 export async function getUserActivities(

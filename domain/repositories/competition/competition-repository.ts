@@ -1,4 +1,4 @@
-import { CompetitionEntity, CompetitionModelEntity, CompetitionModelEntryEntity } from '../../../domain/entities/competition/entity';
+import { CompetitionEntity, CompetitionModelEntity, CompetitionModelEntryEntity, CompetitionResultEntity, CompetitionEvaluationEntity } from '../../../domain/entities/competition/entity';
 
 export interface CompetitionRepository {
   getCompetitions(token?: string): Promise<CompetitionEntity[]>;
@@ -12,4 +12,48 @@ export interface CompetitionRepository {
     userId: number,
     token?: string
   ): Promise<CompetitionModelEntryEntity[]>;
+  getCompetitionModelsByActivity(
+    activityDocumentId: string,
+    token?: string
+  ): Promise<CompetitionModelEntryEntity[]>;
+  getCompetitionByActivity(
+    activityDocumentId: string,
+    token?: string
+  ): Promise<CompetitionEntity>;
+  getCompetitionResult(
+    competitionDocumentId: string,
+    modelDocumentId: string,
+    token?: string
+  ): Promise<CompetitionResultEntity | null>;
+  getCompetitionResultByModel(
+    competitionDocumentId: string,
+    modelDocumentId: string,
+    token?: string
+  ): Promise<CompetitionResultEntity | null>;
+  getCompetitionResultsByCompetition(
+    competitionDocumentId: string,
+    token?: string
+  ): Promise<CompetitionResultEntity[]>;
+  createCompetitionResult(
+    data: { competition: string; model: string; order?: number; totalPoints?: number },
+    token?: string
+  ): Promise<CompetitionResultEntity>;
+  getCompetitionEvaluationsByResultAndReviewer(
+    resultDocumentId: string,
+    reviewerDocumentId: string,
+    token?: string
+  ): Promise<CompetitionEvaluationEntity[]>;
+  getCompetitionEvaluationsByResult(
+    resultDocumentId: string,
+    token?: string
+  ): Promise<CompetitionEvaluationEntity[]>;
+  createCompetitionEvaluation(
+    data: { name: string; criteria: string; points: number; comments?: string; result: string; reviewer: string },
+    token?: string
+  ): Promise<CompetitionEvaluationEntity>;
+  updateCompetitionEvaluation(
+    documentId: string,
+    data: { points: number; comments?: string },
+    token?: string
+  ): Promise<CompetitionEvaluationEntity>;
 }
