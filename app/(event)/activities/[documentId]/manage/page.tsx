@@ -34,6 +34,8 @@ export default function ActivityManagePage() {
   const [selectedParticipant, setSelectedParticipant] = useState<ActivityParticipantEntity | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
+  const [isModelSearchOpen, setIsModelSearchOpen] = useState(false);
+  const [modelSearchInput, setModelSearchInput] = useState('');
   const [isCompetitionActivity, setIsCompetitionActivity] = useState(false);
   const [competition, setCompetition] = useState<CompetitionEntity | null>(null);
   const [competitionModels, setCompetitionModels] = useState<CompetitionModelEntryEntity[]>([]);
@@ -211,6 +213,16 @@ export default function ActivityManagePage() {
     return map;
   }, [collaboratorMetadata]);
 
+  const eligibleModels = useMemo(() => {
+    const paidUserIds = new Set(
+      participants
+        .filter((p) => p.statusName === 'paid')
+        .map((p) => (p.user as PopulatedUser | undefined)?.id)
+        .filter((id): id is number => id != null),
+    );
+    return competitionModels.filter((m) => paidUserIds.has(m.user?.id ?? -1));
+  }, [participants, competitionModels]);
+
   const progressPercent =
     collaboratorMetadata && collaboratorMetadata.summary.totalAssigned > 0
       ? Math.min(
@@ -236,6 +248,24 @@ export default function ActivityManagePage() {
       showError('Participante no encontrado', 'Error');
     }
   }, [participants, showError]);
+
+  const handleModelSearch = useCallback(() => {
+    const num = Number(modelSearchInput.trim());
+    if (!modelSearchInput.trim() || Number.isNaN(num)) {
+      showError('Ingresa un número de modelo válido', 'Error');
+      return;
+    }
+    const match = eligibleModels.find((entry) => entry.model.id === num);
+    if (match) {
+      setModelSearchInput('');
+      setIsModelSearchOpen(false);
+      router.push(
+        `/activities/${params.documentId}/manage/${match.model.documentId}/evaluations`,
+      );
+    } else {
+      showError('Modelo no encontrado', 'Error');
+    }
+  }, [modelSearchInput, eligibleModels, router, params.documentId, showError]);
 
   useEffect(() => {
     if (!isScanning) return;
@@ -429,15 +459,53 @@ export default function ActivityManagePage() {
         token={token}
       />
 
-      <button className="manage__fab" onClick={() => setIsScanning(true)}>
-        <svg className="manage__fab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <rect x="3" y="3" width="18" height="18" rx="2" />
-          <rect x="7" y="7" width="4" height="4" />
-          <rect x="13" y="7" width="4" height="4" />
-          <rect x="7" y="13" width="4" height="4" />
-          <rect x="13" y="13" width="4" height="4" />
-        </svg>
-      </button>
+      <div className="manage__fabs">
+        {isCompetitionActivity && (
+          <button className="manage__fab" onClick={() => setIsModelSearchOpen(true)}>
+            <Image
+              src="/search_icon.svg"
+              alt="Buscar modelo"
+              width={24}
+              height={24}
+              className="manage__fab-icon"
+            />
+          </button>
+        )}
+        <button className="manage__fab" onClick={() => setIsScanning(true)}>
+          <svg className="manage__fab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2" />
+            <rect x="7" y="7" width="4" height="4" />
+            <rect x="13" y="7" width="4" height="4" />
+            <rect x="7" y="13" width="4" height="4" />
+            <rect x="13" y="13" width="4" height="4" />
+          </svg>
+        </button>
+      </div>
+
+      {isModelSearchOpen && (
+        <div className="manage__scanner-overlay" onClick={() => setIsModelSearchOpen(false)}>
+          <div className="manage__scanner-modal" onClick={(e) => e.stopPropagation()}>
+            <h3 className="manage__scanner-title">Buscar modelo por número</h3>
+            <input
+              type="number"
+              className="manage__search-input"
+              placeholder="N° de modelo"
+              value={modelSearchInput}
+              onChange={(e) => setModelSearchInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') handleModelSearch();
+              }}
+              autoFocus
+            />
+            <button className="manage__search-btn" onClick={handleModelSearch}>
+              Buscar
+            </button>
+            <button className="manage__scanner-cancel" onClick={() => setIsModelSearchOpen(false)}>
+              Cancelar
+            </button>
+          </div>
+        </div>
+      )}
 
       {isScanning && (
         <div className="manage__scanner-overlay" onClick={() => { setIsScanning(false); }}>
