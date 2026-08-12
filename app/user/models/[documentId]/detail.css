@@ -64,6 +64,40 @@
   margin-top: 5rem;
 }
 
+.detail-page__model-number {
+  width: 100%;
+  max-width: 28rem;
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  @apply
+    rounded-md
+    border
+    border-[#383838]/20
+    bg-white
+    py-4
+    shadow-sm;
+}
+
+.detail-page__model-number__label {
+  @apply
+    text-sm
+    font-semibold
+    text-gray-500
+    uppercase
+    tracking-wide;
+}
+
+.detail-page__model-number__value {
+  @apply
+    text-5xl
+    font-black
+    leading-none
+    text-[#383838];
+}
+
 .detail-page__delete-wrapper {
   width: 100%;
   max-width: 28rem;
