@@ -416,7 +416,7 @@ export default function ActivityManagePage() {
                                       )}
                                     </div>
                                     <div className="manage__model-info">
-                                      <p className="manage__model-name">{entry.model.name}</p>
+                                      <p className="manage__model-name">No. {entry.model.id} {entry.model.name}</p>
                                       <span className="manage__model-evaluate">Evaluar →</span>
                                     </div>
                                     {status && (

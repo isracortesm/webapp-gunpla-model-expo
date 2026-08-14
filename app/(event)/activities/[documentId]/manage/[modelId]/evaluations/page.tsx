@@ -236,7 +236,7 @@ export default function ActivityModelEvaluationsPage() {
             )}
           </div>
           <div className="evaluations__model-info">
-            <h2 className="evaluations__model-name">{model.name}</h2>
+            <h2 className="evaluations__model-name">No. {model.id} {model.name}</h2>
             {model.description && (
               <p className="evaluations__model-description">{model.description}</p>
             )}
