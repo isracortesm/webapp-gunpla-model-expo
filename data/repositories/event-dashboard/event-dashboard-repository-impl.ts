@@ -206,24 +206,38 @@ export class EventDashboardRepositoryImpl implements EventDashboardRepository {
   ): Promise<PaginatedResult<ActivityParticipantEntity>> {
     const http = new HttpService(process.env.NEXT_PUBLIC_HOST_URI || '', token);
 
-    const response = await http.get<{
-      data: ActivityParticipantEntity[];
-      meta: { pagination: { page: number; pageSize: number; pageCount: number; total: number } };
-    }>('/api/activity-participants', {
-      'populate[user][fields][0]': 'username',
-      'populate[user][fields][1]': 'email',
-      'populate[user][fields][2]': 'documentId',
-      'filters[activity][documentId][$eq]': activityDocumentId,
-    });
+    const pageSize = 100;
+    let page = 1;
+    let data: ActivityParticipantEntity[] = [];
+    let pagination = { page: 1, pageSize, pageCount: 1, total: 0 };
+
+    while (true) {
+      const response = await http.get<{
+        data: ActivityParticipantEntity[];
+        meta: { pagination: { page: number; pageSize: number; pageCount: number; total: number } };
+      }>('/api/activity-participants', {
+        'populate[user][fields][0]': 'username',
+        'populate[user][fields][1]': 'email',
+        'populate[user][fields][2]': 'documentId',
+        'filters[activity][documentId][$eq]': activityDocumentId,
+        'pagination[page]': String(page),
+        'pagination[pageSize]': String(pageSize),
+      });
+
+      data = data.concat(response.data);
+      pagination = response.meta.pagination;
+      if (page >= pagination.pageCount || data.length >= pagination.total) break;
+      page += 1;
+    }
 
     return {
-      data: response.data,
+      data,
       meta: {
         pagination: {
-          page: response.meta.pagination.page,
-          pageSize: response.meta.pagination.pageSize,
-          pageCount: response.meta.pagination.pageCount,
-          total: response.meta.pagination.total,
+          page: pagination.page,
+          pageSize: pagination.pageSize,
+          pageCount: pagination.pageCount,
+          total: pagination.total,
         },
       },
     };

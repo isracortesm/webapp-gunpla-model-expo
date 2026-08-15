@@ -38,7 +38,7 @@ export default function FloatingToolbar({ onProfileClick, showNavLinks = false, 
       </button>
 
       {showNavLinks && (
-        <div className="flex items-center gap-2">
+        <div className="floating-toolbar__nav">
           {NAV_ITEMS.map((item) => {
             const isActive = pathname === item.href;
 

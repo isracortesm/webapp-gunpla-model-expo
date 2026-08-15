@@ -68,13 +68,30 @@ export class CompetitionRepositoryImpl implements CompetitionRepository {
       ? new HttpService(process.env.NEXT_PUBLIC_HOST_URI || '', token)
       : this.httpService;
 
-    const response = await http.get<{ data: StrapiCompetitionModelEntryResponse[] }>('/api/competition-models', {
-      'populate[model][populate][image]': 'true',
-      'filters[competition][id][$eq]': String(competitionId),
-      'filters[user][id][$eq]': String(userId),
-    });
+    const pageSize = 100;
+    let page = 1;
+    let entries: CompetitionModelEntryEntity[] = [];
 
-    return response.data.map(mapCompetitionModelEntryDtoToEntity);
+    while (true) {
+      const response = await http.get<{
+        data: StrapiCompetitionModelEntryResponse[];
+        meta: { pagination: { page: number; pageSize: number; pageCount: number; total: number } };
+      }>('/api/competition-models', {
+        'populate[model][populate][image]': 'true',
+        'filters[competition][id][$eq]': String(competitionId),
+        'filters[user][id][$eq]': String(userId),
+        'pagination[page]': String(page),
+        'pagination[pageSize]': String(pageSize),
+      });
+
+      entries = entries.concat(response.data.map(mapCompetitionModelEntryDtoToEntity));
+
+      const pagination = response.meta?.pagination;
+      if (!pagination || page >= pagination.pageCount || entries.length >= pagination.total) break;
+      page += 1;
+    }
+
+    return entries;
   }
 
   async getCompetitionModelsByActivity(
@@ -85,15 +102,32 @@ export class CompetitionRepositoryImpl implements CompetitionRepository {
       ? new HttpService(process.env.NEXT_PUBLIC_HOST_URI || '', token)
       : this.httpService;
 
-    const response = await http.get<{ data: StrapiCompetitionModelEntryResponse[] }>('/api/competition-models', {
-      'populate[model][populate][image]': 'true',
-      'populate[user][fields][0]': 'username',
-      'populate[user][fields][1]': 'email',
-      'populate[category][populate][criterias]': 'true',
-      'filters[competition][activity][documentId][$eq]': activityDocumentId,
-    });
+    const pageSize = 100;
+    let page = 1;
+    let entries: CompetitionModelEntryEntity[] = [];
 
-    return response.data.map(mapCompetitionModelEntryDtoToEntity);
+    while (true) {
+      const response = await http.get<{
+        data: StrapiCompetitionModelEntryResponse[];
+        meta: { pagination: { page: number; pageSize: number; pageCount: number; total: number } };
+      }>('/api/competition-models', {
+        'populate[model][populate][image]': 'true',
+        'populate[user][fields][0]': 'username',
+        'populate[user][fields][1]': 'email',
+        'populate[category][populate][criterias]': 'true',
+        'filters[competition][activity][documentId][$eq]': activityDocumentId,
+        'pagination[page]': String(page),
+        'pagination[pageSize]': String(pageSize),
+      });
+
+      entries = entries.concat(response.data.map(mapCompetitionModelEntryDtoToEntity));
+
+      const pagination = response.meta?.pagination;
+      if (!pagination || page >= pagination.pageCount || entries.length >= pagination.total) break;
+      page += 1;
+    }
+
+    return entries;
   }
 
   async getCompetitionByActivity(
