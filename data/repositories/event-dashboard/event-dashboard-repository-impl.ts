@@ -212,6 +212,7 @@ export class EventDashboardRepositoryImpl implements EventDashboardRepository {
     }>('/api/activity-participants', {
       'populate[user][fields][0]': 'username',
       'populate[user][fields][1]': 'email',
+      'populate[user][fields][2]': 'documentId',
       'filters[activity][documentId][$eq]': activityDocumentId,
     });
 

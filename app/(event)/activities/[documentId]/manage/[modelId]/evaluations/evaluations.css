@@ -172,6 +172,36 @@
   transform: scale(1.02);
 }
 
+.evaluations__model-number {
+  width: calc(100% - 2em);
+  max-width: 600px;
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  background: #ffffff;
+  border: 1px solid rgba(56, 56, 56, 0.2);
+  border-radius: 6px;
+  padding: 16px 0;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.evaluations__model-number__label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.evaluations__model-number__value {
+  font-size: 48px;
+  font-weight: 900;
+  line-height: 1;
+  color: #383838;
+}
+
 .evaluations__result {
   width: calc(100% - 2em);
   max-width: 600px;

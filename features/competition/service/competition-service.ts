@@ -12,6 +12,8 @@ import { GetCompetitionEvaluationsByResultAndReviewerUseCase } from "@/domain/us
 import { GetCompetitionEvaluationsByResultUseCase } from "@/domain/usecases/competition/get-competition-evaluations-by-result-usecase";
 import { CreateCompetitionEvaluationUseCase } from "@/domain/usecases/competition/create-competition-evaluation-usecase";
 import { UpdateCompetitionEvaluationUseCase } from "@/domain/usecases/competition/update-competition-evaluation-usecase";
+import { SendResultEmailUseCase } from "@/domain/usecases/competition/send-result-email-usecase";
+import { SendResultEmailsToAllUseCase } from "@/domain/usecases/competition/send-result-emails-to-all-usecase";
 import { CompetitionRepositoryImpl } from "@/data/repositories/competition/competition-repository-impl";
 import { HttpService } from "@/data/services/http-client";
 
@@ -31,6 +33,8 @@ const getCompetitionEvaluationsByResultAndReviewerUseCase = new GetCompetitionEv
 const getCompetitionEvaluationsByResultUseCase = new GetCompetitionEvaluationsByResultUseCase(repository);
 const createCompetitionEvaluationUseCase = new CreateCompetitionEvaluationUseCase(repository);
 const updateCompetitionEvaluationUseCase = new UpdateCompetitionEvaluationUseCase(repository);
+const sendResultEmailUseCase = new SendResultEmailUseCase(repository);
+const sendResultEmailsToAllUseCase = new SendResultEmailsToAllUseCase(repository);
 
 export async function getCompetitions(token?: string) {
   return getCompetitionsUseCase.execute(token);
@@ -127,4 +131,18 @@ export async function updateCompetitionEvaluation(
   token?: string
 ) {
   return updateCompetitionEvaluationUseCase.execute(documentId, data, token);
+}
+
+export async function sendResultEmail(
+  data: { participant: string; competition: string; cc?: string },
+  token?: string
+) {
+  return sendResultEmailUseCase.execute(data, token);
+}
+
+export async function sendResultEmailsToAll(
+  data: { competition: string },
+  token?: string
+) {
+  return sendResultEmailsToAllUseCase.execute(data, token);
 }
