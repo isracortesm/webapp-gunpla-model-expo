@@ -236,7 +236,7 @@ export default function ActivityModelEvaluationsPage() {
             )}
           </div>
           <div className="evaluations__model-info">
-            <h2 className="evaluations__model-name">No. {model.id} {model.name}</h2>
+            <h2 className="evaluations__model-name">{model.name}</h2>
             {model.description && (
               <p className="evaluations__model-description">{model.description}</p>
             )}
@@ -246,6 +246,13 @@ export default function ActivityModelEvaluationsPage() {
               </div>
             )}
           </div>
+        </div>
+      )}
+
+      {model && (
+        <div className="evaluations__model-number">
+          <span className="evaluations__model-number__label">Modelo N°</span>
+          <span className="evaluations__model-number__value">{model.id}</span>
         </div>
       )}
 
