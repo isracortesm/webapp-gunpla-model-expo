@@ -62,6 +62,7 @@ export interface StrapiActivityResponse {
   endDate: string;
   capacity?: number;
   participantsCount?: number;
+  hasActiveRegister?: boolean;
   image?: StrapiMediaResponse;
   category?: StrapiCategoryResponse;
   collaborators?: StrapiCollaboratorResponse[];
@@ -162,6 +163,7 @@ export function mapActivityDtoToEntity(dto: StrapiActivityResponse): ActivityEnt
     endDate: dto.endDate,
     capacity: dto.capacity,
     participantsCount: dto.participantsCount,
+    hasActiveRegister: dto.hasActiveRegister,
     image,
     category,
     collaborators: dto.collaborators?.map((c) => ({

@@ -34,6 +34,14 @@ export interface CompetitionRepository {
     competitionDocumentId: string,
     token?: string
   ): Promise<CompetitionResultEntity[]>;
+  sendResultEmail(
+    data: { participant: string; competition: string; cc?: string },
+    token?: string
+  ): Promise<{ sentTo: string; resultsCount: number }>;
+  sendResultEmailsToAll(
+    data: { competition: string },
+    token?: string
+  ): Promise<{ total: number; sent: number; failed: number; errors: { participant?: string; error: string }[] }>;
   createCompetitionResult(
     data: { competition: string; model: string; order?: number; totalPoints?: number },
     token?: string
