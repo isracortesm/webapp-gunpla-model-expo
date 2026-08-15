@@ -53,6 +53,7 @@ export interface ActivityEntity {
   endDate: string;
   capacity?: number;
   participantsCount?: number;
+  hasActiveRegister?: boolean;
   image?: MediaEntity;
   category?: CategoryEntity;
   collaborators?: CollaboratorEntity[];
@@ -91,6 +92,7 @@ export interface SocialNetworkItem {
 
 export type PopulatedUser = {
   id: number;
+  documentId?: string;
   username: string;
   email: string;
 };

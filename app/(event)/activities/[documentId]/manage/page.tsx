@@ -7,7 +7,7 @@ import { Html5QrcodeScanner } from 'html5-qrcode';
 import { useAuth } from '@/features/auth/context/auth-context';
 import { useUnifiedDialog } from '@/features/dialogs/context/unified-dialog-provider';
 import { getActivityParticipants, getActivityByDocumentId, updateActivityCollaboratorMetadata } from '@/features/event-dashboard/service/event-dashboard-service';
-import { getCompetitionByActivity, getCompetitionModelsByActivity } from '@/features/competition/service/competition-service';
+import { getCompetitionByActivity, getCompetitionModelsByActivity, sendResultEmail, sendResultEmailsToAll } from '@/features/competition/service/competition-service';
 import { storeActivityCollaboratorRole } from '@/shared/utils/activity-collaborator-storage';
 import type { ActivityParticipantEntity, PopulatedUser, CollaboratorEvaluationMetadata } from '@/domain/entities/event-dashboard/entity';
 import type { CompetitionEntity, CompetitionModelEntryEntity, CompetitionBatchEntity } from '@/domain/entities/competition/entity';
@@ -27,7 +27,7 @@ export default function ActivityManagePage() {
   const params = useParams<{ documentId: string }>();
   const router = useRouter();
   const { user, isAuthReady } = useAuth();
-  const { showLoading, hideLoading, showError } = useUnifiedDialog();
+  const { showLoading, hideLoading, showError, showConfirmation, showSuccess } = useUnifiedDialog();
   const [participants, setParticipants] = useState<ActivityParticipantEntity[]>([]);
   const [isReady, setIsReady] = useState(false);
   const token = typeof window !== 'undefined' ? localStorage.getItem('auth_token') || '' : '';
@@ -36,6 +36,8 @@ export default function ActivityManagePage() {
   const [isScanning, setIsScanning] = useState(false);
   const [isModelSearchOpen, setIsModelSearchOpen] = useState(false);
   const [modelSearchInput, setModelSearchInput] = useState('');
+  const [isEmailDialogOpen, setIsEmailDialogOpen] = useState(false);
+  const [emailInput, setEmailInput] = useState('');
   const [isCompetitionActivity, setIsCompetitionActivity] = useState(false);
   const [competition, setCompetition] = useState<CompetitionEntity | null>(null);
   const [competitionModels, setCompetitionModels] = useState<CompetitionModelEntryEntity[]>([]);
@@ -267,6 +269,67 @@ export default function ActivityManagePage() {
     }
   }, [modelSearchInput, eligibleModels, router, params.documentId, showError]);
 
+  const handleSendResultsToAll = useCallback(() => {
+    if (!competition) return;
+    showConfirmation(
+      'Enviar resultados',
+      '¿Enviar los resultados por correo a todos los participantes?',
+      async () => {
+        showLoading('Enviando correos...');
+        try {
+          const result = await sendResultEmailsToAll({ competition: competition.documentId }, token);
+          const message =
+            result.failed > 0
+              ? `Resultados enviados: ${result.sent} de ${result.total} (fallidos: ${result.failed})`
+              : `Resultados enviados a ${result.sent} participantes`;
+          showSuccess(message, 'Envío completado');
+        } catch {
+          showError('No se pudieron enviar los correos', 'Error');
+        } finally {
+          hideLoading();
+        }
+      },
+    );
+  }, [competition, token, showConfirmation, showLoading, hideLoading, showSuccess, showError]);
+
+  const handleSendEmailSubmit = useCallback(() => {
+    const email = emailInput.trim().toLowerCase();
+    if (!email) {
+      showError('Ingresa un correo del participante', 'Error');
+      return;
+    }
+    const participant = participants.find(
+      (p) =>
+        p.statusName === 'paid' &&
+        (p.user as PopulatedUser | undefined)?.email?.toLowerCase() === email,
+    );
+    const populatedUser = participant?.user as PopulatedUser | undefined;
+    if (!participant || !populatedUser?.documentId) {
+      showError('No se encontró un participante pagado con ese correo', 'Error');
+      return;
+    }
+    setIsEmailDialogOpen(false);
+    setEmailInput('');
+    showConfirmation(
+      'Enviar resultado',
+      `¿Enviar el resultado de la competencia a ${populatedUser.email}?`,
+      async () => {
+        showLoading('Enviando correo...');
+        try {
+          await sendResultEmail(
+            { participant: populatedUser.documentId as string, competition: competition?.documentId as string },
+            token,
+          );
+          showSuccess(`Resultado enviado a ${populatedUser.email}`, 'Envío completado');
+        } catch {
+          showError('No se pudo enviar el correo', 'Error');
+        } finally {
+          hideLoading();
+        }
+      },
+    );
+  }, [emailInput, participants, competition, token, showConfirmation, showLoading, hideLoading, showSuccess, showError]);
+
   useEffect(() => {
     if (!isScanning) return;
 
@@ -341,6 +404,22 @@ export default function ActivityManagePage() {
             );
           })}
         </div>
+      )}
+
+      {isCompetitionActivity && competition && competition.hasPublicResults && (
+        <section className="manage__emails">
+          <div className="manage__emails-header">
+            <p className="manage__emails-title">Envío de resultados</p>
+          </div>
+          <div className="manage__emails-actions">
+            <button className="manage__emails-btn" onClick={handleSendResultsToAll}>
+              Enviar a todos
+            </button>
+            <button className="manage__emails-btn" onClick={() => setIsEmailDialogOpen(true)}>
+              Enviar a un participante
+            </button>
+          </div>
+        </section>
       )}
 
       {participants.length === 0 ? (
@@ -513,6 +592,31 @@ export default function ActivityManagePage() {
             <h3 className="manage__scanner-title">Escanear código QR</h3>
             <div id="qr-scanner" />
             <button className="manage__scanner-cancel" onClick={() => setIsScanning(false)}>
+              Cancelar
+            </button>
+          </div>
+        </div>
+      )}
+
+      {isEmailDialogOpen && (
+        <div className="manage__scanner-overlay" onClick={() => setIsEmailDialogOpen(false)}>
+          <div className="manage__scanner-modal" onClick={(e) => e.stopPropagation()}>
+            <h3 className="manage__scanner-title">Enviar resultado a un participante</h3>
+            <input
+              type="email"
+              className="manage__search-input"
+              placeholder="correo@ejemplo.com"
+              value={emailInput}
+              onChange={(e) => setEmailInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') handleSendEmailSubmit();
+              }}
+              autoFocus
+            />
+            <button className="manage__search-btn" onClick={handleSendEmailSubmit}>
+              Enviar
+            </button>
+            <button className="manage__scanner-cancel" onClick={() => setIsEmailDialogOpen(false)}>
               Cancelar
             </button>
           </div>

@@ -242,6 +242,10 @@ export default function ActivityDetailPage() {
                         <span className="activity-detail__full-capacity-icon">⚠</span>
                         La actividad esta llena, gracias!!
                       </div>
+                    ) : activity.hasActiveRegister === false ? (
+                      <div className="activity-detail__registration-closed">
+                        Inscripciones cerradas
+                      </div>
                     ) : user ? (
                       <button onClick={handleRegister} className="activity-detail__participate-btn">
                         Participar

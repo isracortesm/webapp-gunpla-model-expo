@@ -11,12 +11,12 @@
 
 .manage__list {
   width: 100%;
-  max-width: 600px;
   margin: 1em auto;
   padding: 16px;
   display: flex;
   flex-direction: column;
   gap: 12px;
+  align-items: center;
 }
 
 .manage__list--no-progress {
@@ -152,6 +152,8 @@
 .manage__card {
   background: #ffffff;
   border: 1px solid #e5e7eb;
+  width: 100%;
+  max-width: 600px;
   border-radius: 12px;
   padding: 16px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
@@ -476,4 +478,48 @@
 #qr-scanner a:hover {
   background-color: #111827;
   color: white;
+}
+
+.manage__emails {
+  width: calc(100% - 2em);
+  max-width: 600px;
+  margin: 1em auto 0;
+  padding: 16px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.manage__emails-header {
+  margin-bottom: 12px;
+}
+
+.manage__emails-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.manage__emails-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.manage__emails-btn {
+  width: 100%;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  background: #111827;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.manage__emails-btn:hover {
+  background: #1f2937;
 }

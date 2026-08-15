@@ -201,6 +201,46 @@ export class CompetitionRepositoryImpl implements CompetitionRepository {
     return mapCompetitionResultDtoToEntity(response.data);
   }
 
+  async sendResultEmail(
+    data: { participant: string; competition: string },
+    token?: string
+  ): Promise<{ sentTo: string; resultsCount: number }> {
+    const http = token
+      ? new HttpService(process.env.NEXT_PUBLIC_HOST_URI || '', token)
+      : this.httpService;
+
+    const response = await http.post<{ data: { sentTo: string; resultsCount: number } }>(
+      '/api/competition-results/send-result-email',
+      {
+        data: {
+          participant: data.participant,
+          competition: data.competition,
+        },
+      }
+    );
+
+    return response.data;
+  }
+
+  async sendResultEmailsToAll(
+    data: { competition: string },
+    token?: string
+  ): Promise<{ total: number; sent: number; failed: number; errors: { participant?: string; error: string }[] }> {
+    const http = token
+      ? new HttpService(process.env.NEXT_PUBLIC_HOST_URI || '', token)
+      : this.httpService;
+
+    const response = await http.post<{
+      data: { total: number; sent: number; failed: number; errors: { participant?: string; error: string }[] };
+    }>('/api/competition-results/send-result-emails-to-all', {
+      data: {
+        competition: data.competition,
+      },
+    });
+
+    return response.data;
+  }
+
   async getCompetitionEvaluationsByResultAndReviewer(
     resultDocumentId: string,
     reviewerDocumentId: string,
