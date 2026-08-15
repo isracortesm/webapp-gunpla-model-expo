@@ -35,7 +35,7 @@ export interface CompetitionRepository {
     token?: string
   ): Promise<CompetitionResultEntity[]>;
   sendResultEmail(
-    data: { participant: string; competition: string },
+    data: { participant: string; competition: string; cc?: string },
     token?: string
   ): Promise<{ sentTo: string; resultsCount: number }>;
   sendResultEmailsToAll(

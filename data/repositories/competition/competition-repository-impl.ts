@@ -202,7 +202,7 @@ export class CompetitionRepositoryImpl implements CompetitionRepository {
   }
 
   async sendResultEmail(
-    data: { participant: string; competition: string },
+    data: { participant: string; competition: string; cc?: string },
     token?: string
   ): Promise<{ sentTo: string; resultsCount: number }> {
     const http = token
@@ -215,6 +215,7 @@ export class CompetitionRepositoryImpl implements CompetitionRepository {
         data: {
           participant: data.participant,
           competition: data.competition,
+          ...(data.cc ? { cc: data.cc } : {}),
         },
       }
     );

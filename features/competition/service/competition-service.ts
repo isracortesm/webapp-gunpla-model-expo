@@ -134,7 +134,7 @@ export async function updateCompetitionEvaluation(
 }
 
 export async function sendResultEmail(
-  data: { participant: string; competition: string },
+  data: { participant: string; competition: string; cc?: string },
   token?: string
 ) {
   return sendResultEmailUseCase.execute(data, token);

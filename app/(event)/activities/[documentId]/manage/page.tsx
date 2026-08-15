@@ -36,8 +36,8 @@ export default function ActivityManagePage() {
   const [isScanning, setIsScanning] = useState(false);
   const [isModelSearchOpen, setIsModelSearchOpen] = useState(false);
   const [modelSearchInput, setModelSearchInput] = useState('');
-  const [isEmailDialogOpen, setIsEmailDialogOpen] = useState(false);
-  const [emailInput, setEmailInput] = useState('');
+  const [emailDialogParticipant, setEmailDialogParticipant] = useState<ActivityParticipantEntity | null>(null);
+  const [emailCcInput, setEmailCcInput] = useState('');
   const [isCompetitionActivity, setIsCompetitionActivity] = useState(false);
   const [competition, setCompetition] = useState<CompetitionEntity | null>(null);
   const [competitionModels, setCompetitionModels] = useState<CompetitionModelEntryEntity[]>([]);
@@ -292,43 +292,54 @@ export default function ActivityManagePage() {
     );
   }, [competition, token, showConfirmation, showLoading, hideLoading, showSuccess, showError]);
 
-  const handleSendEmailSubmit = useCallback(() => {
-    const email = emailInput.trim().toLowerCase();
-    if (!email) {
-      showError('Ingresa un correo del participante', 'Error');
-      return;
-    }
-    const participant = participants.find(
-      (p) =>
-        p.statusName === 'paid' &&
-        (p.user as PopulatedUser | undefined)?.email?.toLowerCase() === email,
-    );
+  const handleOpenEmailSend = useCallback((participant: ActivityParticipantEntity) => {
+    setEmailCcInput('');
+    setEmailDialogParticipant(participant);
+  }, []);
+
+  const handleSendResultSubmit = useCallback(async () => {
+    const participant = emailDialogParticipant;
+    if (!participant || !competition) return;
+
     const populatedUser = participant?.user as PopulatedUser | undefined;
-    if (!participant || !populatedUser?.documentId) {
-      showError('No se encontró un participante pagado con ese correo', 'Error');
+    const participantDocumentId = populatedUser?.documentId as string | undefined;
+    if (!participantDocumentId) {
+      showError('No se encontró el usuario del participante', 'Error');
       return;
     }
-    setIsEmailDialogOpen(false);
-    setEmailInput('');
-    showConfirmation(
-      'Enviar resultado',
-      `¿Enviar el resultado de la competencia a ${populatedUser.email}?`,
-      async () => {
-        showLoading('Enviando correo...');
-        try {
-          await sendResultEmail(
-            { participant: populatedUser.documentId as string, competition: competition?.documentId as string },
-            token,
-          );
-          showSuccess(`Resultado enviado a ${populatedUser.email}`, 'Envío completado');
-        } catch {
-          showError('No se pudo enviar el correo', 'Error');
-        } finally {
-          hideLoading();
-        }
-      },
-    );
-  }, [emailInput, participants, competition, token, showConfirmation, showLoading, hideLoading, showSuccess, showError]);
+
+    const cc = emailCcInput.trim();
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (cc && !emailPattern.test(cc)) {
+      showError('Ingresa un correo alternativo válido', 'Error');
+      return;
+    }
+
+    setEmailDialogParticipant(null);
+    setEmailCcInput('');
+
+    showLoading('Enviando correo...');
+    try {
+      const result = await sendResultEmail(
+        {
+          participant: participantDocumentId,
+          competition: competition.documentId,
+          cc: cc || undefined,
+        },
+        token,
+      );
+      showSuccess(
+        cc
+          ? `Resultado enviado a ${result.sentTo} con copia a ${cc}`
+          : `Resultado enviado a ${result.sentTo}`,
+        'Envío completado',
+      );
+    } catch {
+      showError('No se pudo enviar el correo', 'Error');
+    } finally {
+      hideLoading();
+    }
+  }, [emailDialogParticipant, emailCcInput, competition, token, showLoading, hideLoading, showSuccess, showError]);
 
   useEffect(() => {
     if (!isScanning) return;
@@ -415,9 +426,6 @@ export default function ActivityManagePage() {
             <button className="manage__emails-btn" onClick={handleSendResultsToAll}>
               Enviar a todos
             </button>
-            <button className="manage__emails-btn" onClick={() => setIsEmailDialogOpen(true)}>
-              Enviar a un participante
-            </button>
           </div>
         </section>
       )}
@@ -453,14 +461,24 @@ export default function ActivityManagePage() {
                   <div className="manage__models" onClick={(e) => e.stopPropagation()}>
                     {p.statusName === 'paid' ? (
                       <>
-                        <button
-                          className="manage__models-toggle"
-                          onClick={() =>
-                            setExpandedParticipantId((prev) => (prev === p.id ? null : p.id))
-                          }
-                        >
-                          {expandedParticipantId === p.id ? 'Ocultar modelos' : 'Ver modelos'}
-                        </button>
+                        <div className="manage__models-actions">
+                          <button
+                            className="manage__models-toggle"
+                            onClick={() =>
+                              setExpandedParticipantId((prev) => (prev === p.id ? null : p.id))
+                            }
+                          >
+                            {expandedParticipantId === p.id ? 'Ocultar modelos' : 'Ver modelos'}
+                          </button>
+                          {competition?.hasPublicResults && (
+                            <button
+                              className="manage__models-email-btn"
+                              onClick={() => handleOpenEmailSend(p)}
+                            >
+                              Enviar resultados
+                            </button>
+                          )}
+                        </div>
                         {expandedParticipantId === p.id && (
                           <div className="manage__models-list">
                             {populatedUser?.id != null &&
@@ -598,25 +616,29 @@ export default function ActivityManagePage() {
         </div>
       )}
 
-      {isEmailDialogOpen && (
-        <div className="manage__scanner-overlay" onClick={() => setIsEmailDialogOpen(false)}>
+      {emailDialogParticipant && (
+        <div className="manage__scanner-overlay" onClick={() => setEmailDialogParticipant(null)}>
           <div className="manage__scanner-modal" onClick={(e) => e.stopPropagation()}>
-            <h3 className="manage__scanner-title">Enviar resultado a un participante</h3>
+            <h3 className="manage__scanner-title">Enviar resultado</h3>
+            <p className="manage__email-info">
+              Se enviará al correo registrado del participante:{' '}
+              <strong>{(emailDialogParticipant.user as PopulatedUser | undefined)?.email}</strong>
+            </p>
             <input
               type="email"
               className="manage__search-input"
-              placeholder="correo@ejemplo.com"
-              value={emailInput}
-              onChange={(e) => setEmailInput(e.target.value)}
+              placeholder="Correo alternativo para enviar una copia (opcional)"
+              value={emailCcInput}
+              onChange={(e) => setEmailCcInput(e.target.value)}
               onKeyDown={(e) => {
-                if (e.key === 'Enter') handleSendEmailSubmit();
+                if (e.key === 'Enter') handleSendResultSubmit();
               }}
               autoFocus
             />
-            <button className="manage__search-btn" onClick={handleSendEmailSubmit}>
-              Enviar
+            <button className="manage__search-btn" onClick={handleSendResultSubmit}>
+              Confirmar envío
             </button>
-            <button className="manage__scanner-cancel" onClick={() => setIsEmailDialogOpen(false)}>
+            <button className="manage__scanner-cancel" onClick={() => setEmailDialogParticipant(null)}>
               Cancelar
             </button>
           </div>

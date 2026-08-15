@@ -8,7 +8,7 @@ export class SendResultEmailUseCase {
   }
 
   async execute(
-    data: { participant: string; competition: string },
+    data: { participant: string; competition: string; cc?: string },
     token?: string
   ): Promise<{ sentTo: string; resultsCount: number }> {
     return this.repository.sendResultEmail(data, token);
