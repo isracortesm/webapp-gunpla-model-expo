@@ -197,12 +197,29 @@ export class CompetitionRepositoryImpl implements CompetitionRepository {
       ? new HttpService(process.env.NEXT_PUBLIC_HOST_URI || '', token)
       : this.httpService;
 
-    const response = await http.get<{ data: StrapiCompetitionResultResponse[] }>('/api/competition-results', {
-      ...this.resultPopulateParams(),
-      'filters[competition][documentId][$eq]': competitionDocumentId,
-    });
+    const pageSize = 100;
+    let page = 1;
+    let entries: CompetitionResultEntity[] = [];
 
-    return response.data.map(mapCompetitionResultDtoToEntity);
+    while (true) {
+      const response = await http.get<{
+        data: StrapiCompetitionResultResponse[];
+        meta: { pagination: { page: number; pageSize: number; pageCount: number; total: number } };
+      }>('/api/competition-results', {
+        ...this.resultPopulateParams(),
+        'filters[competition][documentId][$eq]': competitionDocumentId,
+        'pagination[page]': String(page),
+        'pagination[pageSize]': String(pageSize),
+      });
+
+      entries = entries.concat(response.data.map(mapCompetitionResultDtoToEntity));
+
+      const pagination = response.meta?.pagination;
+      if (!pagination || page >= pagination.pageCount || entries.length >= pagination.total) break;
+      page += 1;
+    }
+
+    return entries;
   }
 
   private resultPopulateParams() {
