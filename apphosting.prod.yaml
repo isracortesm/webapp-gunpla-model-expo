@@ -1,3 +1,5 @@
 runConfig:
+  cpu: 2
+  memoryGiB: 4
   minInstances: 3
   maxInstances: 6
