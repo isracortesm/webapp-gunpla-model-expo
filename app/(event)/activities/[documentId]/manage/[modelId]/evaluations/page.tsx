@@ -133,15 +133,33 @@ export default function ActivityModelEvaluationsPage() {
           t,
         );
         if (!resultData) {
-          resultData = await createCompetitionResult(
-            {
-              competition: competition.documentId,
-              model: modelEntry.documentId,
-              order: 0,
-              totalPoints: 0,
-            },
-            t,
-          );
+          try {
+            resultData = await createCompetitionResult(
+              {
+                competition: competition.documentId,
+                model: modelEntry.documentId,
+                order: 0,
+                totalPoints: 0,
+              },
+              t,
+            );
+          } catch (error: unknown) {
+            // 409: otro evaluador ya creó el resultado concurrentemente → recuperar el existente
+            const isConflict =
+              error instanceof Error &&
+              'status' in error &&
+              (error as { status?: number }).status === 409;
+            if (isConflict) {
+              resultData = await getCompetitionResult(
+                competition.documentId,
+                modelEntry.documentId,
+                t,
+              );
+              if (!resultData) throw error;
+            } else {
+              throw error;
+            }
+          }
         }
         setResult(resultData);
 

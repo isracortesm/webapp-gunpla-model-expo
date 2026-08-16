@@ -175,6 +175,15 @@ export default function ActivityModelPublicResultPage() {
               <div className="public__section-header">
                 <h3 className="public__section-title">Evaluaciones</h3>
               </div>
+              {result && (
+                <div className="public__average">
+                  <div className="public__average-info">
+                    <span className="public__average-label">Promedio general</span>
+                    <p className="public__average-note">Promedio de todos los evaluadores</p>
+                  </div>
+                  <span className="public__average-value">{result.totalPoints} pts</span>
+                </div>
+              )}
               <div className="public__evaluations">
                 {groupedEvaluations.map((group, index) => {
                   const judgeName = `Juez ${index + 1}`;
@@ -186,7 +195,6 @@ export default function ActivityModelPublicResultPage() {
                           <div key={evaluation.documentId} className="public__evaluation-item">
                             <div className="public__evaluation-header">
                               <p className="public__evaluation-criteria">{evaluation.name}</p>
-                              <span className="public__evaluation-points">{evaluation.points} pts</span>
                             </div>
                             {evaluation.comments && (
                               <p className="public__evaluation-comments">{evaluation.comments}</p>

@@ -104,6 +104,43 @@
   margin-bottom: 0;
 }
 
+.public__average {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.public__average-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.public__average-label {
+  font-size: 14px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.public__average-note {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.public__average-value {
+  font-size: 16px;
+  font-weight: 700;
+  color: #2563eb;
+  white-space: nowrap;
+}
+
 .public__evaluations {
   display: flex;
   flex-direction: column;
@@ -151,12 +188,7 @@
   color: #111827;
 }
 
-.public__evaluation-points {
-  font-size: 13px;
-  font-weight: 700;
-  color: #2563eb;
-  white-space: nowrap;
-}
+
 
 .public__evaluation-comments {
   margin-top: 6px;

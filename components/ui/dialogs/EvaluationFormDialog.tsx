@@ -129,17 +129,26 @@ export default function EvaluationFormDialog({
             token,
           );
         } else {
-          await createCompetitionEvaluation(
-            {
-              name: op.name,
-              criteria: op.criteriaDocumentId,
-              points: op.points,
-              comments: op.comments,
-              result: result.documentId,
-              reviewer: reviewerDocumentId,
-            },
-            token,
-          );
+          try {
+            await createCompetitionEvaluation(
+              {
+                name: op.name,
+                criteria: op.criteriaDocumentId,
+                points: op.points,
+                comments: op.comments,
+                result: result.documentId,
+                reviewer: reviewerDocumentId,
+              },
+              token,
+            );
+          } catch (error: unknown) {
+            // 409: la evaluación ya existe (creada concurrentemente) → tratar como guardado exitoso
+            const isConflict =
+              error instanceof Error &&
+              'status' in error &&
+              (error as { status?: number }).status === 409;
+            if (!isConflict) throw error;
+          }
         }
       }
       showSuccess('Evaluaciones guardadas correctamente');
